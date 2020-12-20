@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "declaration": true,
+    "lib": ["es5", "es6", "dom"],
+    "experimentalDecorators": true
+  },
+  "exclude": [
+    "dist",
+    "node_modules"
+  ]
+}
