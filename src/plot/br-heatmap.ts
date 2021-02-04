@@ -92,9 +92,18 @@ export class BrHeatmap extends Plot {
         const value2color = this.getValue2color();
 
         // change fill of squares
-        this.g.selectAll("rect")
-            .data(dataObjs)
+        const rects = this.g.selectAll("rect")
+            .data(dataObjs);
+
+        rects.enter()
             .transition()
+            .style("fill", d => value2color(d.value));
+
+        rects.exit()
+            .transition()
+            .style("fill", COLORS.BLANK);
+
+        rects.transition()
             .style("fill", d => value2color(d.value));
     }
 
@@ -207,8 +216,8 @@ export class BrHeatmap extends Plot {
         }
 
         return (value: number) => {
-            if (value === 0) {
-                return COLORS.GRAY;
+            if (value == 0.) {
+                return COLORS.BLANK;
             } else {
                 return range2color(value2range(value));
             }

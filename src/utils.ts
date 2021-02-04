@@ -79,6 +79,7 @@ export enum COLORS {
     SKY = "#89DDFF",
     BLACK = "#2B2B2B",
     GRAY = "#616161",
-    WHITE = "#EEFFFF"
+    WHITE = "#EEFFFF",
+    BLANK = "#FFFFFF"
 }
 
