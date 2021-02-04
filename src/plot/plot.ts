@@ -2,8 +2,18 @@ export abstract class Plot {
     svgHeight: number;
     svgWidth: number;
     margin: Margin;
+    svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>
+    g: d3.Selection<SVGGElement, unknown, HTMLElement, any>
 
-    abstract update(): void;
+    constructor(svgHeight: number, svgWidth: number, margin: Margin) {
+        this.svgHeight = svgHeight;
+        this.svgWidth = svgWidth;
+        this.margin = margin;
+    }
+
+    abstract init(...args: any[]): void;
+
+    abstract update(...args: any[]): void;
 
     get width() {
         return this.svgWidth - this.margin.left - this.margin.right;

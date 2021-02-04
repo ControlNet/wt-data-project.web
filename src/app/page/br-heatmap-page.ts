@@ -5,6 +5,7 @@ import * as d3 from "d3";
 import { utils } from "../../utils";
 
 export class BRHeatMapPage extends Page {
+    plot: BrHeatmap;
     id = "br-heatmap";
     name = "BR HeatMap";
 
@@ -97,7 +98,16 @@ export class BRHeatMapPage extends Page {
             .html(d => d.id);
 
         // init main content plot
-        this.plot = new BrHeatmap();
-        utils.setEvent.byClass("br-heatmap-selection").onchange(this.plot.update);
+        const margin = {top: 20, right: 30, bottom: 30, left: 100};
+        this.plot = new BrHeatmap(800, 600, margin);
+        utils.setEvent.byClass("br-heatmap-selection")
+            .onchange(() => this.plot.update(false));
+        // override some selection forcing re-download time-series data
+        utils.setEvent.byIds("mode-selection", "br-range-selection")
+            .onchange(() => this.plot.update(true));
     }
 }
+
+export type BRRange = "0" | "1";
+
+export type Measurement = "win_rate" | "battles_sum";
