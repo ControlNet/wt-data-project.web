@@ -67,6 +67,8 @@ export class BrHeatmap extends Plot {
     }
 
     update(reDownload: boolean): void {
+        const oldAxis = d3.selectAll("g#br-heatmap-x, g#br-heatmap-y");
+
         if (reDownload) {
             // if need re-download data
             d3.csv(this.dataPath, (data: TimeseriesData) => {
@@ -77,6 +79,9 @@ export class BrHeatmap extends Plot {
             // else read data from cache
             this.updateSquares(this.cache);
         }
+
+        this.buildAxis();
+        oldAxis.remove();
     }
 
     private updateSquares(data: TimeseriesData) {
