@@ -1,4 +1,4 @@
-import {Page, PageClass} from "./page";
+import {Page, PageClass} from "./page/page";
 import {Metadata} from "../data/metadata";
 import d3 = require("d3");
 
