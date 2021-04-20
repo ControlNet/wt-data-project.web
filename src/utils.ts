@@ -1,3 +1,5 @@
+import * as d3 from "d3";
+
 export namespace utils {
     export function getSelectedValue(id: string) {
         return (<HTMLSelectElement>document.getElementById(id)).value;
@@ -66,6 +68,39 @@ export namespace utils {
         }).join("");
         return prefix + number;
     }
+
+    export function rgbToHex(rgb: string) {
+        // rgb(x, y, z)
+        const color = rgb.match(/\d+/g);
+        let hex = "#";
+
+        for (let i = 0; i < 3; i++) {
+            hex += ("0" + Number(color[i]).toString(16)).slice(-2);
+        }
+        return hex;
+    }
+
+    export const parseDate = d3.timeParse("%Y-%m-%d")
+
+    // an implementation for deep copy
+    export function deepCopy<T extends Object | Array<any>>(obj: T): T {
+        if (Array.isArray(obj)) {
+            const newArr: Array<any> = [];
+            obj.forEach(value => {
+                newArr.push(this.deepCopy(value));
+            })
+            return <T>newArr;
+        } else if (typeof obj === "object") {
+            const newObj = {};
+            Object.entries(obj).forEach(([key, value]) => {
+                // @ts-ignore
+                newObj[key] = this.deepCopy(value);
+            })
+            return <T>newObj;
+        } else {
+            return obj;
+        }
+    }
 }
 
 export enum COLORS {
@@ -81,5 +116,15 @@ export enum COLORS {
     GRAY = "#616161",
     WHITE = "#EEFFFF",
     BLANK = "#FFFFFF"
+}
+
+export const categoricalColors = [
+    COLORS.GREEN, COLORS.YELLOW, COLORS.RED, COLORS.BLUE,
+    COLORS.PURPLE, COLORS.ORANGE, COLORS.AZURE, COLORS.SKY,
+    COLORS.GRAY
+];
+
+// Colors for continuous values
+export enum CONT_COLORS {
 }
 

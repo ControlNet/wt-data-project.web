@@ -1,25 +1,83 @@
 import * as d3 from "d3";
-import { Margin, Plot } from "./plot";
+import { Plot } from "./plot";
 import { TimeseriesData, TimeseriesRow } from "../data/timeseries-data";
-import { COLORS, utils } from "../utils";
+import { categoricalColors, COLORS, utils } from "../utils";
 import { BRRange, Measurement } from "../app/page/br-heatmap-page";
 import { ColorBar } from "./color-bar";
+import { BRLineChart, LineChartDataObj } from "./line-chart";
 
 export class BrHeatmap extends Plot {
     colorBar: ColorBar;
+    lineChart: BRLineChart;
+    selected: Array<SquareInfo> = [];
 
-    mouseoverEvent = function() {
+    mouseoverEvent = function(): void {
         d3.select(this).style("stroke", "white");
     };
 
-    mouseleaveEvent = function() {
+    mouseleaveEvent = function(): void {
         d3.select(this).style("stroke", "black");
     };
 
-    cache: TimeseriesData;
+    getClickEvent(): () => void {
+        const self = this;
+        return function(): void {
+            const square = d3.select(this);
+            // @ts-ignore
+            const info: SquareInfo = square.data()[0];
 
-    constructor(svgHeight: number, svgWidth: number, margin: Margin) {
-        super(svgHeight, svgWidth, margin);
+            if (utils.rgbToHex(square.style("fill")).toUpperCase() === COLORS.BLUE) {
+                // if the square is selected
+                square.style("fill", self.value2color(info.value));
+                // remove the item in the `this.selected`
+                self.selected = self.selected.filter(each => each.br !== info.br || each.nation !== info.nation);
+            } else {
+                // if the square is not selected
+                square.style("fill", COLORS.BLUE);
+                // add the item into the `this.selected`
+                self.selected.push(info);
+            }
+            self.lineChart.update();
+        }
+    }
+
+    cache: TimeseriesData;
+    value2color: Value2Color;
+
+    colorPool = {
+        values: utils.deepCopy(categoricalColors),
+        i: 0,
+
+        bindings: new Array<{br: string, nation: string, color: string}>(),
+
+        get: function(d: LineChartDataObj) {
+            // if the category is generated before, use previous color
+            for (const binding of this.bindings) {
+                if (binding.br === d.br && binding.nation === d.nation) {
+                    return binding.color;
+                }
+            }
+            // else assign a new color to the nation
+            const out = this.values[this.i];
+            this.i++;
+            if (this.i === this.values.length) {
+                this.i = 0;
+            }
+
+            // add to binding
+            this.bindings.push({
+                nation: d.nation,
+                br: d.br,
+                color: out
+            })
+            return out;
+        }
+    }
+
+    init(colorBar: ColorBar, lineChart: BRLineChart): BrHeatmap {
+        this.colorBar = colorBar;
+        this.lineChart = lineChart;
+
         // build new plot in the content div of page
         this.svg = d3.select("#content")
             .append("svg")
@@ -30,10 +88,7 @@ export class BrHeatmap extends Plot {
             .attr("id", "main-g")
             .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`);
 
-        this.init();
-    }
 
-    init(): void {
         d3.csv(this.dataPath, (data: TimeseriesData) => {
             // init
             const dataObjs = this.extractData(data)
@@ -42,8 +97,12 @@ export class BrHeatmap extends Plot {
             // build axis
             const {x, y} = this.buildAxis();
 
+            // init the colorbar and line chart
+            this.colorBar.init();
+            this.lineChart.init();
+
             // colorMap function
-            const value2color = this.getValue2color();
+            this.value2color = this.getValue2color();
 
             // TODO: tooltip
 
@@ -56,17 +115,19 @@ export class BrHeatmap extends Plot {
                 .attr("y", d => y(d.br))
                 .attr("width", squareWidth)
                 .attr("height", squareHeight)
-                .style("fill", d => value2color(d.value))
+                .style("fill", d => this.value2color(d.value))
                 .style("stroke-width", 1)
                 .style("stroke", "black")
                 .on("mouseover", this.mouseoverEvent)
                 .on("mouseleave", this.mouseleaveEvent)
+                .on("click", this.getClickEvent());
 
             this.cache = data;
         })
+        return this;
     }
 
-    update(reDownload: boolean): void {
+    update(reDownload: boolean): BrHeatmap {
         const oldAxis = d3.selectAll("g#br-heatmap-x, g#br-heatmap-y");
 
         if (reDownload) {
@@ -82,6 +143,7 @@ export class BrHeatmap extends Plot {
 
         this.buildAxis();
         oldAxis.remove();
+        return this;
     }
 
     private updateSquares(data: TimeseriesData) {
@@ -89,7 +151,7 @@ export class BrHeatmap extends Plot {
         const dataObjs = this.extractData(data)
 
         // colorMap function
-        const value2color = this.getValue2color();
+        this.value2color = this.getValue2color();
 
         // change fill of squares
         const rects = this.g.selectAll("rect")
@@ -97,14 +159,14 @@ export class BrHeatmap extends Plot {
 
         rects.enter()
             .transition()
-            .style("fill", d => value2color(d.value));
+            .style("fill", d => this.value2color(d.value));
 
         rects.exit()
             .transition()
             .style("fill", COLORS.BLANK);
 
         rects.transition()
-            .style("fill", d => value2color(d.value));
+            .style("fill", d => this.value2color(d.value));
     }
 
     private buildAxis() {
@@ -135,7 +197,7 @@ export class BrHeatmap extends Plot {
     }
 
     private extractData(data: Array<TimeseriesRow>) {
-        return data.filter(row => row.date === this.date)
+        return data.filter(row => row.date === this.date && row.cls === this.clazz)
             .map(row => {
                 return {
                     nation: row.nation,
@@ -145,17 +207,17 @@ export class BrHeatmap extends Plot {
             });
     }
 
-    private getValue(row: TimeseriesRow): number {
+    getValue(row: TimeseriesRow): number {
         // @ts-ignore
         return row[`${this.mode}_${this.measurement}`]
     }
 
-    private getBr(row: TimeseriesRow): string {
+    getBr(row: TimeseriesRow): string {
         // @ts-ignore
         return row[`${this.mode}_br`]
     }
 
-    private getValue2color() {
+    private getValue2color(): Value2Color {
         let value2range: d3.ScaleLinear<number, number, never>;
         let range2color: d3.ScaleLinear<number, number, never>;
         let valueMin: number;
@@ -206,14 +268,8 @@ export class BrHeatmap extends Plot {
 
         const value2color = (value: number) => range2color(value2range(value));
 
-        // add color bar
-        if (this.colorBar === undefined) {
-            this.colorBar = new ColorBar(this, valueMin, valueMax, value2color, 800, 60, {
-                bottom: this.margin.bottom, left: 0, right: 40, top: this.margin.top
-            })
-        } else {
-            this.colorBar.update(valueMin, valueMax, value2color);
-        }
+        // update color bar
+        this.colorBar.update(valueMin, valueMax, value2color);
 
         return (value: number) => {
             if (value == 0.) {
@@ -249,4 +305,14 @@ export class BrHeatmap extends Plot {
         return <BRRange>utils.getSelectedValue("br-range-selection");
     }
 
+}
+
+interface SquareInfo {
+    nation: string;
+    br: string;
+    value: number;
+}
+
+interface Value2Color {
+    (value: number): number | COLORS
 }

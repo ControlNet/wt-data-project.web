@@ -95,3 +95,4 @@ modules.xml
 
 # User-defined
 node_modules
+.idea

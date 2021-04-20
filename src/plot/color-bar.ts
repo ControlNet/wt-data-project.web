@@ -9,14 +9,12 @@ export class ColorBar extends Plot {
     valueMax: number;
     value2color: any;
 
-    constructor(brHeatmap: BrHeatmap, valueMin: number, valueMax: number, value2color: any,
-                svgHeight: number, svgWidth: number, margin: Margin) {
+    constructor(brHeatmap: BrHeatmap, svgHeight: number, svgWidth: number, margin: Margin) {
         super(svgHeight, svgWidth, margin);
         this.brHeatmap = brHeatmap;
-        this.valueMin = valueMin;
-        this.valueMax = valueMax;
-        this.value2color = value2color;
+    }
 
+    init(): ColorBar {
         this.svg = d3.select("#content")
             .append("svg")
             .attr("height", this.svgHeight)
@@ -26,11 +24,14 @@ export class ColorBar extends Plot {
         this.g = this.svg.append("g")
             .attr("id", "color-bar-g")
             .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`);
-
-        this.init();
+        return this;
     }
 
-    init(): void {
+    update(valueMin: number, valueMax: number, value2color: any): ColorBar {
+        this.valueMin = valueMin;
+        this.valueMax = valueMax;
+        this.value2color = value2color;
+
         const scale = this.brHeatmap.measurement === "battles_sum" ? "log" : "linear";
         const samples = scale === "log" ? utils.logspace(this.valueMin, this.valueMax, 100)
             : utils.linspace(this.valueMin, this.valueMax, 100);
@@ -105,12 +106,6 @@ export class ColorBar extends Plot {
             .attr("transform", "translate(" + legendWidth + ", 0)")
             .call(legendAxis);
 
-    }
-
-    update(valueMin: number, valueMax: number, value2color: any): void {
-        this.valueMin = valueMin;
-        this.valueMax = valueMax;
-        this.value2color = value2color;
-        this.init()
+        return this;
     }
 }

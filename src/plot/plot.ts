@@ -11,9 +11,9 @@ export abstract class Plot {
         this.margin = margin;
     }
 
-    abstract init(...args: any[]): void;
+    abstract init(...args: any[]): Plot;
 
-    abstract update(...args: any[]): void;
+    abstract update(...args: any[]): Plot;
 
     get width() {
         return this.svgWidth - this.margin.left - this.margin.right;

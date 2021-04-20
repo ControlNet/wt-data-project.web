@@ -3,6 +3,8 @@ import { BrHeatmap } from "../../plot/br-heatmap";
 import { Page } from "./page";
 import * as d3 from "d3";
 import { utils } from "../../utils";
+import { ColorBar } from "../../plot/color-bar";
+import { BRLineChart } from "../../plot/line-chart";
 
 export class BRHeatMapPage extends Page {
     plot: BrHeatmap;
@@ -97,9 +99,18 @@ export class BRHeatMapPage extends Page {
             .attr("selected", d => d.id === "1" ? "selected" : undefined)
             .html(d => d.id);
 
-        // init main content plot
+        // init main content plot, colorbar and line chart
         const margin = {top: 20, right: 30, bottom: 30, left: 100};
+
         this.plot = new BrHeatmap(800, 600, margin);
+        const colorBar = new ColorBar(this.plot, 800, 60, {
+            top: this.plot.margin.top, right: 40, bottom: this.plot.margin.bottom, left: 0
+        });
+        const lineChart = new BRLineChart(this.plot, 400, 500, {
+            top: 10, right: 20, bottom: this.plot.margin.bottom, left: 50
+        });
+        this.plot.init(colorBar, lineChart);
+
         utils.setEvent.byClass("br-heatmap-selection")
             .onchange(() => this.plot.update(false));
         // override some selection forcing re-download time-series data
