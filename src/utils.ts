@@ -126,5 +126,10 @@ export const categoricalColors = [
 
 // Colors for continuous values
 export enum CONT_COLORS {
+    RED = "#d11141",
+    YELLOW = "#ffc425",
+    GREEN = "#00b159",
+    BLACK = "#2B2B2B",
+    WHITE = "#EEFFFF"
 }
 

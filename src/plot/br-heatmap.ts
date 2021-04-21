@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { Plot } from "./plot";
 import { TimeseriesData, TimeseriesRow } from "../data/timeseries-data";
-import { categoricalColors, COLORS, utils } from "../utils";
+import { categoricalColors, COLORS, CONT_COLORS, utils } from "../utils";
 import { BRRange, Measurement } from "../app/page/br-heatmap-page";
 import { ColorBar } from "./color-bar";
 import { BRLineChart, LineChartDataObj } from "./line-chart";
@@ -28,14 +28,14 @@ export class BrHeatmap extends Plot {
             // @ts-ignore
             const info: SquareInfo = square.data()[0];
 
-            if (utils.rgbToHex(square.style("fill")).toUpperCase() === COLORS.BLUE) {
+            if (utils.rgbToHex(square.style("fill")).toUpperCase() === COLORS.AZURE) {
                 // if the square is selected
                 square.style("fill", self.value2color(info.value));
                 // remove the item in the `this.selected`
                 self.selected = self.selected.filter(each => each.br !== info.br || each.nation !== info.nation);
             } else {
                 // if the square is not selected
-                square.style("fill", COLORS.BLUE);
+                square.style("fill", COLORS.AZURE);
                 // add the item into the `this.selected`
                 self.selected.push(info);
             }
@@ -245,14 +245,14 @@ export class BrHeatmap extends Plot {
                     range2color = d3.scaleLinear()
                         .domain([0, 0.05, 0.4, 0.5, 0.6, 0.95, 1.0])
                         // @ts-ignore
-                        .range([COLORS.WHITE, COLORS.BLACK, COLORS.RED, COLORS.YELLOW, COLORS.GREEN, COLORS.BLACK, COLORS.BLACK])
+                        .range([CONT_COLORS.WHITE, CONT_COLORS.BLACK, CONT_COLORS.RED, CONT_COLORS.YELLOW, CONT_COLORS.GREEN, CONT_COLORS.BLACK, CONT_COLORS.BLACK])
                         // @ts-ignore
                         .interpolate(d3.interpolateHcl)
                 } else if (this.clazz === "Aviation") {
                     range2color = d3.scaleLinear()
                         .domain([0, 0.01, 0.5, 0.6, 0.7, 0.99, 1.0])
                         // @ts-ignore
-                        .range([COLORS.WHITE, COLORS.BLACK, COLORS.RED, COLORS.YELLOW, COLORS.GREEN, COLORS.BLACK, COLORS.BLACK])
+                        .range([CONT_COLORS.WHITE, CONT_COLORS.BLACK, CONT_COLORS.RED, CONT_COLORS.YELLOW, CONT_COLORS.GREEN, CONT_COLORS.BLACK, CONT_COLORS.BLACK])
                         // @ts-ignore
                         .interpolate(d3.interpolateHcl)
                 }
@@ -269,7 +269,7 @@ export class BrHeatmap extends Plot {
                 range2color = d3.scaleLinear()
                     .domain([0, 0.01, 0.4, 0.5, 0.6, 0.99, 1.0])
                     // @ts-ignore
-                    .range([COLORS.WHITE, COLORS.BLACK, COLORS.RED, COLORS.YELLOW, COLORS.GREEN, COLORS.BLACK])
+                    .range([CONT_COLORS.WHITE, CONT_COLORS.BLACK, CONT_COLORS.RED, CONT_COLORS.YELLOW, CONT_COLORS.GREEN, CONT_COLORS.BLACK])
                     // @ts-ignore
                     .interpolate(d3.interpolateHcl)
                 break;
