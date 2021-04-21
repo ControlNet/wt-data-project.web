@@ -13,7 +13,7 @@ export abstract class Plot {
 
     abstract init(...args: any[]): Plot;
 
-    abstract update(...args: any[]): Plot;
+    abstract update(...args: any[]): Promise<Plot>;
 
     get width() {
         return this.svgWidth - this.margin.left - this.margin.right;

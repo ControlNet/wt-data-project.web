@@ -11,7 +11,6 @@ export abstract class LineChart extends Plot {
 export class BRLineChart extends LineChart {
     brHeatmap: BrHeatmap;
 
-
     constructor(brHeatmap: BrHeatmap, svgHeight: number, svgWidth: number, margin: Margin) {
         super(svgHeight, svgWidth, margin);
         this.brHeatmap = brHeatmap;
@@ -31,108 +30,109 @@ export class BRLineChart extends LineChart {
         return this;
     }
 
-    update(): Plot {
+    async update(): Promise<Plot> {
         const oldXAxis = this.g.selectAll(".x-axis");
         const oldYAxis = this.g.selectAll(".y-axis");
         // const oldLineChart = this.g.selectAll("g.line-chart-element");
 
-        d3.csv(this.brHeatmap.dataPath, (data: TimeseriesData) => {
-            const dataObjs = this.groupBy(this.extractData(data));
+        return await new Promise((resolve) => {
+            d3.csv(this.brHeatmap.dataPath, (data: TimeseriesData) => {
+                const dataObjs = this.groupBy(this.extractData(data));
 
-            // x axis
-            const x = d3.scaleLinear()
-                .domain(d3.extent(data, d => utils.parseDate(d.date)))
-                .range([0, this.width]);
-            // generate sticks
-            this.g.append("g")
-                .classed("x-axis", true)
-                .attr("transform", `translate(0, ${this.height})`)
-                .call(d3.axisBottom(x)
-                    .tickFormat(d3.timeFormat('%Y/%m')));
+                // x axis
+                const x = d3.scaleLinear()
+                    .domain(d3.extent(data, d => utils.parseDate(d.date)))
+                    .range([0, this.width]);
+                // generate sticks
+                this.g.append("g")
+                    .classed("x-axis", true)
+                    .attr("transform", `translate(0, ${this.height})`)
+                    .call(d3.axisBottom(x)
+                        .tickFormat(d3.timeFormat('%Y/%m')));
 
-            // add x label
-            this.g.append("text")
-                .classed("x-axis", true)
-                .text("Date")
-                .attr("transform", `translate(${this.width / 2}, ${this.height + 30})`)
-                .style("font-size", 12)
-                .style("text-anchor", "middle");
+                // add x label
+                this.g.append("text")
+                    .classed("x-axis", true)
+                    .text("Date")
+                    .attr("transform", `translate(${this.width / 2}, ${this.height + 30})`)
+                    .style("font-size", 12)
+                    .style("text-anchor", "middle");
 
-            oldXAxis.remove();
+                oldXAxis.remove();
 
-            // y axis
-            const yValues: Array<number> = _.flatMap(dataObjs, obj => obj.values).map(row => row.value);
-            const yMax = _.max(yValues) * 1.02
-            const yMin = _.min(yValues) * 0.98
-            const y = d3.scaleLinear()
-                .domain([yMin, yMax])
-                .range([this.height, 0]);
-            // generate sticks
-            this.g.append("g")
-                .classed("y-axis", true)
-                .call(d3.axisLeft(y));
+                // y axis
+                const yValues: Array<number> = _.flatMap(dataObjs, obj => obj.values).map(row => row.value);
+                const yMax = _.max(yValues) * 1.02
+                const yMin = _.min(yValues) * 0.98
+                const y = d3.scaleLinear()
+                    .domain([yMin, yMax])
+                    .range([this.height, 0]);
+                // generate sticks
+                this.g.append("g")
+                    .classed("y-axis", true)
+                    .call(d3.axisLeft(y));
 
-            // add y label
-            this.g.append("text")
-                .classed("y-axis", true)
-                .text(this.brHeatmap.measurement)
-                .attr("transform", `translate(${-30}, ${this.height / 2}) rotate(270)`)
-                .style("font-size", 12)
-                .style("text-anchor", "middle");
+                // add y label
+                this.g.append("text")
+                    .classed("y-axis", true)
+                    .text(this.brHeatmap.measurement)
+                    .attr("transform", `translate(${-30}, ${this.height / 2}) rotate(270)`)
+                    .style("font-size", 12)
+                    .style("text-anchor", "middle");
 
-            oldYAxis.remove();
+                oldYAxis.remove();
 
-            const line = d3.line()
-                .x(function(d) {
+                const line = d3.line()
+                    .x(function(d) {
+                        // @ts-ignore
+                        return x(d.date)
+                    })
+                    .y(function(d) {
+                        // @ts-ignore
+                        return y(d.value)
+                    })
+
+                // add lines
+                let paths;
+                if (this.g.selectAll("#line-chart-path-g").size() > 0) {
+                    paths = this.g.select("#line-chart-path-g")
+                        .selectAll("path")
+                        .data(dataObjs, (d: LineChartDataObj) => d.nation + d.br);
+                } else {
+                    paths = this.g.append("g")
+                        .attr("id", "line-chart-path-g")
+                        .style("fill", "None")
+                        .selectAll("path")
+                        .data(dataObjs, (d: LineChartDataObj) => d.nation + d.br);
+                }
+
+                // @ts-ignore
+                paths.exit().transition()
+                    .duration(500)
+                    .style("opacity", 0)
+                    .remove();
+
+                paths.transition()
+                    .duration(500)
                     // @ts-ignore
-                    return x(d.date)
-                })
-                .y(function(d) {
+                    .attr("d", (d: LineChartDataObj) => line(d.values))
+                    .attr("stroke", d => this.brHeatmap.colorPool.get(d));
+
+                paths.enter()
                     // @ts-ignore
-                    return y(d.value)
-                })
+                    .append("path")
+                    .style("opacity", 0)
+                    .style("stroke-width", 3)
+                    .transition()
+                    .duration(500)
+                    .style("opacity", 1)
+                    // @ts-ignore
+                    .attr("d", (d: LineChartDataObj) => line(d.values))
+                    .attr("stroke", (d: LineChartDataObj) => this.brHeatmap.colorPool.get(d));
 
-            // add lines
-            let paths;
-            if (this.g.selectAll("#line-chart-path-g").size() > 0) {
-                paths = this.g.select("#line-chart-path-g")
-                    .selectAll("path")
-                    .data(dataObjs, (d: LineChartDataObj) => d.nation + d.br);
-            } else {
-                paths = this.g.append("g")
-                    .attr("id", "line-chart-path-g")
-                    .style("fill", "None")
-                    .selectAll("path")
-                    .data(dataObjs, (d: LineChartDataObj) => d.nation + d.br);
-            }
-
-            // @ts-ignore
-            paths.exit().transition()
-                .duration(500)
-                .style("opacity", 0)
-                .remove();
-
-            paths.transition()
-                .duration(500)
-                // @ts-ignore
-                .attr("d", (d: LineChartDataObj) => line(d.values))
-                .attr("stroke", d => this.brHeatmap.colorPool.get(d));
-
-            paths.enter()
-                // @ts-ignore
-                .append("path")
-                .style("opacity", 0)
-                .style("stroke-width", 3)
-                .transition()
-                .duration(500)
-                .style("opacity", 1)
-                // @ts-ignore
-                .attr("d", (d: LineChartDataObj) => line(d.values))
-                .attr("stroke", (d: LineChartDataObj) => this.brHeatmap.colorPool.get(d));
-
+                resolve(this)
+            })
         })
-
-        return this;
     }
 
     private extractData(data: Array<TimeseriesRow>): LineChartData {

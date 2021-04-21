@@ -5,6 +5,7 @@ import * as d3 from "d3";
 import { utils } from "../../utils";
 import { ColorBar } from "../../plot/color-bar";
 import { BRLineChart } from "../../plot/line-chart";
+import { Legend } from "../../plot/legend";
 
 export class BRHeatMapPage extends Page {
     plot: BrHeatmap;
@@ -109,7 +110,10 @@ export class BRHeatMapPage extends Page {
         const lineChart = new BRLineChart(this.plot, 400, 500, {
             top: 10, right: 20, bottom: this.plot.margin.bottom, left: 50
         });
-        this.plot.init(colorBar, lineChart);
+        const legend = new Legend(this.plot, 800, 150, {
+            top: this.plot.margin.top, right: 5, bottom: this.plot.margin.bottom, left: 5
+        });
+        this.plot.init(colorBar, lineChart, legend);
 
         utils.setEvent.byClass("br-heatmap-selection")
             .onchange(() => this.plot.update(false));

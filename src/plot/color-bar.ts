@@ -27,7 +27,7 @@ export class ColorBar extends Plot {
         return this;
     }
 
-    update(valueMin: number, valueMax: number, value2color: any): ColorBar {
+    async update(valueMin: number, valueMax: number, value2color: any): Promise<ColorBar> {
         this.valueMin = valueMin;
         this.valueMax = valueMax;
         this.value2color = value2color;
@@ -106,6 +106,6 @@ export class ColorBar extends Plot {
             .attr("transform", "translate(" + legendWidth + ", 0)")
             .call(legendAxis);
 
-        return this;
+        return await new Promise(resolve => resolve(this));
     }
 }

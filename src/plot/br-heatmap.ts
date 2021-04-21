@@ -5,16 +5,18 @@ import { categoricalColors, COLORS, utils } from "../utils";
 import { BRRange, Measurement } from "../app/page/br-heatmap-page";
 import { ColorBar } from "./color-bar";
 import { BRLineChart, LineChartDataObj } from "./line-chart";
+import { Legend } from "./legend";
 
 export class BrHeatmap extends Plot {
     colorBar: ColorBar;
     lineChart: BRLineChart;
+    legend: Legend;
+
     selected: Array<SquareInfo> = [];
 
     mouseoverEvent = function(): void {
         d3.select(this).style("stroke", "white");
     };
-
     mouseleaveEvent = function(): void {
         d3.select(this).style("stroke", "black");
     };
@@ -37,7 +39,9 @@ export class BrHeatmap extends Plot {
                 // add the item into the `this.selected`
                 self.selected.push(info);
             }
-            self.lineChart.update();
+            self.lineChart.update().then(() => {
+                self.legend.update();
+            });
         }
     }
 
@@ -71,12 +75,15 @@ export class BrHeatmap extends Plot {
                 color: out
             })
             return out;
-        }
+        },
+
+
     }
 
-    init(colorBar: ColorBar, lineChart: BRLineChart): BrHeatmap {
+    init(colorBar: ColorBar, lineChart: BRLineChart, legend: Legend): BrHeatmap {
         this.colorBar = colorBar;
         this.lineChart = lineChart;
+        this.legend = legend;
 
         // build new plot in the content div of page
         this.svg = d3.select("#content")
@@ -97,9 +104,10 @@ export class BrHeatmap extends Plot {
             // build axis
             const {x, y} = this.buildAxis();
 
-            // init the colorbar and line chart
+            // init the colorbar, line chart and legend
             this.colorBar.init();
             this.lineChart.init();
+            this.legend.init();
 
             // colorMap function
             this.value2color = this.getValue2color();
@@ -127,7 +135,7 @@ export class BrHeatmap extends Plot {
         return this;
     }
 
-    update(reDownload: boolean): BrHeatmap {
+    async update(reDownload: boolean): Promise<BrHeatmap> {
         const oldAxis = d3.selectAll("g#br-heatmap-x, g#br-heatmap-y");
 
         if (reDownload) {
@@ -143,7 +151,8 @@ export class BrHeatmap extends Plot {
 
         this.buildAxis();
         oldAxis.remove();
-        return this;
+
+        return await new Promise(resolve => resolve(this));
     }
 
     private updateSquares(data: TimeseriesData) {
@@ -307,7 +316,7 @@ export class BrHeatmap extends Plot {
 
 }
 
-interface SquareInfo {
+export interface SquareInfo {
     nation: string;
     br: string;
     value: number;
