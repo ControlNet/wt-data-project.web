@@ -110,7 +110,7 @@ export class BRHeatMapPage extends Page {
         const lineChart = new BRLineChart(this.plot, 400, 500, {
             top: 10, right: 20, bottom: this.plot.margin.bottom, left: 50
         });
-        const legend = new Legend(this.plot, 800, 150, {
+        const legend = new Legend(this.plot, 800, 160, {
             top: this.plot.margin.top, right: 5, bottom: this.plot.margin.bottom, left: 5
         });
         this.plot.init(colorBar, lineChart, legend);

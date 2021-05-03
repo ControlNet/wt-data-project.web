@@ -34,7 +34,6 @@ export class Legend extends Plot {
 
         legends.exit()
             .each(function(d: SquareInfo, i: number) {
-                console.log(d3.selectAll(g.selectAll("g.legend-row").nodes().slice(i + 1)));
                 d3.selectAll(g.selectAll("g.legend-row").nodes().slice(i + 1))
                     .each(function() {
                         const obj = d3.select(this);

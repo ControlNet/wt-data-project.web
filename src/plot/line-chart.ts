@@ -61,9 +61,9 @@ export class BRLineChart extends LineChart {
                 oldXAxis.remove();
 
                 // y axis
-                const yValues: Array<number> = _.flatMap(dataObjs, obj => obj.values).map(row => row.value);
-                const yMax = _.max(yValues) * 1.02
-                const yMin = _.min(yValues) * 0.98
+                const yValues: Array<number> = _.flatMap(dataObjs, obj => obj.values).map(row => +row.value);
+                const yMax = Math.min(_.max(yValues) * 1.02, 100);
+                const yMin = Math.max(_.min(yValues) * 0.98, 0);
                 const y = d3.scaleLinear()
                     .domain([yMin, yMax])
                     .range([this.height, 0]);
