@@ -1,9 +1,8 @@
 import * as d3 from "d3";
 import { Plot } from "../../plot/plot";
+import { NavTab } from "../nav-tab";
 
-export abstract class Page {
-    id: string;
-    name: string;
+export abstract class Page extends NavTab {
     plot: Plot;
 
     init(): void {
