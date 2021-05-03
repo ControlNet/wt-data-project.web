@@ -179,7 +179,11 @@ export class BRLineChart extends LineChart {
             }
         }
 
-        return result;
+        // remove 0 values
+        return result.map(category => {
+            category.values = category.values.filter(row => row.value > 0);
+            return category;
+        });
     }
 }
 
