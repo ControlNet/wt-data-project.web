@@ -37,12 +37,12 @@ export class Application {
             return Application.build;
         },
 
-        withPages(...Pages: Array<PageClass<any>>) {
+        withPages(...Pages: Array<PageClass<Page>>) {
             Application.Pages = Pages;
             return Application.build;
         },
 
-        withLinks(...Links: Array<LinkClass<any>>) {
+        withLinks(...Links: Array<LinkClass<Link>>) {
             Application.Links = Links;
             return Application.build;
         },

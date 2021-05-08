@@ -5,9 +5,6 @@ export abstract class Link extends NavTab {
     abstract url: string;
 
     init(): void {
-        console.log(this.id);
-        console.log(this.url);
-
         d3.select("#navbar")
             .append("li")
             .append("a")
