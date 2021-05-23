@@ -11,11 +11,18 @@ export abstract class Page extends NavTab {
             .append("a")
             .attr("id", this.id)
             .attr("href", `#${this.id}`)
+            .classed("page-tab", true)
             .html(this.name)
-            .on("click", this.update)
+            .on("click", () => this.update.call(this))
     }
 
     abstract update(): void;
+
+    removeOld(): void {
+        // remove old plot
+        d3.select("#sidebar").html("");
+        d3.select("#content").html("");
+    }
 }
 
 export type PageClass<T extends Page> = { new(...args: any[]): T };

@@ -4,7 +4,7 @@ A visualization web application for wt-data-project.
 # [Visualization Link](https://wt.controlnet.space)
 
 ## Todo List
-<div id="todo-list">
+<div id="todo-list-section">
 This repo is still in progress.
 
  - [x] Battle rating heatmap 

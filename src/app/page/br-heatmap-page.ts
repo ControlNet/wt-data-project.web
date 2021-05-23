@@ -14,8 +14,7 @@ export class BRHeatMapPage extends Page {
 
     update(): void {
         // remove old plot
-        d3.select("#sidebar").selectAll("*").remove();
-        d3.select("#content").selectAll("*").remove();
+        this.removeOld();
         // init sidebar
         const sidebar = d3.select("#sidebar");
 

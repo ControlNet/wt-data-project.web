@@ -20,7 +20,7 @@ export class Application {
                 .map(each => each.date)
                 .reverse();
             // initialize the pages
-            Application.pages = Application.Pages.map(Page => new Page(Application.metadata));
+            Application.pages = Application.Pages.map(Page => new Page());
             Application.pages.forEach(page => page.init());
 
             // initialize the links
