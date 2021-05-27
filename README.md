@@ -13,6 +13,7 @@ This repo is still in progress.
         - [ ] Mouse tooltip
         - [ ] Adjustable date range
     - [ ] Mouse tooltip
+    - [ ] New Measurement: Average Repair Fees
  - [ ] Trend graph
  - [ ] Other animated graphs
 </div>
