@@ -4,6 +4,12 @@ ul#navbar {
     padding: 0;
     overflow: hidden;
     background-color: #2B2B2B;
+    font-family: -apple-system, system-ui, BlinkMacSystemFont, Arial, serif;
+}
+
+div#sidebar label {
+    font-family: -apple-system, system-ui, BlinkMacSystemFont, Arial, serif;
+    margin: 3px;
 }
 
 ul#navbar > li {
