@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import * as _ from "lodash";
 import { Margin, Plot } from "./plot";
-import { BrHeatmap } from "./br-heatmap";
+import { BrHeatmap, BRRange, Clazz, Measurement, Mode } from "./br-heatmap";
 import { TimeseriesData, TimeseriesRow } from "../data/timeseries-data";
 import { utils } from "../utils";
 
@@ -10,6 +10,7 @@ export abstract class LineChart extends Plot {
 
 export class BRLineChart extends LineChart {
     brHeatmap: BrHeatmap;
+    dataCache: Array<TimeseriesDataCache> = [];
 
     constructor(brHeatmap: BrHeatmap, svgHeight: number, svgWidth: number, margin: Margin) {
         super(svgHeight, svgWidth, margin);
@@ -30,14 +31,40 @@ export class BRLineChart extends LineChart {
         return this;
     }
 
+    private async searchInCache(): Promise<TimeseriesData> {
+        return await new Promise(resolve => {
+            // search dataObj in cache
+            for (const cache of this.dataCache) {
+                if (this.brHeatmap.clazz === cache.clazz
+                    && this.brHeatmap.brRange === cache.brRange
+                    && this.brHeatmap.mode === cache.mode
+                    && this.brHeatmap.measurement === cache.measurement
+                ) {
+                    resolve(cache.data);
+                    return;
+                }
+            }
+            // else generate a new cache
+            d3.csv(this.brHeatmap.dataPath, (data: TimeseriesData) => {
+                this.dataCache.push({
+                    brRange: this.brHeatmap.brRange,
+                    clazz: this.brHeatmap.clazz,
+                    measurement: this.brHeatmap.measurement,
+                    mode: this.brHeatmap.mode,
+                    data: data
+                });
+                resolve(data);
+            })
+        })
+    }
+
     async update(): Promise<Plot> {
         const oldXAxis = this.g.selectAll(".x-axis");
         const oldYAxis = this.g.selectAll(".y-axis");
-        // const oldLineChart = this.g.selectAll("g.line-chart-element");
 
         return await new Promise((resolve) => {
-            d3.csv(this.brHeatmap.dataPath, (data: TimeseriesData) => {
-                const dataObjs = this.groupBy(this.extractData(data));
+            this.searchInCache().then((data) => {
+                const dataObjs: Array<LineChartDataObj> = this.groupBy(this.extractData(data));
 
                 // x axis
                 const x = d3.scaleLinear()
@@ -130,14 +157,14 @@ export class BRLineChart extends LineChart {
                     .attr("d", (d: LineChartDataObj) => line(d.values))
                     .attr("stroke", (d: LineChartDataObj) => this.brHeatmap.colorPool.get(d));
 
-                resolve(this)
-            })
-        })
+                resolve(this);
+            });
+        });
     }
 
     async reset(): Promise<Plot> {
         this.g.html(null);
-        return await new Promise((resolve) => resolve(this))
+        return await new Promise((resolve) => resolve(this));
     }
 
     private extractData(data: Array<TimeseriesRow>): LineChartData {
@@ -205,4 +232,12 @@ export interface LineChartDataObj {
     br: string;
     nation: string;
     values: Array<{ date: Date, value: number }>
+}
+
+interface TimeseriesDataCache {
+    clazz: Clazz
+    mode: Mode
+    measurement: Measurement
+    brRange: BRRange
+    data: TimeseriesData
 }

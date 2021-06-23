@@ -24,20 +24,19 @@ export class BrHeatmap extends Plot {
 
     async updateSubPlots() {
         await this.table.update();
-        this.lineChart.update().then(() => {
-            this.legend.update();
-        });
+        await this.lineChart.update();
+        await this.legend.update();
     }
 
     async resetSubPlots() {
         await this.table.reset();
         await this.lineChart.reset();
-        await this.legend.reset();
+        await this.legend.update();
     }
 
     getClickEvent(): () => void {
         const self = this;
-        return function(): void {
+        return async function(): Promise<void> {
             const square = d3.select(this);
             // @ts-ignore
             const info: SquareInfo = square.data()[0];
@@ -53,7 +52,7 @@ export class BrHeatmap extends Plot {
                 // add the item into the `this.selected`
                 self.selected.push(info);
             }
-            self.updateSubPlots()
+            await self.updateSubPlots()
         }
     }
 
@@ -320,8 +319,8 @@ export class BrHeatmap extends Plot {
         return utils.getSelectedValue("date-selection");
     }
 
-    get clazz(): string {
-        return utils.getSelectedValue("class-selection");
+    get clazz(): Clazz {
+        return <Clazz>utils.getSelectedValue("class-selection");
     }
 
     get mode(): Mode {
@@ -335,7 +334,6 @@ export class BrHeatmap extends Plot {
     get brRange(): BRRange {
         return <BRRange>utils.getSelectedValue("br-range-selection");
     }
-
 }
 
 export interface SquareInfo {
@@ -354,3 +352,5 @@ export type BRRange = "0" | "1";
 export type Measurement = "win_rate" | "battles_sum";
 
 export type Mode = "ab" | "rb" | "sb";
+
+export type Clazz = "Aviation" | "Ground_vehicles";
