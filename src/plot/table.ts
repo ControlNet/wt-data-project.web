@@ -24,7 +24,7 @@ export class Table extends Plot {
 
     async update(): Promise<Plot> {
         // remove previous
-        this.table.html(null);
+        await this.reset();
 
         const clazz = this.brHeatmap.clazz;
         const brRange = +this.brHeatmap.brRange;
@@ -62,6 +62,12 @@ export class Table extends Plot {
                 })
             })
         })
+        return await new Promise(resolve => resolve(this));
+    }
+
+    async reset(): Promise<Plot> {
+        // remove previous
+        this.table.html(null);
         return await new Promise(resolve => resolve(this));
     }
 

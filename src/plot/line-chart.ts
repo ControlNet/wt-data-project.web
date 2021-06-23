@@ -135,6 +135,11 @@ export class BRLineChart extends LineChart {
         })
     }
 
+    async reset(): Promise<Plot> {
+        this.g.html(null);
+        return await new Promise((resolve) => resolve(this))
+    }
+
     private extractData(data: Array<TimeseriesRow>): LineChartData {
         return data.filter(row => {
             return this.brHeatmap.selected.some(

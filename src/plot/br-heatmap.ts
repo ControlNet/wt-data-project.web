@@ -22,12 +22,17 @@ export class BrHeatmap extends Plot {
         d3.select(this).style("stroke", "black");
     };
 
-    updateSubPlots() {
+    async updateSubPlots() {
+        await this.table.update();
         this.lineChart.update().then(() => {
             this.legend.update();
-        }).then(() => {
-            this.table.update();
         });
+    }
+
+    async resetSubPlots() {
+        await this.table.reset();
+        await this.lineChart.reset();
+        await this.legend.reset();
     }
 
     getClickEvent(): () => void {
@@ -161,7 +166,7 @@ export class BrHeatmap extends Plot {
         this.buildAxis();
         oldAxis.remove();
         this.selected = [];
-        this.updateSubPlots();
+        await this.resetSubPlots();
 
         return await new Promise(resolve => resolve(this));
     }

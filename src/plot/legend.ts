@@ -76,4 +76,9 @@ export class Legend extends Plot {
 
         return await new Promise(resolve => resolve(this));
     }
+
+    async reset(): Promise<Plot> {
+        this.g.html(null)
+        return await new Promise(resolve => resolve(this));
+    }
 }
