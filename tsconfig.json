@@ -3,7 +3,7 @@
     "target": "es5",
     "noImplicitAny": true,
     "sourceMap": true,
-    "lib": ["es5", "es6", "dom"],
+    "lib": ["es5", "es6", "es2019", "dom"],
     "experimentalDecorators": true
   },
   "exclude": [

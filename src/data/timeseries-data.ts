@@ -1,12 +1,12 @@
-export type TimeseriesData<T extends TimeseriesRow = TimeseriesRow> = Array<T>
+export type TimeseriesData<T extends TimeseriesRow = TimeseriesRow> = Array<T>;
 
-export class TimeseriesRow {
+export interface TimeseriesRow {
     nation: string
     cls: string
     date: string
 }
 
-export class TimeseriesABRow extends TimeseriesRow {
+export interface TimeseriesABRow extends TimeseriesRow {
     ab_br: string
     ab_lower_br: number
     ab_battles_sum: number
@@ -18,7 +18,7 @@ export class TimeseriesABRow extends TimeseriesRow {
     ab_ground_frags_per_death: number
 }
 
-export class TimeseriesRBRow extends TimeseriesRow {
+export interface TimeseriesRBRow extends TimeseriesRow {
     rb_br: string
     rb_lower_br: number
     rb_battles_sum: number
@@ -30,7 +30,7 @@ export class TimeseriesRBRow extends TimeseriesRow {
     rb_ground_frags_per_death: number
 }
 
-export class TimeseriesSBRow extends TimeseriesRow {
+export interface TimeseriesSBRow extends TimeseriesRow {
     sb_br: string
     sb_lower_br: number
     sb_battles_sum: number

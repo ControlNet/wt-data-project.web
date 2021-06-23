@@ -2,15 +2,16 @@ import * as d3 from "d3";
 import { Plot } from "./plot";
 import { TimeseriesData, TimeseriesRow } from "../data/timeseries-data";
 import { categoricalColors, COLORS, CONT_COLORS, utils } from "../utils";
-import { BRRange, Measurement } from "../app/page/br-heatmap-page";
 import { ColorBar } from "./color-bar";
 import { BRLineChart, LineChartDataObj } from "./line-chart";
 import { Legend } from "./legend";
+import { Table } from "./table";
 
 export class BrHeatmap extends Plot {
     colorBar: ColorBar;
     lineChart: BRLineChart;
     legend: Legend;
+    table: Table;
 
     selected: Array<SquareInfo> = [];
 
@@ -41,6 +42,8 @@ export class BrHeatmap extends Plot {
             }
             self.lineChart.update().then(() => {
                 self.legend.update();
+            }).then(() => {
+                self.table.update();
             });
         }
     }
@@ -52,7 +55,7 @@ export class BrHeatmap extends Plot {
         values: utils.deepCopy(categoricalColors),
         i: 0,
 
-        bindings: new Array<{br: string, nation: string, color: string}>(),
+        bindings: new Array<{ br: string, nation: string, color: string }>(),
 
         get: function(d: LineChartDataObj) {
             // if the category is generated before, use previous color
@@ -80,10 +83,11 @@ export class BrHeatmap extends Plot {
 
     }
 
-    init(colorBar: ColorBar, lineChart: BRLineChart, legend: Legend): BrHeatmap {
+    init(colorBar: ColorBar, lineChart: BRLineChart, legend: Legend, table: Table): BrHeatmap {
         this.colorBar = colorBar;
         this.lineChart = lineChart;
         this.legend = legend;
+        this.table = table;
 
         // build new plot in the content div of page
         this.svg = d3.select("#content")
@@ -108,6 +112,7 @@ export class BrHeatmap extends Plot {
             this.colorBar.init();
             this.lineChart.init();
             this.legend.init();
+            this.table.init();
 
             // colorMap function
             this.value2color = this.getValue2color();
@@ -205,12 +210,13 @@ export class BrHeatmap extends Plot {
         return {x, y};
     }
 
-    private extractData(data: Array<TimeseriesRow>) {
+    private extractData(data: Array<TimeseriesRow>): Array<SquareInfo> {
         return data.filter(row => row.date === this.date && row.cls === this.clazz)
             .map(row => {
                 return {
                     nation: row.nation,
                     br: this.getBr(row),
+                    lowerBr: this.getLowerBr(row),
                     value: this.getValue(row)
                 }
             });
@@ -218,12 +224,17 @@ export class BrHeatmap extends Plot {
 
     getValue(row: TimeseriesRow): number {
         // @ts-ignore
-        return row[`${this.mode}_${this.measurement}`]
+        return +row[`${this.mode}_${this.measurement}`];
     }
 
     getBr(row: TimeseriesRow): string {
         // @ts-ignore
-        return row[`${this.mode}_br`]
+        return row[`${this.mode}_br`];
+    }
+
+    getLowerBr(row: TimeseriesRow): number {
+        // @ts-ignore
+        return +row[`${this.mode}_lower_br`];
     }
 
     private getValue2color(): Value2Color {
@@ -302,8 +313,8 @@ export class BrHeatmap extends Plot {
         return utils.getSelectedValue("class-selection");
     }
 
-    get mode(): string {
-        return utils.getSelectedValue("mode-selection");
+    get mode(): Mode {
+        return <Mode>utils.getSelectedValue("mode-selection");
     }
 
     get measurement(): Measurement {
@@ -319,9 +330,16 @@ export class BrHeatmap extends Plot {
 export interface SquareInfo {
     nation: string;
     br: string;
+    lowerBr: number;
     value: number;
 }
 
 interface Value2Color {
     (value: number): number | COLORS
 }
+
+export type BRRange = "0" | "1";
+
+export type Measurement = "win_rate" | "battles_sum";
+
+export type Mode = "ab" | "rb" | "sb";

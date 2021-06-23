@@ -6,6 +6,7 @@ import { utils } from "../../utils";
 import { ColorBar } from "../../plot/color-bar";
 import { BRLineChart } from "../../plot/line-chart";
 import { Legend } from "../../plot/legend";
+import { Table } from "../../plot/table";
 
 export class BRHeatMapPage extends Page {
     plot: BrHeatmap;
@@ -112,7 +113,9 @@ export class BRHeatMapPage extends Page {
         const legend = new Legend(this.plot, 800, 160, {
             top: this.plot.margin.top, right: 5, bottom: this.plot.margin.bottom, left: 5
         });
-        this.plot.init(colorBar, lineChart, legend);
+        const table = new Table(this.plot);
+
+        this.plot.init(colorBar, lineChart, legend, table);
 
         utils.setEvent.byClass("br-heatmap-selection")
             .onchange(() => this.plot.update(false));
@@ -121,7 +124,3 @@ export class BRHeatMapPage extends Page {
             .onchange(() => this.plot.update(true));
     }
 }
-
-export type BRRange = "0" | "1";
-
-export type Measurement = "win_rate" | "battles_sum";

@@ -12,8 +12,9 @@ This repo is still in progress.
         - [ ] Compatible for "battles" data
         - [ ] Mouse tooltip
         - [ ] Adjustable date range
+    - [ ] Display table with selected data  
     - [ ] Mouse tooltip
-    - [ ] New Measurement: Average Repair Fees
+    - [ ] New measurement: average repair fees
  - [ ] Trend graph
  - [ ] Other animated graphs
 </div>

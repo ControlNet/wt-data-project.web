@@ -96,3 +96,5 @@ modules.xml
 # User-defined
 node_modules
 .idea
+.ipynb_checkpoints
+*.ipynb

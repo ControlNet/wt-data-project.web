@@ -35,3 +35,8 @@ ul#navbar > li > a#todo-list {
 ul#navbar > li > a:hover {
     background-color: #616161;
 }
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}

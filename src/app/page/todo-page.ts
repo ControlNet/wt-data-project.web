@@ -1,6 +1,6 @@
 import { Page } from "./page";
 import * as d3 from "d3";
-import * as marked from "marked"
+import * as marked from "marked";
 
 export class TodoPage extends Page {
     id = "todo-list";
