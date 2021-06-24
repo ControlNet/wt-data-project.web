@@ -15,13 +15,13 @@ export class ColorBar extends Plot {
     }
 
     init(): ColorBar {
-        this.svg = d3.select("#content")
-            .append("svg")
+        this.svg = d3.select<HTMLDivElement, unknown>("#content")
+            .append<SVGSVGElement>("svg")
             .attr("height", this.svgHeight)
             .attr("width", this.svgWidth)
             .attr("id", "color-bar-svg");
 
-        this.g = this.svg.append("g")
+        this.g = this.svg.append<SVGGElement>("g")
             .attr("id", "color-bar-g")
             .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`);
         return this;
@@ -33,7 +33,8 @@ export class ColorBar extends Plot {
         this.value2color = value2color;
 
         const scale = this.brHeatmap.measurement === "battles_sum" ? "log" : "linear";
-        const samples = scale === "log" ? utils.logspace(this.valueMin, this.valueMax, 100)
+        const samples = scale === "log"
+            ? utils.logspace(this.valueMin, this.valueMax, 100)
             : utils.linspace(this.valueMin, this.valueMax, 100);
         const colors = samples.map(this.value2color);
 
@@ -42,8 +43,8 @@ export class ColorBar extends Plot {
 
         // append gradient bar
         const gradientId = `${this.svg.attr("id")}-gradient`;
-        const gradient = this.g.append("defs")
-            .append('linearGradient')
+        const gradient = this.g.append<SVGDefsElement>("defs")
+            .append<SVGLinearGradientElement>("linearGradient")
             .attr('id', gradientId)
             .attr('x1', '0%') // bottom
             .attr('y1', '100%')
@@ -57,7 +58,7 @@ export class ColorBar extends Plot {
         });
 
         d3.zip(pct, colors).forEach(function([pct, scale]) {
-            gradient.append('stop')
+            gradient.append<SVGStopElement>('stop')
                 .attr('offset', pct)
                 .attr('stop-color', scale)
                 .attr('stop-opacity', 1);
@@ -66,7 +67,7 @@ export class ColorBar extends Plot {
         const legendHeight = this.height;
         const legendWidth = this.width;
 
-        this.g.append('rect')
+        this.g.append<SVGRectElement>('rect')
             .attr('x1', 0)
             .attr('y1', 10)
             .attr('width', legendWidth)

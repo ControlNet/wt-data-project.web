@@ -20,12 +20,12 @@ export class BRLineChart extends LineChart {
 
     init(): Plot {
         // build new plot in the content div of page
-        this.svg = d3.select("#content")
-            .append("svg")
+        this.svg = d3.select<HTMLDivElement, unknown>("#content")
+            .append<SVGSVGElement>("svg")
             .attr("height", this.svgHeight)
             .attr("width", this.svgWidth)
             .attr("id", "line-chart-svg");
-        this.g = this.svg.append("g")
+        this.g = this.svg.append<SVGGElement>("g")
             .attr("id", "line-chart-g")
             .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`);
 
@@ -55,13 +55,14 @@ export class BRLineChart extends LineChart {
                     data: data
                 });
                 resolve(data);
+                return;
             })
         })
     }
 
     async update(): Promise<Plot> {
-        const oldXAxis = this.g.selectAll(".x-axis");
-        const oldYAxis = this.g.selectAll(".y-axis");
+        const oldXAxis = this.g.selectAll<SVGElement, unknown>(".x-axis");
+        const oldYAxis = this.g.selectAll<SVGElement, unknown>(".y-axis");
 
         return await new Promise((resolve) => {
             this.searchInCache().then((data) => {
@@ -72,14 +73,14 @@ export class BRLineChart extends LineChart {
                     .domain(d3.extent(data, d => utils.parseDate(d.date)))
                     .range([0, this.width]);
                 // generate sticks
-                this.g.append("g")
+                this.g.append<SVGGElement>("g")
                     .classed("x-axis", true)
                     .attr("transform", `translate(0, ${this.height})`)
                     .call(d3.axisBottom(x)
                         .tickFormat(d3.timeFormat('%Y/%m')));
 
                 // add x label
-                this.g.append("text")
+                this.g.append<SVGTextElement>("text")
                     .classed("x-axis", true)
                     .text("Date")
                     .attr("transform", `translate(${this.width / 2}, ${this.height + 30})`)
@@ -96,12 +97,12 @@ export class BRLineChart extends LineChart {
                     .domain([yMin, yMax])
                     .range([this.height, 0]);
                 // generate sticks
-                this.g.append("g")
+                this.g.append<SVGGElement>("g")
                     .classed("y-axis", true)
                     .call(d3.axisLeft(y));
 
                 // add y label
-                this.g.append("text")
+                this.g.append<SVGTextElement>("text")
                     .classed("y-axis", true)
                     .text(this.brHeatmap.measurement)
                     .attr("transform", `translate(${-30}, ${this.height / 2}) rotate(270)`)
@@ -125,25 +126,28 @@ export class BRLineChart extends LineChart {
                         .selectAll<SVGPathElement, LineChartDataObj>("path")
                         .data(dataObjs, (d: LineChartDataObj) => d.nation + d.br);
                 } else {
-                    paths = this.g.append("g")
+                    paths = this.g.append<SVGGElement>("g")
                         .attr("id", "line-chart-path-g")
                         .style("fill", "None")
                         .selectAll<SVGPathElement, LineChartDataObj>("path")
                         .data(dataObjs, (d: LineChartDataObj) => d.nation + d.br);
                 }
 
+                // remove lines for removed selection
                 paths.exit().transition()
                     .duration(500)
                     .style("opacity", 0)
                     .remove();
 
+                // shift the lines with re-adjusted y-axis range
                 paths.transition()
                     .duration(500)
                     .attr("d", (d: LineChartDataObj) => line(d.values))
                     .attr("stroke", d => this.brHeatmap.colorPool.get(d));
 
+                // add lines for new selected data
                 paths.enter()
-                    .append("path")
+                    .append<SVGPathElement>("path")
                     .style("opacity", 0)
                     .style("stroke-width", 3)
                     .transition()

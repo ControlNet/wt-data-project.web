@@ -12,12 +12,12 @@ export class Legend extends Plot {
 
     init(): Plot {
         // build new plot in the content div of page
-        this.svg = d3.select("#content")
-            .append("svg")
+        this.svg = d3.select<HTMLDivElement, unknown>("#content")
+            .append<SVGSVGElement>("svg")
             .attr("height", this.svgHeight)
             .attr("width", this.svgWidth)
             .attr("id", "legend-svg");
-        this.g = this.svg.append("g")
+        this.g = this.svg.append<SVGGElement>("g")
             .attr("id", "legend-g")
             .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`);
 
@@ -25,16 +25,17 @@ export class Legend extends Plot {
     }
 
     async update(): Promise<Plot> {
-        const legends = this.g.selectAll("g")
+        const legends = this.g.selectAll<SVGGElement, SquareInfo>("g")
             .data(this.brHeatmap.selected, (info: SquareInfo) => info.nation + info.br);
 
         const height = this.height;
         const brHeatmap = this.brHeatmap;
         const g = this.g;
 
+        // removed legend
         legends.exit()
             .each(function(d: SquareInfo, i: number) {
-                d3.selectAll(g.selectAll("g.legend-row").nodes().slice(i + 1))
+                d3.selectAll(g.selectAll<SVGGElement, unknown>("g.legend-row").nodes().slice(i + 1))
                     .each(function() {
                         const obj = d3.select(this);
                         const rect = obj.select("rect");
@@ -48,14 +49,14 @@ export class Legend extends Plot {
             .style("opacity", 0)
             .remove()
 
-
+        // new legend
         legends.enter()
-            .append("g")
+            .append<SVGGElement>("g")
             .classed("legend-row", true)
             .each(function(d: SquareInfo, i: number) {
                 // add rect
                 d3.select(this)
-                    .append("rect")
+                    .append<SVGRectElement>("rect")
                     .classed("legend-rect", true)
                     .attr("x", 5)
                     .attr("y", height - 30 - 30 * i)
@@ -66,7 +67,7 @@ export class Legend extends Plot {
                     })[0].color);
                 // add text
                 d3.select(this)
-                    .append("text")
+                    .append<SVGTextElement>("text")
                     .attr("x", 35)
                     .attr("y", height - 15 - 30 * i)
                     .text(`${d.nation} ${d.br}`)

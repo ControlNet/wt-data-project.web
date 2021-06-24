@@ -6,7 +6,7 @@ import * as _ from "lodash";
 
 export class Table extends Plot {
     brHeatmap: BrHeatmap;
-    table: d3.Selection<HTMLTableElement, unknown, HTMLElement, any>
+    table: d3.Selection<HTMLTableElement, unknown, HTMLElement, unknown>
 
     constructor(brHeatmap: BrHeatmap) {
         super(null, null, null);
@@ -14,10 +14,10 @@ export class Table extends Plot {
     }
 
     init(): Plot {
-        this.table = d3.select("#content")
-            .append("div")
+        this.table = d3.select<HTMLDivElement, unknown>("#content")
+            .append<HTMLDivElement>("div")
             .attr("id", "selected-table-div")
-            .append("table")
+            .append<HTMLTableElement>("table")
             .attr("id", "selected-table");
         return this;
     }

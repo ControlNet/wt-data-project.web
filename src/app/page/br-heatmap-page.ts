@@ -17,24 +17,24 @@ export class BRHeatMapPage extends Page {
         // remove old plot
         this.removeOld();
         // init sidebar
-        const sidebar = d3.select("#sidebar");
+        const sidebar = d3.select<HTMLDivElement, unknown>("#sidebar");
 
         // add date selection
-        const dateSelection = sidebar.append("label")
+        const dateSelection = sidebar.append<HTMLLabelElement>("label")
             .text("Date: ")
             .append("select")
             .attr("id", "date-selection")
             .classed("br-heatmap-selection", true);
 
         Application.dates.forEach(date => {
-            dateSelection.append("option")
+            dateSelection.append<HTMLOptionElement>("option")
                 .attr("value", date)
                 .html(date);
         })
         // add class selection
-        sidebar.append("label")
+        sidebar.append<HTMLLabelElement>("label")
             .text("Class: ")
-            .append("select")
+            .append<HTMLSelectElement>("select")
             .attr("id", "class-selection")
             .classed("br-heatmap-selection", true)
             .selectAll()
@@ -43,15 +43,15 @@ export class BRHeatMapPage extends Page {
                 {id: "Aviation", text: "Aviation"}
             ])
             .enter()
-            .append("option")
+            .append<HTMLOptionElement>("option")
             .attr("value", d => d.id)
             .attr("selected", d => d.id === "Ground_vehicles" ? "selected" : undefined)
             .html(d => d.text);
 
         // add mode selection for measurement
-        sidebar.append("label")
+        sidebar.append<HTMLLabelElement>("label")
             .text("Mode: ")
-            .append("select")
+            .append<HTMLSelectElement>("select")
             .attr("id", "mode-selection")
             .classed("br-heatmap-selection", true)
             .selectAll()
@@ -61,15 +61,15 @@ export class BRHeatMapPage extends Page {
                 {id: "sb", text: "SB"}
             ])
             .enter()
-            .append("option")
+            .append<HTMLOptionElement>("option")
             .attr("value", d => d.id)
             .attr("selected", d => d.id === "rb" ? "selected" : undefined)
             .html(d => d.text);
 
         // add measurement selection
-        sidebar.append("label")
+        sidebar.append<HTMLLabelElement>("label")
             .text("Measurement: ")
-            .append("select")
+            .append<HTMLSelectElement>("select")
             .attr("id", "measurement-selection")
             .classed("br-heatmap-selection", true)
             .selectAll()
@@ -78,15 +78,15 @@ export class BRHeatMapPage extends Page {
                 {id: "battles_sum", text: "Battles"}
             ])
             .enter()
-            .append("option")
+            .append<HTMLOptionElement>("option")
             .attr("value", d => d.id)
             .attr("selected", d => d.id === "win_rate" ? "selected" : undefined)
             .html(d => d.text);
 
         // br range selection
-        sidebar.append("label")
+        sidebar.append<HTMLLabelElement>("label")
             .text("BR Range: ")
-            .append("select")
+            .append<HTMLSelectElement>("select")
             .attr("id", "br-range-selection")
             .classed("br-heatmap-selection", true)
             .selectAll()
@@ -95,7 +95,7 @@ export class BRHeatMapPage extends Page {
                 {id: "1"}
             ])
             .enter()
-            .append("option")
+            .append<HTMLOptionElement>("option")
             .attr("value", d => d.id)
             .attr("selected", d => d.id === "1" ? "selected" : undefined)
             .html(d => d.id);

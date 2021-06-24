@@ -98,12 +98,12 @@ export class BrHeatmap extends Plot {
         this.table = table;
 
         // build new plot in the content div of page
-        this.svg = d3.select("#content")
-            .append("svg")
+        this.svg = d3.select<HTMLDivElement, unknown>("#content")
+            .append<SVGSVGElement>("svg")
             .attr("height", this.svgHeight)
             .attr("width", this.svgWidth)
             .attr("id", "main-svg");
-        this.g = this.svg.append("g")
+        this.g = this.svg.append<SVGGElement>("g")
             .attr("id", "main-g")
             .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`);
 
@@ -116,7 +116,7 @@ export class BrHeatmap extends Plot {
             // build axis
             const {x, y} = this.buildAxis();
 
-            // init the colorbar, line chart and legend
+            // init the color bar, line chart and legend
             this.colorBar.init();
             this.lineChart.init();
             this.legend.init();

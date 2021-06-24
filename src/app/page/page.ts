@@ -6,7 +6,7 @@ export abstract class Page extends NavTab {
     plot: Plot;
 
     init(): void {
-        d3.select("#navbar")
+        d3.select<HTMLDivElement, unknown>("#navbar")
             .append("li")
             .append("a")
             .attr("id", this.id)
