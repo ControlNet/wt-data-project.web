@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { Margin, Plot } from "./plot";
-import { BrHeatmap } from "./br-heatmap";
+import { BrHeatmap, Value2Color } from "./br-heatmap";
 import { utils } from "../utils";
 
 export class ColorBar extends Plot {
@@ -27,7 +27,7 @@ export class ColorBar extends Plot {
         return this;
     }
 
-    async update(valueMin: number, valueMax: number, value2color: any): Promise<ColorBar> {
+    async update(valueMin: number, valueMax: number, value2color: Value2Color): Promise<ColorBar> {
         this.valueMin = valueMin;
         this.valueMax = valueMax;
         this.value2color = value2color;

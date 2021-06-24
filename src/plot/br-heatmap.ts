@@ -1,11 +1,12 @@
 import * as d3 from "d3";
 import { Plot } from "./plot";
-import { TimeseriesData, TimeseriesRow } from "../data/timeseries-data";
+import { TimeseriesData, TimeseriesRow, TimeseriesRowGetter } from "../data/timeseries-data";
 import { categoricalColors, COLORS, CONT_COLORS, utils } from "../utils";
 import { ColorBar } from "./color-bar";
 import { BRLineChart, LineChartDataObj } from "./line-chart";
 import { Legend } from "./legend";
 import { Table } from "./table";
+import { BRRange, Clazz, Measurement, Mode } from "../data/options";
 
 export class BrHeatmap extends Plot {
     colorBar: ColorBar;
@@ -37,8 +38,7 @@ export class BrHeatmap extends Plot {
     getClickEvent(): () => void {
         const self = this;
         return async function(): Promise<void> {
-            const square = d3.select(this);
-            // @ts-ignore
+            const square: d3.Selection<SVGRectElement, SquareInfo, HTMLElement, any> = d3.select(this);
             const info: SquareInfo = square.data()[0];
 
             if (utils.rgbToHex(square.style("fill")).toUpperCase() === COLORS.AZURE) {
@@ -108,7 +108,7 @@ export class BrHeatmap extends Plot {
             .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`);
 
 
-        d3.csv(this.dataPath, (data: TimeseriesData) => {
+        d3.csv(this.dataPath, async (data: TimeseriesData) => {
             // init
             const dataObjs = this.extractData(data)
             const squareWidth = this.width / utils.nations.length;
@@ -123,7 +123,7 @@ export class BrHeatmap extends Plot {
             this.table.init();
 
             // colorMap function
-            this.value2color = this.getValue2color();
+            this.value2color = await this.getValue2color();
 
             // TODO: tooltip
 
@@ -159,7 +159,7 @@ export class BrHeatmap extends Plot {
             })
         } else {
             // else read data from cache
-            this.updateSquares(this.cache);
+            await this.updateSquares(this.cache);
         }
 
         this.buildAxis();
@@ -170,12 +170,12 @@ export class BrHeatmap extends Plot {
         return await new Promise(resolve => resolve(this));
     }
 
-    private updateSquares(data: TimeseriesData) {
+    private async updateSquares(data: TimeseriesData) {
         // init
         const dataObjs = this.extractData(data)
 
         // colorMap function
-        this.value2color = this.getValue2color();
+        this.value2color = await this.getValue2color();
 
         // change fill of squares
         const rects = this.g.selectAll("rect")
@@ -223,33 +223,19 @@ export class BrHeatmap extends Plot {
     private extractData(data: Array<TimeseriesRow>): Array<SquareInfo> {
         return data.filter(row => row.date === this.date && row.cls === this.clazz)
             .map(row => {
+                const get = new TimeseriesRowGetter(row, this.mode, this.measurement);
                 return {
                     nation: row.nation,
-                    br: this.getBr(row),
-                    lowerBr: this.getLowerBr(row),
-                    value: this.getValue(row)
+                    br: get.br,
+                    lowerBr: get.lowerBr,
+                    value: get.value
                 }
             });
     }
 
-    getValue(row: TimeseriesRow): number {
-        // @ts-ignore
-        return +row[`${this.mode}_${this.measurement}`];
-    }
-
-    getBr(row: TimeseriesRow): string {
-        // @ts-ignore
-        return row[`${this.mode}_br`];
-    }
-
-    getLowerBr(row: TimeseriesRow): number {
-        // @ts-ignore
-        return +row[`${this.mode}_lower_br`];
-    }
-
-    private getValue2color(): Value2Color {
-        let value2range: d3.ScaleLinear<number, number, never>;
-        let range2color: d3.ScaleLinear<number, number, never>;
+    private async getValue2color(): Promise<Value2Color> {
+        let value2range: d3.ScaleLinear<number, number>;
+        let range2color: d3.ScaleLinear<string, string>;
         let valueMin: number;
         let valueMax: number;
 
@@ -258,26 +244,21 @@ export class BrHeatmap extends Plot {
                 valueMin = 0;
                 valueMax = 100;
 
-                value2range = d3.scaleLinear()
+                value2range = d3.scaleLinear<number, number>()
                     .domain([valueMin, valueMax])
                     .range([0, 1]);
 
                 if (this.clazz === "Ground_vehicles") {
-                    range2color = d3.scaleLinear()
+                    range2color = d3.scaleLinear<string, string>()
                         .domain([0, 0.05, 0.4, 0.5, 0.6, 0.95, 1.0])
-                        // @ts-ignore
                         .range([CONT_COLORS.WHITE, CONT_COLORS.BLACK, CONT_COLORS.RED, CONT_COLORS.YELLOW, CONT_COLORS.GREEN, CONT_COLORS.BLACK, CONT_COLORS.BLACK])
-                        // @ts-ignore
                         .interpolate(d3.interpolateHcl)
                 } else if (this.clazz === "Aviation") {
-                    range2color = d3.scaleLinear()
+                    range2color = d3.scaleLinear<string, string>()
                         .domain([0, 0.01, 0.5, 0.6, 0.7, 0.99, 1.0])
-                        // @ts-ignore
                         .range([CONT_COLORS.WHITE, CONT_COLORS.BLACK, CONT_COLORS.RED, CONT_COLORS.YELLOW, CONT_COLORS.GREEN, CONT_COLORS.BLACK, CONT_COLORS.BLACK])
-                        // @ts-ignore
                         .interpolate(d3.interpolateHcl)
                 }
-
                 break;
             case "battles_sum":
                 valueMin = Math.pow(10, 2.5);
@@ -287,11 +268,9 @@ export class BrHeatmap extends Plot {
                     .domain([valueMin, valueMax])
                     .range([0, 1]);
 
-                range2color = d3.scaleLinear()
+                range2color = d3.scaleLinear<string, string>()
                     .domain([0, 0.01, 0.4, 0.5, 0.6, 0.99, 1.0])
-                    // @ts-ignore
                     .range([CONT_COLORS.WHITE, CONT_COLORS.BLACK, CONT_COLORS.RED, CONT_COLORS.YELLOW, CONT_COLORS.GREEN, CONT_COLORS.BLACK])
-                    // @ts-ignore
                     .interpolate(d3.interpolateHcl)
                 break;
         }
@@ -299,7 +278,7 @@ export class BrHeatmap extends Plot {
         const value2color = (value: number) => range2color(value2range(value));
 
         // update color bar
-        this.colorBar.update(valueMin, valueMax, value2color);
+        await this.colorBar.update(valueMin, valueMax, value2color);
 
         return (value: number) => {
             if (value == 0.) {
@@ -310,7 +289,6 @@ export class BrHeatmap extends Plot {
         }
     }
 
-
     get dataPath(): string {
         return `https://raw.githubusercontent.com/ControlNet/wt-data-project.data/master/${this.mode.toLowerCase()}_ranks_${this.brRange}.csv`
     }
@@ -320,19 +298,19 @@ export class BrHeatmap extends Plot {
     }
 
     get clazz(): Clazz {
-        return <Clazz>utils.getSelectedValue("class-selection");
+        return utils.getSelectedValue("class-selection");
     }
 
     get mode(): Mode {
-        return <Mode>utils.getSelectedValue("mode-selection");
+        return utils.getSelectedValue("mode-selection");
     }
 
     get measurement(): Measurement {
-        return <Measurement>utils.getSelectedValue("measurement-selection");
+        return utils.getSelectedValue("measurement-selection");
     }
 
     get brRange(): BRRange {
-        return <BRRange>utils.getSelectedValue("br-range-selection");
+        return utils.getSelectedValue("br-range-selection");
     }
 }
 
@@ -343,14 +321,6 @@ export interface SquareInfo {
     value: number;
 }
 
-interface Value2Color {
-    (value: number): number | COLORS
+export interface Value2Color {
+    (value: number): number | string | COLORS
 }
-
-export type BRRange = "0" | "1";
-
-export type Measurement = "win_rate" | "battles_sum";
-
-export type Mode = "ab" | "rb" | "sb";
-
-export type Clazz = "Aviation" | "Ground_vehicles";

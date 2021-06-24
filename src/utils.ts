@@ -1,8 +1,8 @@
 import * as d3 from "d3";
 
 export namespace utils {
-    export function getSelectedValue(id: string) {
-        return (<HTMLSelectElement>document.getElementById(id)).value;
+    export function getSelectedValue<T extends string = string>(id: string): T {
+        return <T>(<HTMLSelectElement>document.getElementById(id)).value;
     }
 
     export const setEvent = {
@@ -95,9 +95,8 @@ export namespace utils {
             })
             return <T>newArr;
         } else if (typeof obj === "object") {
-            const newObj = {};
+            const newObj: any = {};
             Object.entries(obj).forEach(([key, value]) => {
-                // @ts-ignore
                 newObj[key] = this.deepCopy(value);
             })
             return <T>newObj;

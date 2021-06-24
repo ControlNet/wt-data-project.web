@@ -12,7 +12,7 @@ export class Application {
     static links: Array<Link>
 
     static run(): void {
-        d3.json("https://raw.githubusercontent.com/ControlNet/wt-data-project.data/master/metadata.json", metadata => {
+        d3.json("https://raw.githubusercontent.com/ControlNet/wt-data-project.data/master/metadata.json", (metadata: Array<Metadata>) => {
             Application.metadata = metadata;
             // initialize the dates
             Application.dates = Application.metadata

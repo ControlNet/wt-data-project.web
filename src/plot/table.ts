@@ -1,8 +1,8 @@
 import { Plot } from "./plot";
 import { BrHeatmap, SquareInfo } from "./br-heatmap";
 import * as d3 from "d3";
-import { JoinedData, JoinedRow } from "../data/joined-data";
-import _ = require("lodash");
+import { JoinedData, JoinedRow, JoinedRowGetter } from "../data/joined-data";
+import * as _ from "lodash";
 
 export class Table extends Plot {
     brHeatmap: BrHeatmap;
@@ -37,7 +37,8 @@ export class Table extends Plot {
 
                 return data.filter(d => {
                     // filter br
-                    const br = this.getBr(d);
+                    const get = new JoinedRowGetter(d, this.brHeatmap.mode);
+                    const br = get.br;
                     const filterBr = () => br <= lowerBr + brRange && br >= lowerBr;
                     // filter nation
                     const filterNation = () => d.nation === nation;
@@ -49,7 +50,7 @@ export class Table extends Plot {
 
             // select columns with selected mode
             const tableData = this.selectColumns(_.uniqBy(filtered, d => d.name));
-            const keys = _.keys(tableData[0]);
+            const keys = <Array<keyof TableRow>>_.keys(tableData[0]);
             // init table header
             this.table.append("tr").selectAll().data(keys).enter().append("th").html(d => d);
 
@@ -57,8 +58,7 @@ export class Table extends Plot {
             tableData.forEach((tableRow: TableRow) => {
                 const tr = this.table.append("tr");
                 keys.forEach(key => {
-                    // @ts-ignore
-                    tr.append("td").html(tableRow[key]);
+                    tr.append("td").html(<string>tableRow[key]);
                 })
             })
         })
@@ -74,41 +74,28 @@ export class Table extends Plot {
     selectColumns(data: JoinedData): Array<TableRow> {
         const mode = this.brHeatmap.mode;
         return data.map((d: JoinedRow) => {
-            // @ts-ignore
+            const get = new JoinedRowGetter(d, mode)
             return {
                 ts_name: d.name,
                 wk_name: d.wk_name,
                 nation: d.nation,
                 "class": d.cls,
-                br: this.getBr(d),
-                // @ts-ignore
-                battles: +d[`${mode}_battles`],
-                // @ts-ignore
-                win_rate: +d[`${mode}_win_rate`],
-                // @ts-ignore
-                air_frags_per_battle: +d[`${mode}_air_frags_per_battle`],
-                // @ts-ignore
-                air_frags_per_death: +d[`${mode}_air_frags_per_death`],
-                // @ts-ignore
-                ground_frags_per_battle: +d[`${mode}_ground_frags_per_battle`],
-                // @ts-ignore
-                ground_frags_per_death: +d[`${mode}_ground_frags_per_death`],
+                br: get.br,
+                battles: get.battles,
+                win_rate: get.winRate,
+                air_frags_per_battle: get.airFragsPerBattle,
+                air_frags_per_death: get.airFragsPerDeath,
+                ground_frags_per_battle: get.groundFragsPerBattle,
+                ground_frags_per_death: get.groundFragsPerDeath,
                 is_premium: d.is_premium,
-                // @ts-ignore
-                rp_rate: +d[`${mode}_rp_rate`],
-                // @ts-ignore
-                sl_rate: +d[`${mode}_sl_rate`]
+                rp_rate: get.rpRate,
+                sl_rate: get.slRate
             }
         })
     }
 
     get dataPath(): string {
         return `https://raw.githubusercontent.com/ControlNet/wt-data-project.data/master/joined/${this.brHeatmap.date}.csv`;
-    }
-
-    getBr(row: JoinedRow): number {
-        // @ts-ignore
-        return +row[`${this.brHeatmap.mode}_br`];
     }
 }
 

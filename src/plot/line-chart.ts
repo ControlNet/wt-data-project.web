@@ -1,9 +1,10 @@
 import * as d3 from "d3";
 import * as _ from "lodash";
 import { Margin, Plot } from "./plot";
-import { BrHeatmap, BRRange, Clazz, Measurement, Mode } from "./br-heatmap";
-import { TimeseriesData, TimeseriesRow } from "../data/timeseries-data";
+import { BrHeatmap } from "./br-heatmap";
+import { TimeseriesData, TimeseriesRow, TimeseriesRowGetter } from "../data/timeseries-data";
 import { utils } from "../utils";
+import { BRRange, Clazz, Measurement, Mode } from "../data/options";
 
 export abstract class LineChart extends Plot {
 }
@@ -109,31 +110,28 @@ export class BRLineChart extends LineChart {
 
                 oldYAxis.remove();
 
-                const line = d3.line()
+                const line = d3.line<{ date: Date, value: number }>()
                     .x(function(d) {
-                        // @ts-ignore
                         return x(d.date)
                     })
                     .y(function(d) {
-                        // @ts-ignore
                         return y(d.value)
                     })
 
                 // add lines
-                let paths;
+                let paths: d3.Selection<SVGPathElement, LineChartDataObj, SVGGElement, unknown>;
                 if (this.g.selectAll("#line-chart-path-g").size() > 0) {
-                    paths = this.g.select("#line-chart-path-g")
-                        .selectAll("path")
+                    paths = this.g.select<SVGGElement>("#line-chart-path-g")
+                        .selectAll<SVGPathElement, LineChartDataObj>("path")
                         .data(dataObjs, (d: LineChartDataObj) => d.nation + d.br);
                 } else {
                     paths = this.g.append("g")
                         .attr("id", "line-chart-path-g")
                         .style("fill", "None")
-                        .selectAll("path")
+                        .selectAll<SVGPathElement, LineChartDataObj>("path")
                         .data(dataObjs, (d: LineChartDataObj) => d.nation + d.br);
                 }
 
-                // @ts-ignore
                 paths.exit().transition()
                     .duration(500)
                     .style("opacity", 0)
@@ -141,19 +139,16 @@ export class BRLineChart extends LineChart {
 
                 paths.transition()
                     .duration(500)
-                    // @ts-ignore
                     .attr("d", (d: LineChartDataObj) => line(d.values))
                     .attr("stroke", d => this.brHeatmap.colorPool.get(d));
 
                 paths.enter()
-                    // @ts-ignore
                     .append("path")
                     .style("opacity", 0)
                     .style("stroke-width", 3)
                     .transition()
                     .duration(500)
                     .style("opacity", 1)
-                    // @ts-ignore
                     .attr("d", (d: LineChartDataObj) => line(d.values))
                     .attr("stroke", (d: LineChartDataObj) => this.brHeatmap.colorPool.get(d));
 
@@ -169,17 +164,19 @@ export class BRLineChart extends LineChart {
 
     private extractData(data: Array<TimeseriesRow>): LineChartData {
         return data.filter(row => {
+            const get = new TimeseriesRowGetter(row, this.brHeatmap.mode, this.brHeatmap.measurement);
             return this.brHeatmap.selected.some(
                 info => info.nation === row.nation
-                    && info.br === this.brHeatmap.getBr(row)
+                    && info.br === get.br
                     && this.brHeatmap.clazz === row.cls
             )
         }).map(row => {
+            const get = new TimeseriesRowGetter(row, this.brHeatmap.mode, this.brHeatmap.measurement);
             return {
                 date: utils.parseDate(row.date),
                 nation: row.nation,
-                br: this.brHeatmap.getBr(row),
-                value: this.brHeatmap.getValue(row)
+                br: get.br,
+                value: get.value
             }
         });
     }
@@ -235,9 +232,9 @@ export interface LineChartDataObj {
 }
 
 interface TimeseriesDataCache {
-    clazz: Clazz
-    mode: Mode
-    measurement: Measurement
-    brRange: BRRange
-    data: TimeseriesData
+    clazz: Clazz;
+    mode: Mode;
+    measurement: Measurement;
+    brRange: BRRange;
+    data: TimeseriesData;
 }
