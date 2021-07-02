@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import { NavTab } from "../nav-tab";
 
 export abstract class Link extends NavTab {
-    abstract url: string;
+    abstract readonly url: string;
 
     init(): void {
         d3.select<HTMLDivElement, unknown>("#navbar")

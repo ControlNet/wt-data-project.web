@@ -1,7 +1,7 @@
 import { Link } from "./link";
 
 export class GithubLink extends Link {
-    id = "github";
-    name = "by ControlNet";
-    url = "https://github.com/ControlNet";
+    readonly id = "github";
+    readonly name = "by ControlNet";
+    readonly url = "https://github.com/ControlNet";
 }

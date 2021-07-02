@@ -1,7 +1,7 @@
 import { Link } from "./link";
 
 export class WebRepo extends Link {
-    id = "web-repo";
-    name = "GitHub";
-    url = "https://github.com/ControlNet/wt-data-project.web";
+    readonly id = "web-repo";
+    readonly name = "GitHub";
+    readonly url = "https://github.com/ControlNet/wt-data-project.web";
 }

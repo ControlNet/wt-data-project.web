@@ -1,7 +1,7 @@
 import { Link } from "./link";
 
 export class VisRepo extends Link {
-    id = "vis-repo";
-    name = "Visualization Repo";
+    readonly id = "vis-repo";
+    readonly name = "Visualization Repo";
     url = "https://github.com/ControlNet/wt-data-project.visualization";
 }

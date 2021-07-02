@@ -1,5 +1,5 @@
 export abstract class NavTab {
-    abstract id: string;
-    abstract name: string;
+    abstract readonly id: string;
+    abstract readonly name: string;
     abstract init(): void;
 }

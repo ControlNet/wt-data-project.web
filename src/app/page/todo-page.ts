@@ -3,8 +3,8 @@ import * as d3 from "d3";
 import * as marked from "marked";
 
 export class TodoPage extends Page {
-    id = "todo-list";
-    name = "Todo List";
+    readonly id = "todo-list";
+    readonly name = "Todo List";
 
     update(): void {
         // remove old content of previous page

@@ -10,8 +10,8 @@ import { Table } from "../../plot/table";
 
 export class BRHeatMapPage extends Page {
     plot: BrHeatmap;
-    id = "br-heatmap";
-    name = "BR HeatMap";
+    readonly id = "br-heatmap";
+    readonly name = "BR HeatMap";
 
     update(): void {
         // remove old plot
