@@ -70,20 +70,24 @@ export class Tooltip extends Plot {
 
     // update rect
     updateRect(mousePos: MousePosition): Tooltip {
+        const x = mousePos.x < 130 ? mousePos.x + this.rectXBias + 150 : mousePos.x + this.rectXBias;
+        const y = mousePos.y < 40 ? mousePos.y + this.rectYBias + 70 : mousePos.y + this.rectYBias;
         this.rect
-            .attr("x", mousePos.x + this.rectXBias)
-            .attr("y", mousePos.y + this.rectYBias);
+            .attr("x", x)
+            .attr("y", y);
         return this;
     }
 
     // update text with new position and new string
     updateText(textArr: Array<string>, mousePos: MousePosition): Tooltip {
         textArr.forEach((line, i) => {
+            const x = mousePos.x < 130 ? this.textXBias + mousePos.x + 150 : this.textXBias + mousePos.x
+            const y = mousePos.y < 40 ? this.textYBias + mousePos.y + 15 * i + 70 : this.textYBias + mousePos.y + 15 * i;
             this.text
                 .select(`.tooltip-text-row${i + 1}`)
                 .text(line)
-                .attr("x", (this.textXBias + mousePos.x) + "px")
-                .attr("y", (this.textYBias + mousePos.y + 15 * i) + "px")
+                .attr("x", x + "px")
+                .attr("y", y + "px")
                 .attr("text-anchor", "left");
         });
         return this;
