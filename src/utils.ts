@@ -136,3 +136,12 @@ export enum CONT_COLORS {
     WHITE = "#EEFFFF"
 }
 
+export class MousePosition {
+    x: number;
+    y: number;
+
+    constructor(x: number, y: number) {
+        this.x = x;
+        this.y = y;
+    }
+}

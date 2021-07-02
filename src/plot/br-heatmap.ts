@@ -1,12 +1,14 @@
 import * as d3 from "d3";
+import * as _ from "lodash";
 import { Plot } from "./plot";
 import { TimeseriesData, TimeseriesRow, TimeseriesRowGetter } from "../data/timeseries-data";
-import { categoricalColors, COLORS, CONT_COLORS, utils } from "../utils";
+import { categoricalColors, COLORS, CONT_COLORS, MousePosition, utils } from "../utils";
 import { ColorBar } from "./color-bar";
-import { BRLineChart, LineChartDataObj } from "./line-chart";
+import { BRLineChart, BRLineChartDataObj } from "./line-chart";
 import { Legend } from "./legend";
 import { Table } from "./table";
 import { BRRange, Clazz, Measurement, Mode } from "../data/options";
+import { Tooltip } from "./tooltip";
 
 export class BrHeatmap extends Plot {
     colorBar: ColorBar;
@@ -16,12 +18,7 @@ export class BrHeatmap extends Plot {
 
     selected: Array<SquareInfo> = [];
 
-    mouseoverEvent = function(): void {
-        d3.select(this).style("stroke", "white");
-    };
-    mouseleaveEvent = function(): void {
-        d3.select(this).style("stroke", "black");
-    };
+    private tooltip: Tooltip;
 
     async updateSubPlots() {
         await this.table.update();
@@ -35,7 +32,38 @@ export class BrHeatmap extends Plot {
         await this.legend.update();
     }
 
-    getClickEvent(): () => void {
+    get mouseleaveEvent(): () => void{
+        const self = this;
+        return function(): void {
+            d3.select(this).style("stroke", "black");
+            self.tooltip.hide();
+        };
+    }
+
+    get mouseoverEvent(): () => void {
+        const self = this;
+        return function(): void {
+            d3.select(this).style("stroke", "white");
+            self.tooltip.appear();
+        }
+    }
+
+    get mousemoveEvent(): (d: SquareInfo) => void {
+        const self = this;
+        return async function(d: SquareInfo): Promise<void> {
+            const mousePos = new MousePosition(
+                d3.mouse(this)[0],
+                d3.mouse(this)[1]
+            );
+            await self.tooltip.update([
+                `Nation: ${d.nation}`,
+                `BR: ${d.br}`,
+                `${self.measurement}: ${_.round(d.value, 3)}`
+            ], mousePos);
+        }
+    }
+
+    get clickEvent(): () => void {
         const self = this;
         return async function(): Promise<void> {
             const square: d3.Selection<SVGRectElement, SquareInfo, HTMLElement, any> = d3.select(this);
@@ -65,7 +93,7 @@ export class BrHeatmap extends Plot {
 
         bindings: new Array<{ br: string, nation: string, color: string }>(),
 
-        get: function(d: LineChartDataObj) {
+        get: function(d: BRLineChartDataObj) {
             // if the category is generated before, use previous color
             for (const binding of this.bindings) {
                 if (binding.br === d.br && binding.nation === d.nation) {
@@ -103,10 +131,16 @@ export class BrHeatmap extends Plot {
             .attr("height", this.svgHeight)
             .attr("width", this.svgWidth)
             .attr("id", "main-svg");
+
+        // init mouse tooltip
+        this.tooltip = new Tooltip(
+            this.svg, 0.8, 3, 120, -30, -35, -25, -20
+        ).init();
+
+        // init the heatmap plot body
         this.g = this.svg.append<SVGGElement>("g")
             .attr("id", "main-g")
             .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`);
-
 
         d3.csv(this.dataPath, async (data: TimeseriesData) => {
             // init
@@ -125,13 +159,11 @@ export class BrHeatmap extends Plot {
             // colorMap function
             this.value2color = await this.getValue2color();
 
-            // TODO: tooltip
-
             // add heat squares
             this.g.selectAll()
                 .data(dataObjs)
                 .enter()
-                .append("rect")
+                .append<SVGRectElement>("rect")
                 .attr("x", d => x(d.nation))
                 .attr("y", d => y(d.br))
                 .attr("width", squareWidth)
@@ -141,9 +173,13 @@ export class BrHeatmap extends Plot {
                 .style("stroke", "black")
                 .on("mouseover", this.mouseoverEvent)
                 .on("mouseleave", this.mouseleaveEvent)
-                .on("click", this.getClickEvent());
+                .on("mousemove", this.mousemoveEvent)
+                .on("click", this.clickEvent);
 
             this.cache = data;
+
+            // sort the tooltip in the top layer
+            this.tooltip.toTopLayer();
         })
         return this;
     }
@@ -162,12 +198,17 @@ export class BrHeatmap extends Plot {
             await this.updateSquares(this.cache);
         }
 
+        // reset axis
         this.buildAxis();
         oldAxis.remove();
+        // reset selected data and sub plots
         this.selected = [];
         await this.resetSubPlots();
 
-        return await new Promise(resolve => resolve(this));
+        // sort the tooltip in the top layer
+        this.tooltip.toTopLayer();
+
+        return this;
     }
 
     private async updateSquares(data: TimeseriesData) {

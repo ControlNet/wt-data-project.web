@@ -18,7 +18,7 @@ export class BRLineChart extends LineChart {
         this.brHeatmap = brHeatmap;
     }
 
-    init(): Plot {
+    init(): BRLineChart {
         // build new plot in the content div of page
         this.svg = d3.select<HTMLDivElement, unknown>("#content")
             .append<SVGSVGElement>("svg")
@@ -60,13 +60,13 @@ export class BRLineChart extends LineChart {
         })
     }
 
-    async update(): Promise<Plot> {
+    async update(): Promise<BRLineChart> {
         const oldXAxis = this.g.selectAll<SVGElement, unknown>(".x-axis");
         const oldYAxis = this.g.selectAll<SVGElement, unknown>(".y-axis");
 
-        return await new Promise((resolve) => {
+        return await new Promise(resolve => {
             this.searchInCache().then((data) => {
-                const dataObjs: Array<LineChartDataObj> = this.groupBy(this.extractData(data));
+                const dataObjs: Array<BRLineChartDataObj> = this.groupBy(this.extractData(data));
 
                 // x axis
                 const x = d3.scaleLinear()
@@ -120,17 +120,17 @@ export class BRLineChart extends LineChart {
                     })
 
                 // add lines
-                let paths: d3.Selection<SVGPathElement, LineChartDataObj, SVGGElement, unknown>;
+                let paths: d3.Selection<SVGPathElement, BRLineChartDataObj, SVGGElement, unknown>;
                 if (this.g.selectAll("#line-chart-path-g").size() > 0) {
                     paths = this.g.select<SVGGElement>("#line-chart-path-g")
-                        .selectAll<SVGPathElement, LineChartDataObj>("path")
-                        .data(dataObjs, (d: LineChartDataObj) => d.nation + d.br);
+                        .selectAll<SVGPathElement, BRLineChartDataObj>("path")
+                        .data(dataObjs, (d: BRLineChartDataObj) => d.nation + d.br);
                 } else {
                     paths = this.g.append<SVGGElement>("g")
                         .attr("id", "line-chart-path-g")
                         .style("fill", "None")
-                        .selectAll<SVGPathElement, LineChartDataObj>("path")
-                        .data(dataObjs, (d: LineChartDataObj) => d.nation + d.br);
+                        .selectAll<SVGPathElement, BRLineChartDataObj>("path")
+                        .data(dataObjs, (d: BRLineChartDataObj) => d.nation + d.br);
                 }
 
                 // remove lines for removed selection
@@ -142,7 +142,7 @@ export class BRLineChart extends LineChart {
                 // shift the lines with re-adjusted y-axis range
                 paths.transition()
                     .duration(500)
-                    .attr("d", (d: LineChartDataObj) => line(d.values))
+                    .attr("d", (d: BRLineChartDataObj) => line(d.values))
                     .attr("stroke", d => this.brHeatmap.colorPool.get(d));
 
                 // add lines for new selected data
@@ -153,8 +153,8 @@ export class BRLineChart extends LineChart {
                     .transition()
                     .duration(500)
                     .style("opacity", 1)
-                    .attr("d", (d: LineChartDataObj) => line(d.values))
-                    .attr("stroke", (d: LineChartDataObj) => this.brHeatmap.colorPool.get(d));
+                    .attr("d", (d: BRLineChartDataObj) => line(d.values))
+                    .attr("stroke", (d: BRLineChartDataObj) => this.brHeatmap.colorPool.get(d));
 
                 resolve(this);
             });
@@ -166,7 +166,7 @@ export class BRLineChart extends LineChart {
         return await new Promise((resolve) => resolve(this));
     }
 
-    private extractData(data: Array<TimeseriesRow>): LineChartData {
+    private extractData(data: Array<TimeseriesRow>): BRLineChartData {
         return data.filter(row => {
             const get = new TimeseriesRowGetter(row, this.brHeatmap.mode, this.brHeatmap.measurement);
             return this.brHeatmap.selected.some(
@@ -185,8 +185,8 @@ export class BRLineChart extends LineChart {
         });
     }
 
-    private groupBy(data: LineChartData): Array<LineChartDataObj> {
-        const result: Array<LineChartDataObj> = [];
+    private groupBy(data: BRLineChartData): Array<BRLineChartDataObj> {
+        const result: Array<BRLineChartDataObj> = [];
         for (const row of data) {
             // if there is an existed category
             if (result.filter(category => category.br === row.br && category.nation === row.nation).length > 0) {
@@ -220,16 +220,16 @@ export class BRLineChart extends LineChart {
     }
 }
 
-type LineChartData = Array<LineChartRow>;
+type BRLineChartData = Array<BRLineChartRow>;
 
-interface LineChartRow {
+interface BRLineChartRow {
     date: Date;
     br: string;
     nation: string;
     value: number;
 }
 
-export interface LineChartDataObj {
+export interface BRLineChartDataObj {
     br: string;
     nation: string;
     values: Array<{ date: Date, value: number }>
@@ -241,4 +241,18 @@ interface TimeseriesDataCache {
     measurement: Measurement;
     brRange: BRRange;
     data: TimeseriesData;
+}
+
+export class StackLineChart extends LineChart {
+    init(...args: any[]): Plot {
+        return undefined;
+    }
+
+    async update(...args: any[]): Promise<Plot> {
+
+        return await new Promise(resolve => {
+            resolve(this)
+        })
+    }
+
 }

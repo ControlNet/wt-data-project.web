@@ -10,7 +10,7 @@ export class Legend extends Plot {
         this.brHeatmap = brHeatmap;
     }
 
-    init(): Plot {
+    init(): Legend {
         // build new plot in the content div of page
         this.svg = d3.select<HTMLDivElement, unknown>("#content")
             .append<SVGSVGElement>("svg")
@@ -24,7 +24,7 @@ export class Legend extends Plot {
         return this;
     }
 
-    async update(): Promise<Plot> {
+    async update(): Promise<Legend> {
         const legends = this.g.selectAll<SVGGElement, SquareInfo>("g")
             .data(this.brHeatmap.selected, (info: SquareInfo) => info.nation + info.br);
 

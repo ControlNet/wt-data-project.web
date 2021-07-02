@@ -13,7 +13,7 @@ export class Table extends Plot {
         this.brHeatmap = brHeatmap;
     }
 
-    init(): Plot {
+    init(): Table {
         this.table = d3.select<HTMLDivElement, unknown>("#content")
             .append<HTMLDivElement>("div")
             .attr("id", "selected-table-div")
@@ -22,7 +22,7 @@ export class Table extends Plot {
         return this;
     }
 
-    async update(): Promise<Plot> {
+    async update(): Promise<Table> {
         // remove previous
         await this.reset();
 
