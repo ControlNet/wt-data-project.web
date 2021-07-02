@@ -46,13 +46,15 @@ export class Tooltip extends Plot {
             .attr("width", this.rectWidth)
             .attr("fill", "white")
             .style("stroke", "black")
+            .style("opacity", this.opacity)
             .attr("rx", "5px")
             .attr("ry", "5px");
 
         // init tooltip text
         this.text = this.g.append<SVGTextElement>("text")
             .attr("class", "tooltip-text")
-            .style("font-size", 12);
+            .style("font-size", 12)
+            .style("opacity", 0.9);
 
         // generate tspan for each text row
         _.range(this.nRow)
@@ -99,7 +101,7 @@ export class Tooltip extends Plot {
     }
 
     appear(): Tooltip {
-        this.g.style("opacity", this.opacity)
+        this.g.style("opacity", 1)
         return this;
     }
 

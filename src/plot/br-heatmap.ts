@@ -40,11 +40,15 @@ export class BrHeatmap extends Plot {
         };
     }
 
-    get mouseoverEvent(): () => void {
+    get mouseoverEvent(): (d: SquareInfo) => void {
         const self = this;
-        return function(): void {
+        return function(d: SquareInfo): void {
             d3.select(this).style("stroke", "white");
             self.tooltip.appear();
+            self.tooltip.rect
+                .transition()
+                .duration(100)
+                .style("fill", self.value2color(d.value));
         }
     }
 
