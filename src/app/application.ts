@@ -25,7 +25,7 @@ export class Application {
 
         d3.json("https://raw.githubusercontent.com/ControlNet/wt-data-project.data/master/metadata.json", (metadata: Array<Metadata>) => {
 
-            d3.json("/config/config.json", (json: ConfigJson) => {
+            d3.json("/config/params.json", (json: ConfigJson) => {
                 Container.importProvider();
                 Config.load(json);
 

@@ -46,7 +46,7 @@ export abstract class Tooltip extends Plot {
         // init tooltip g element
         this.g = this.parentSvg.append<SVGGElement>("g")
             .attr("class", "tooltip")
-            .style("opacity", 1);
+            .style("opacity", 0);
 
         // init tooltip rect background
         this.rect = this.g.append<SVGRectElement>("rect")
