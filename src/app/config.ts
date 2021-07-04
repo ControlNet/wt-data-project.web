@@ -1,6 +1,5 @@
 import * as _ from "lodash"
-import * as d3 from "d3";
-import { Container } from "../utils";
+import { Container, ObjChainMap } from "../utils";
 
 
 export interface ConfigJson {
@@ -97,25 +96,21 @@ class TooltipConfig extends AbstractConfig {
     }
 }
 
+
 export class Config {
     static async load(): Promise<void> {
-        return new Promise(resolve => {
-                d3.json("/config/params.json", (json: ConfigJson) => {
-                    _.keys(json).forEach((page: keyof Config) => {
-                        const pageJson = json[page];
-                        _.keys(pageJson).forEach(plot => {
-                            const plotJson = pageJson[plot];
-                            _.keys(plotJson).forEach(attr => {
-                                const key = Config[page][plot][attr];
-                                const value = plotJson[attr];
-                                Container.bind(key).toConstantValue(value);
-                            })
-                        })
-                    })
-                    resolve();
-                });
-            }
-        )
+        const json: ConfigJson = await (await fetch("/config/params.json")).json()
+
+        new ObjChainMap()
+            .addLayer(() => json)
+            .addLayer((page: keyof Config) => json[page])
+            .addLayer((page: keyof Config, plot: string) => json[page][plot])
+            .addLayer((page: keyof Config, plot: string, attr: string) => json[page][plot][attr])
+            .forEach((layers, value) => {
+                const [page, plot, attr] = layers as [keyof Config, string, string];
+                const key = Config[page][plot][attr];
+                Container.bind(key).toConstantValue(value);
+            })
     }
 
     static BrHeatmapPage = class {

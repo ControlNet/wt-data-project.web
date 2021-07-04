@@ -173,9 +173,81 @@ export class Container {
         return Container.container.rebind<T>(serviceIdentifier);
     };
 
+    static unbind<T>(serviceIdentifier: interfaces.ServiceIdentifier<T>): void {
+        return Container.container.unbind(serviceIdentifier);
+    };
+
     static bind<T>(serviceIdentifier: interfaces.ServiceIdentifier<T>): interfaces.BindingToSyntax<T> {
         return Container.container.bind<T>(serviceIdentifier);
     }
 }
 
+// object chain map and forEach
+interface ObjGetter {
+    (...layers: Array<string>): any
+}
 
+interface ChainMapLayer {
+    (...getValues: Array<ObjGetter>): Array<Array<string>>
+}
+
+export class ObjChainMap {
+    readonly getObj: Array<ObjGetter> = [];
+
+    get length(): number {
+        return this.getObj.length;
+    }
+
+    addLayer(getter: ObjGetter) {
+        this.getObj.push(getter);
+        return this;
+    }
+
+    static chainMapLayer2(getValue0: ObjGetter): Array<Array<string>> {
+        return Object.keys(getValue0()).map(layer1 => {
+            return [layer1]
+        })
+    }
+
+    static chainMapLayer3(getValue0: ObjGetter, getValue1: ObjGetter): Array<Array<string>> {
+        return ObjChainMap.chainMapLayer2(getValue0).map(([layer1]) => {
+            return Object.keys(getValue1(layer1)).map(layer2 => {
+                return [layer1, layer2]
+            })
+        }).flat(1)
+    }
+
+    static chainMapLayer4(getValue0: ObjGetter, getValue1: ObjGetter, getValue2: ObjGetter): Array<Array<string>> {
+        return ObjChainMap.chainMapLayer3(getValue0, getValue1).map(([layer1, layer2]) => {
+            return Object.keys(getValue2(layer1, layer2)).map(layer3 => {
+                return [layer1, layer2, layer3]
+            });
+        }).flat(1)
+    }
+
+    static objChainMapFunc: {[length: number]: ChainMapLayer} = {
+        2: ObjChainMap.chainMapLayer2,
+        3: ObjChainMap.chainMapLayer3,
+        4: ObjChainMap.chainMapLayer4
+    }
+
+    getKVs() {
+        let values;
+        if (this.length <= 1) {
+            throw Error("Number of layers should >= 2");
+        } else {
+            const chainMapLayer = ObjChainMap.objChainMapFunc[this.length];
+            values = chainMapLayer(...this.getObj)
+                .map(layers => [layers, this.getObj[this.length - 1](...layers)])
+        }
+        return values;
+    }
+
+    map<T>(func: (layers: Array<string>, value: T) => T): Array<T> {
+        return this.getKVs().map(([layers, value]) => func(layers, value))
+    }
+
+    forEach<T>(func: (layers: Array<string>, value: T) => T): void {
+        this.getKVs().forEach(([layers, value]) => func(layers, value))
+    }
+}

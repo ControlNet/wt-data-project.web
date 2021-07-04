@@ -2,7 +2,7 @@ import { Page, PageClass } from "./page/page";
 import { Metadata } from "../data/metadata";
 import * as d3 from "d3";
 import { Link, LinkClass } from "./link/link";
-import { Config, ConfigJson } from "./config";
+import { Config } from "./config";
 import { Container } from "../utils";
 import "reflect-metadata";
 import "../plot/br-heatmap";

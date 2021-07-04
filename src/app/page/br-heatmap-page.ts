@@ -98,9 +98,11 @@ export class BRHeatMapPage extends Page {
             .attr("selected", d => d.id === "1" ? "selected" : undefined)
             .html(d => d.id);
 
-        // init main content plot, colorbar and line chart
-
+        // init main content plot
+        // rebind the container to BrHeatmap constructor to new a object
+        Container.rebind(BrHeatmap).toSelf();
         this.plot = Container.get(BrHeatmap);
+        // rebind the plot object as constant value for other subplots
         Container.rebind(BrHeatmap).toConstantValue(this.plot);
 
         this.plot.init();
