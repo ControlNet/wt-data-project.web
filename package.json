@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack --watch"
+  },
+
   "dependencies": {
     "@types/d3": "^4.11.0",
     "@types/d3-array": "^1.2.1",
