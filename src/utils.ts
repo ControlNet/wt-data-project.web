@@ -1,4 +1,7 @@
 import * as d3 from "d3";
+import { buildProviderModule, fluentProvide, provide } from "inversify-binding-decorators";
+import { interfaces, interfaces as inversifyInterfaces } from "inversify/lib/interfaces/interfaces";
+import { inject, Container as InvContainer, injectable } from "inversify";
 
 export namespace utils {
     export function getSelectedValue<T extends string = string>(id: string): T {
@@ -145,3 +148,33 @@ export class MousePosition {
         this.y = y;
     }
 }
+// IOC containers
+export function Singleton(serviceIdentifier: inversifyInterfaces.ServiceIdentifier<any>) {
+    return fluentProvide(serviceIdentifier).inSingletonScope().done();
+}
+export const Provider = provide;
+export const Inject = inject;
+export const Injectable = injectable();
+
+
+export class Container {
+    static container: InvContainer = new InvContainer();
+
+    static importProvider() {
+        Container.container.load(buildProviderModule());
+    }
+
+    static get<T>(serviceIdentifier: interfaces.ServiceIdentifier<T>): T {
+        return Container.container.get<T>(serviceIdentifier);
+    };
+
+    static rebind<T>(serviceIdentifier: interfaces.ServiceIdentifier<T>): interfaces.BindingToSyntax<T> {
+        return Container.container.rebind<T>(serviceIdentifier);
+    };
+
+    static bind<T>(serviceIdentifier: interfaces.ServiceIdentifier<T>): interfaces.BindingToSyntax<T> {
+        return Container.container.bind<T>(serviceIdentifier);
+    }
+}
+
+

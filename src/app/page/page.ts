@@ -1,7 +1,9 @@
 import * as d3 from "d3";
 import { Plot } from "../../plot/plot";
 import { NavTab } from "../nav-tab";
+import { Injectable } from "../../utils";
 
+@Injectable
 export abstract class Page extends NavTab {
     plot: Plot;
 

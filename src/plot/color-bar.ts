@@ -1,18 +1,18 @@
 import * as d3 from "d3";
-import { Margin, Plot } from "./plot";
+import { Plot } from "./plot";
 import { BrHeatmap, Value2Color } from "./br-heatmap";
-import { utils } from "../utils";
+import { Container, Inject, Provider, utils } from "../utils";
+import { Config, Margin } from "../app/config";
 
+
+@Provider(ColorBar)
 export class ColorBar extends Plot {
-    brHeatmap: BrHeatmap;
+    @Inject(Config.BrHeatmapPage.ColorBar.svgHeight) readonly svgHeight: number;
+    @Inject(Config.BrHeatmapPage.ColorBar.svgWidth) readonly svgWidth: number;
+    @Inject(Config.BrHeatmapPage.ColorBar.margin) readonly margin: Margin;
     valueMin: number;
     valueMax: number;
     value2color: any;
-
-    constructor(brHeatmap: BrHeatmap, svgHeight: number, svgWidth: number, margin: Margin) {
-        super(svgHeight, svgWidth, margin);
-        this.brHeatmap = brHeatmap;
-    }
 
     init(): ColorBar {
         this.svg = d3.select<HTMLDivElement, unknown>("#content")
@@ -108,5 +108,9 @@ export class ColorBar extends Plot {
             .call(legendAxis);
 
         return await new Promise(resolve => resolve(this));
+    }
+
+    get brHeatmap(): BrHeatmap {
+        return Container.get(BrHeatmap);
     }
 }

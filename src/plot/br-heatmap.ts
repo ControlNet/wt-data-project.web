@@ -2,23 +2,29 @@ import * as d3 from "d3";
 import * as _ from "lodash";
 import { Plot } from "./plot";
 import { TimeseriesData, TimeseriesRow, TimeseriesRowGetter } from "../data/timeseries-data";
-import { categoricalColors, COLORS, CONT_COLORS, MousePosition, utils } from "../utils";
+import { categoricalColors, COLORS, CONT_COLORS, Inject, MousePosition, Provider, utils } from "../utils";
 import { ColorBar } from "./color-bar";
-import { BRLineChart, BRLineChartDataObj } from "./line-chart";
+import { BrLineChart, BrLineChartDataObj } from "./line-chart";
 import { Legend } from "./legend";
 import { Table } from "./table";
 import { BRRange, Clazz, Measurement, Mode } from "../data/options";
-import { Tooltip } from "./tooltip";
+import { BrHeatmapTooltip, Tooltip } from "./tooltip";
+import { Config, Margin } from "../app/config";
 
+
+@Provider(BrHeatmap)
 export class BrHeatmap extends Plot {
-    colorBar: ColorBar;
-    lineChart: BRLineChart;
-    legend: Legend;
-    table: Table;
+    @Inject(Config.BrHeatmapPage.BrHeatmap.svgHeight) readonly svgHeight: number;
+    @Inject(Config.BrHeatmapPage.BrHeatmap.svgWidth) readonly svgWidth: number;
+    @Inject(Config.BrHeatmapPage.BrHeatmap.margin) readonly margin: Margin;
+    @Inject(Config.BrHeatmapPage.BrHeatmap.mainSvgId) readonly mainSvgId: string;
+    @Inject(ColorBar) readonly colorBar: ColorBar;
+    @Inject(BrLineChart) readonly lineChart: BrLineChart;
+    @Inject(Legend) readonly legend: Legend;
+    @Inject(Table) readonly table: Table;
+    @Inject(BrHeatmapTooltip) readonly tooltip: Tooltip;
 
     selected: Array<SquareInfo> = [];
-
-    private tooltip: Tooltip;
 
     async updateSubPlots() {
         await this.table.update();
@@ -32,7 +38,7 @@ export class BrHeatmap extends Plot {
         await this.legend.update();
     }
 
-    get mouseleaveEvent(): () => void{
+    get mouseleaveEvent(): () => void {
         const self = this;
         return function(): void {
             d3.select(this).style("stroke", "black");
@@ -97,7 +103,7 @@ export class BrHeatmap extends Plot {
 
         bindings: new Array<{ br: string, nation: string, color: string }>(),
 
-        get: function(d: BRLineChartDataObj) {
+        get: function(d: BrLineChartDataObj) {
             // if the category is generated before, use previous color
             for (const binding of this.bindings) {
                 if (binding.br === d.br && binding.nation === d.nation) {
@@ -123,23 +129,13 @@ export class BrHeatmap extends Plot {
 
     }
 
-    init(colorBar: ColorBar, lineChart: BRLineChart, legend: Legend, table: Table): BrHeatmap {
-        this.colorBar = colorBar;
-        this.lineChart = lineChart;
-        this.legend = legend;
-        this.table = table;
-
+    init(): BrHeatmap {
         // build new plot in the content div of page
         this.svg = d3.select<HTMLDivElement, unknown>("#content")
             .append<SVGSVGElement>("svg")
             .attr("height", this.svgHeight)
             .attr("width", this.svgWidth)
-            .attr("id", "main-svg");
-
-        // init mouse tooltip
-        this.tooltip = new Tooltip(
-            this.svg, 0.8, 3, 120, -30, -35, -25, -20
-        ).init();
+            .attr("id", this.mainSvgId);
 
         // init the heatmap plot body
         this.g = this.svg.append<SVGGElement>("g")
@@ -154,11 +150,12 @@ export class BrHeatmap extends Plot {
             // build axis
             const {x, y} = this.buildAxis();
 
-            // init the color bar, line chart and legend
+            // init the color bar, line chart, legend, table and tooltip
             this.colorBar.init();
             this.lineChart.init();
             this.legend.init();
             this.table.init();
+            this.tooltip.init();
 
             // colorMap function
             this.value2color = await this.getValue2color();

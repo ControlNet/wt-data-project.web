@@ -1,13 +1,17 @@
 import { Application } from "../application";
-import { BrHeatmap } from "../../plot/br-heatmap";
 import { Page } from "./page";
 import * as d3 from "d3";
-import { utils } from "../../utils";
+import { Container, Singleton, utils } from "../../utils";
 import { ColorBar } from "../../plot/color-bar";
-import { BRLineChart } from "../../plot/line-chart";
+import { BrLineChart } from "../../plot/line-chart";
 import { Legend } from "../../plot/legend";
 import { Table } from "../../plot/table";
+import { BrHeatmap } from "../../plot/br-heatmap";
+import { Config } from "../config";
+import { BrHeatmapTooltip } from "../../plot/tooltip";
 
+
+@Singleton(BRHeatMapPage)
 export class BRHeatMapPage extends Page {
     plot: BrHeatmap;
     readonly id = "br-heatmap";
@@ -101,21 +105,13 @@ export class BRHeatMapPage extends Page {
             .html(d => d.id);
 
         // init main content plot, colorbar and line chart
-        const margin = {top: 20, right: 30, bottom: 30, left: 100};
 
-        this.plot = new BrHeatmap(800, 600, margin);
-        const colorBar = new ColorBar(this.plot, 800, 60, {
-            top: this.plot.margin.top, right: 40, bottom: this.plot.margin.bottom, left: 0
-        });
-        const lineChart = new BRLineChart(this.plot, 400, 500, {
-            top: 10, right: 20, bottom: this.plot.margin.bottom, left: 50
-        });
-        const legend = new Legend(this.plot, 400, 160, {
-            top: this.plot.margin.top, right: 5, bottom: this.plot.margin.bottom, left: 5
-        });
-        const table = new Table(this.plot);
+        this.plot = Container.get(BrHeatmap);
+        Container.rebind(BrHeatmap).toConstantValue(this.plot);
 
-        this.plot.init(colorBar, lineChart, legend, table);
+        // Container.bind(ColorBar).to(ColorBar).withParams(this.plot);
+
+        this.plot.init();
 
         utils.setEvent.byClass("br-heatmap-selection")
             .onchange(() => this.plot.update(false));

@@ -1,6 +1,8 @@
 import * as d3 from "d3";
-import { NavTab } from "../nav-tab";
+import { NavTab } from "../nav-tab"
+import { Injectable } from "../../utils";
 
+@Injectable
 export abstract class Link extends NavTab {
     abstract readonly url: string;
 

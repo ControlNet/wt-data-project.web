@@ -1,7 +1,10 @@
 import { Page } from "./page";
 import * as d3 from "d3";
 import * as marked from "marked";
+import { Singleton } from "../../utils";
 
+
+@Singleton(TodoPage)
 export class TodoPage extends Page {
     readonly id = "todo-list";
     readonly name = "Todo List";

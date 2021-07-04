@@ -1,14 +1,15 @@
 import * as d3 from "d3";
-import { Margin, Plot } from "./plot";
+import { Plot } from "./plot";
 import { BrHeatmap, SquareInfo } from "./br-heatmap";
+import { Config, Margin } from "../app/config";
+import { Container, Inject, Provider } from "../utils";
 
+
+@Provider(Legend)
 export class Legend extends Plot {
-    brHeatmap: BrHeatmap;
-
-    constructor(brHeatmap: BrHeatmap, svgHeight: number, svgWidth: number, margin: Margin) {
-        super(svgHeight, svgWidth, margin);
-        this.brHeatmap = brHeatmap;
-    }
+    @Inject(Config.BrHeatmapPage.Legend.svgHeight) readonly svgHeight: number;
+    @Inject(Config.BrHeatmapPage.Legend.svgWidth) readonly svgWidth: number;
+    @Inject(Config.BrHeatmapPage.Legend.margin) readonly margin: Margin;
 
     init(): Legend {
         // build new plot in the content div of page
@@ -76,6 +77,10 @@ export class Legend extends Plot {
             })
 
         return await new Promise(resolve => resolve(this));
+    }
+
+    get brHeatmap(): BrHeatmap {
+        return Container.get(BrHeatmap);
     }
 
     async reset(): Promise<Plot> {

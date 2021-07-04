@@ -1,24 +1,26 @@
 import * as d3 from "d3";
 import * as _ from "lodash";
-import { Margin, Plot } from "./plot";
+import { Plot } from "./plot";
 import { BrHeatmap } from "./br-heatmap";
 import { TimeseriesData, TimeseriesRow, TimeseriesRowGetter } from "../data/timeseries-data";
-import { utils } from "../utils";
+import { Container, Inject, Injectable, Provider, utils } from "../utils";
 import { BRRange, Clazz, Measurement, Mode } from "../data/options";
+import { Config, Margin } from "../app/config";
 
+
+@Injectable
 export abstract class LineChart extends Plot {
 }
 
-export class BRLineChart extends LineChart {
-    brHeatmap: BrHeatmap;
+
+@Provider(BrLineChart)
+export class BrLineChart extends LineChart {
+    @Inject(Config.BrHeatmapPage.BrLineChart.svgHeight) readonly svgHeight: number;
+    @Inject(Config.BrHeatmapPage.BrLineChart.svgWidth) readonly svgWidth: number;
+    @Inject(Config.BrHeatmapPage.BrLineChart.margin) readonly margin: Margin;
     dataCache: Array<TimeseriesDataCache> = [];
 
-    constructor(brHeatmap: BrHeatmap, svgHeight: number, svgWidth: number, margin: Margin) {
-        super(svgHeight, svgWidth, margin);
-        this.brHeatmap = brHeatmap;
-    }
-
-    init(): BRLineChart {
+    init(): BrLineChart {
         // build new plot in the content div of page
         this.svg = d3.select<HTMLDivElement, unknown>("#content")
             .append<SVGSVGElement>("svg")
@@ -60,13 +62,13 @@ export class BRLineChart extends LineChart {
         })
     }
 
-    async update(): Promise<BRLineChart> {
+    async update(): Promise<BrLineChart> {
         const oldXAxis = this.g.selectAll<SVGElement, unknown>(".x-axis");
         const oldYAxis = this.g.selectAll<SVGElement, unknown>(".y-axis");
 
         return await new Promise(resolve => {
             this.searchInCache().then((data) => {
-                const dataObjs: Array<BRLineChartDataObj> = this.groupBy(this.extractData(data));
+                const dataObjs: Array<BrLineChartDataObj> = this.groupBy(this.extractData(data));
 
                 // x axis
                 const x = d3.scaleLinear()
@@ -120,17 +122,17 @@ export class BRLineChart extends LineChart {
                     })
 
                 // add lines
-                let paths: d3.Selection<SVGPathElement, BRLineChartDataObj, SVGGElement, unknown>;
+                let paths: d3.Selection<SVGPathElement, BrLineChartDataObj, SVGGElement, unknown>;
                 if (this.g.selectAll("#line-chart-path-g").size() > 0) {
                     paths = this.g.select<SVGGElement>("#line-chart-path-g")
-                        .selectAll<SVGPathElement, BRLineChartDataObj>("path")
-                        .data(dataObjs, (d: BRLineChartDataObj) => d.nation + d.br);
+                        .selectAll<SVGPathElement, BrLineChartDataObj>("path")
+                        .data(dataObjs, (d: BrLineChartDataObj) => d.nation + d.br);
                 } else {
                     paths = this.g.append<SVGGElement>("g")
                         .attr("id", "line-chart-path-g")
                         .style("fill", "None")
-                        .selectAll<SVGPathElement, BRLineChartDataObj>("path")
-                        .data(dataObjs, (d: BRLineChartDataObj) => d.nation + d.br);
+                        .selectAll<SVGPathElement, BrLineChartDataObj>("path")
+                        .data(dataObjs, (d: BrLineChartDataObj) => d.nation + d.br);
                 }
 
                 // remove lines for removed selection
@@ -142,7 +144,7 @@ export class BRLineChart extends LineChart {
                 // shift the lines with re-adjusted y-axis range
                 paths.transition()
                     .duration(500)
-                    .attr("d", (d: BRLineChartDataObj) => line(d.values))
+                    .attr("d", (d: BrLineChartDataObj) => line(d.values))
                     .attr("stroke", d => this.brHeatmap.colorPool.get(d));
 
                 // add lines for new selected data
@@ -153,12 +155,16 @@ export class BRLineChart extends LineChart {
                     .transition()
                     .duration(500)
                     .style("opacity", 1)
-                    .attr("d", (d: BRLineChartDataObj) => line(d.values))
-                    .attr("stroke", (d: BRLineChartDataObj) => this.brHeatmap.colorPool.get(d));
+                    .attr("d", (d: BrLineChartDataObj) => line(d.values))
+                    .attr("stroke", (d: BrLineChartDataObj) => this.brHeatmap.colorPool.get(d));
 
                 resolve(this);
             });
         });
+    }
+
+    get brHeatmap(): BrHeatmap {
+        return Container.get(BrHeatmap);
     }
 
     async reset(): Promise<Plot> {
@@ -166,7 +172,7 @@ export class BRLineChart extends LineChart {
         return await new Promise((resolve) => resolve(this));
     }
 
-    private extractData(data: Array<TimeseriesRow>): BRLineChartData {
+    private extractData(data: Array<TimeseriesRow>): BrLineChartData {
         return data.filter(row => {
             const get = new TimeseriesRowGetter(row, this.brHeatmap.mode, this.brHeatmap.measurement);
             return this.brHeatmap.selected.some(
@@ -185,8 +191,8 @@ export class BRLineChart extends LineChart {
         });
     }
 
-    private groupBy(data: BRLineChartData): Array<BRLineChartDataObj> {
-        const result: Array<BRLineChartDataObj> = [];
+    private groupBy(data: BrLineChartData): Array<BrLineChartDataObj> {
+        const result: Array<BrLineChartDataObj> = [];
         for (const row of data) {
             // if there is an existed category
             if (result.filter(category => category.br === row.br && category.nation === row.nation).length > 0) {
@@ -220,16 +226,16 @@ export class BRLineChart extends LineChart {
     }
 }
 
-type BRLineChartData = Array<BRLineChartRow>;
+type BrLineChartData = Array<BrLineChartRow>;
 
-interface BRLineChartRow {
+interface BrLineChartRow {
     date: Date;
     br: string;
     nation: string;
     value: number;
 }
 
-export interface BRLineChartDataObj {
+export interface BrLineChartDataObj {
     br: string;
     nation: string;
     values: Array<{ date: Date, value: number }>

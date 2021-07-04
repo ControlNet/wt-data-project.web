@@ -1,10 +1,13 @@
 import * as d3 from "d3";
 import * as _ from "lodash";
-import { MousePosition } from "../utils";
+import { Container, Inject, Injectable, MousePosition, Provider } from "../utils";
 import { Plot } from "./plot";
+import { Config } from "../app/config";
 
-export class Tooltip extends Plot {
-    readonly parentSvg: d3.Selection<SVGSVGElement, any, HTMLElement, unknown>;
+
+@Injectable
+export abstract class Tooltip extends Plot {
+    readonly parentSvgId: string;
     readonly opacity: number;
     readonly nRow: number;
     readonly rectWidth: number;
@@ -12,18 +15,21 @@ export class Tooltip extends Plot {
     readonly rectYBias: number;
     readonly textXBias: number;
     readonly textYBias: number;
+
+    parentSvg: d3.Selection<SVGSVGElement, any, HTMLElement, unknown>;
     g: d3.Selection<SVGGElement, any, HTMLElement, unknown>;
     rect: d3.Selection<SVGRectElement, any, HTMLElement, unknown>;
     text: d3.Selection<SVGTextElement, any, HTMLElement, unknown>;
 
     constructor(
-        parentSvg: d3.Selection<SVGSVGElement, any, HTMLElement, unknown>, opacity: number,
+        parentSvgSelector: d3.Selection<SVGSVGElement, any, HTMLElement, unknown>, opacity: number,
         nRow: number, width: number,
         rectXBias: number, rectYBias: number,
         textXBias: number, textYBias: number
     ) {
-        super(null, null, null);
-        this.parentSvg = parentSvg;
+        super();
+        // this.parentSvg = d3.select(`#${parentSvgSelector}`);
+        this.parentSvg = parentSvgSelector;
         this.opacity = opacity;
         this.nRow = nRow;
         this.rectWidth = width;
@@ -34,10 +40,13 @@ export class Tooltip extends Plot {
     }
 
     init(): Tooltip {
+        // select parent svg
+        this.parentSvg = d3.select("#" + this.parentSvgId);
+
         // init tooltip g element
         this.g = this.parentSvg.append<SVGGElement>("g")
             .attr("class", "tooltip")
-            .style("opacity", 0);
+            .style("opacity", 1);
 
         // init tooltip rect background
         this.rect = this.g.append<SVGRectElement>("rect")
@@ -72,9 +81,7 @@ export class Tooltip extends Plot {
     updateRect(mousePos: MousePosition): Tooltip {
         const x = mousePos.x < 130 ? mousePos.x + this.rectXBias + 150 : mousePos.x + this.rectXBias;
         const y = mousePos.y < 40 ? mousePos.y + this.rectYBias + 70 : mousePos.y + this.rectYBias;
-        this.rect
-            .attr("x", x)
-            .attr("y", y);
+        this.rect.attr("x", x).attr("y", y);
         return this;
     }
 
@@ -100,13 +107,25 @@ export class Tooltip extends Plot {
     }
 
     hide(): Tooltip {
-        this.g.style("opacity", 0)
+        this.g.style("opacity", 0);
         return this;
     }
 
     appear(): Tooltip {
-        this.g.style("opacity", 1)
+        this.g.style("opacity", 1);
         return this;
     }
+}
 
+
+@Provider(BrHeatmapTooltip)
+export class BrHeatmapTooltip extends Tooltip {
+    @Inject(Config.BrHeatmapPage.Tooltip.parentSvgId) readonly parentSvgId: string;
+    @Inject(Config.BrHeatmapPage.Tooltip.opacity) readonly opacity: number;
+    @Inject(Config.BrHeatmapPage.Tooltip.nRow) readonly nRow: number;
+    @Inject(Config.BrHeatmapPage.Tooltip.rectWidth) readonly rectWidth: number;
+    @Inject(Config.BrHeatmapPage.Tooltip.rectXBias) readonly rectXBias: number;
+    @Inject(Config.BrHeatmapPage.Tooltip.rectYBias) readonly rectYBias: number;
+    @Inject(Config.BrHeatmapPage.Tooltip.textXBias) readonly textXBias: number;
+    @Inject(Config.BrHeatmapPage.Tooltip.textYBias) readonly textYBias: number;
 }

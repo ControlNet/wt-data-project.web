@@ -3,15 +3,12 @@ import { BrHeatmap, SquareInfo } from "./br-heatmap";
 import * as d3 from "d3";
 import { JoinedData, JoinedRow, JoinedRowGetter } from "../data/joined-data";
 import * as _ from "lodash";
+import { Container, Provider } from "../utils";
 
+
+@Provider(Table)
 export class Table extends Plot {
-    brHeatmap: BrHeatmap;
     table: d3.Selection<HTMLTableElement, unknown, HTMLElement, unknown>
-
-    constructor(brHeatmap: BrHeatmap) {
-        super(null, null, null);
-        this.brHeatmap = brHeatmap;
-    }
 
     init(): Table {
         this.table = d3.select<HTMLDivElement, unknown>("#content")
@@ -92,6 +89,10 @@ export class Table extends Plot {
                 sl_rate: get.slRate
             }
         })
+    }
+
+    get brHeatmap(): BrHeatmap {
+        return Container.get(BrHeatmap);
     }
 
     get dataPath(): string {

@@ -1,7 +1,17 @@
-import {Page, PageClass} from "./page/page";
-import {Metadata} from "../data/metadata";
-import d3 = require("d3");
+import { Page, PageClass } from "./page/page";
+import { Metadata } from "../data/metadata";
+import * as d3 from "d3";
 import { Link, LinkClass } from "./link/link";
+import { Config, ConfigJson } from "./config";
+import { Container } from "../utils";
+import "reflect-metadata";
+import "../plot/br-heatmap";
+import "../plot/color-bar";
+import "../plot/line-chart";
+import "../plot/legend";
+import "../plot/table";
+import "../plot/tooltip";
+
 
 export class Application {
     static Pages: Array<PageClass<any>>;
@@ -12,23 +22,31 @@ export class Application {
     static links: Array<Link>
 
     static run(): void {
+
         d3.json("https://raw.githubusercontent.com/ControlNet/wt-data-project.data/master/metadata.json", (metadata: Array<Metadata>) => {
-            Application.metadata = metadata;
-            // initialize the dates
-            Application.dates = Application.metadata
-                .filter(each => each.type === "joined")
-                .map(each => each.date)
-                .reverse();
-            // initialize the pages
-            Application.pages = Application.Pages.map(Page => new Page());
-            Application.pages.forEach(page => page.init());
 
-            // initialize the links
-            Application.links = Application.Links.map(TheLink => new TheLink());
-            Application.links.forEach(link => link.init());
+            d3.json("/config/config.json", (json: ConfigJson) => {
+                Container.importProvider();
+                Config.load(json);
 
-            // render the first page
-            Application.pages[0].update();
+                Application.metadata = metadata;
+                // initialize the dates
+                Application.dates = Application.metadata
+                    .filter(each => each.type === "joined")
+                    .map(each => each.date)
+                    .reverse();
+                // initialize the pages
+                Application.pages = Application.Pages.map(Container.get);
+                Application.pages.forEach(page => page.init());
+
+                // initialize the links
+                Application.links = Application.Links.map(Container.get);
+                Application.links.forEach(link => link.init());
+
+                // render the first page
+                Application.pages[0].update();
+            })
+
         })
     }
 

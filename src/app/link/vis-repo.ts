@@ -1,5 +1,7 @@
 import { Link } from "./link";
+import { Singleton } from "../../utils";
 
+@Singleton(VisRepo)
 export class VisRepo extends Link {
     readonly id = "vis-repo";
     readonly name = "Visualization Repo";

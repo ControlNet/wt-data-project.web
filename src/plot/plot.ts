@@ -1,17 +1,14 @@
 import * as d3 from "d3";
+import { Injectable } from "../utils";
+import { Margin } from "../app/config";
 
+@Injectable
 export abstract class Plot {
-    svgHeight: number;
-    svgWidth: number;
-    margin: Margin;
+    readonly svgHeight: number;
+    readonly svgWidth: number;
+    readonly margin: Margin;
     svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>
     g: d3.Selection<SVGGElement, unknown, HTMLElement, any>
-
-    constructor(svgHeight: number, svgWidth: number, margin: Margin) {
-        this.svgHeight = svgHeight;
-        this.svgWidth = svgWidth;
-        this.margin = margin;
-    }
 
     abstract init(...args: any[]): Plot;
 
@@ -24,11 +21,4 @@ export abstract class Plot {
     get height() {
         return this.svgHeight - this.margin.top - this.margin.bottom;
     }
-}
-
-export class Margin {
-    top: number;
-    right: number;
-    bottom: number;
-    left: number;
 }
