@@ -35,19 +35,18 @@ export class BrLineChart extends LineChart {
     }
 
     private async searchInCache(): Promise<TimeseriesData> {
-        return await new Promise(resolve => {
-            // search dataObj in cache
-            for (const cache of this.dataCache) {
-                if (this.brHeatmap.clazz === cache.clazz
-                    && this.brHeatmap.brRange === cache.brRange
-                    && this.brHeatmap.mode === cache.mode
-                    && this.brHeatmap.measurement === cache.measurement
-                ) {
-                    resolve(cache.data);
-                    return;
-                }
+        // search dataObj in cache
+        for (const cache of this.dataCache) {
+            if (this.brHeatmap.clazz === cache.clazz
+                && this.brHeatmap.brRange === cache.brRange
+                && this.brHeatmap.mode === cache.mode
+                && this.brHeatmap.measurement === cache.measurement
+            ) {
+                return cache.data;
             }
-            // else generate a new cache
+        }
+        // else generate a new cache
+        return new Promise(resolve => {
             d3.csv(this.brHeatmap.dataPath, (data: TimeseriesData) => {
                 this.dataCache.push({
                     brRange: this.brHeatmap.brRange,
@@ -57,119 +56,115 @@ export class BrLineChart extends LineChart {
                     data: data
                 });
                 resolve(data);
-                return;
             })
-        })
+        });
     }
 
     async update(): Promise<BrLineChart> {
         const oldXAxis = this.g.selectAll<SVGElement, unknown>(".x-axis");
         const oldYAxis = this.g.selectAll<SVGElement, unknown>(".y-axis");
 
-        return await new Promise(resolve => {
-            this.searchInCache().then((data) => {
-                const dataObjs: Array<BrLineChartDataObj> = this.groupBy(this.extractData(data));
+        const data = await this.searchInCache();
+        const dataObjs: Array<BrLineChartDataObj> = this.groupBy(this.extractData(data));
 
-                // x axis
-                const x = d3.scaleLinear()
-                    .domain(d3.extent(data, d => utils.parseDate(d.date)))
-                    .range([0, this.width]);
-                // generate sticks
-                this.g.append<SVGGElement>("g")
-                    .classed("x-axis", true)
-                    .attr("transform", `translate(0, ${this.height})`)
-                    .call(d3.axisBottom(x)
-                        .tickFormat(d3.timeFormat('%Y/%m')));
+        // x axis
+        const x = d3.scaleLinear()
+            .domain(d3.extent(data, d => utils.parseDate(d.date)))
+            .range([0, this.width]);
+        // generate sticks
+        this.g.append<SVGGElement>("g")
+            .classed("x-axis", true)
+            .attr("transform", `translate(0, ${this.height})`)
+            .call(d3.axisBottom(x)
+                .tickFormat(d3.timeFormat('%Y/%m')));
 
-                // add x label
-                this.g.append<SVGTextElement>("text")
-                    .classed("x-axis", true)
-                    .text("Date")
-                    .attr("transform", `translate(${this.width / 2}, ${this.height + 30})`)
-                    .style("font-size", 12)
-                    .style("text-anchor", "middle");
+        // add x label
+        this.g.append<SVGTextElement>("text")
+            .classed("x-axis", true)
+            .text("Date")
+            .attr("transform", `translate(${this.width / 2}, ${this.height + 30})`)
+            .style("font-size", 12)
+            .style("text-anchor", "middle");
 
-                oldXAxis.remove();
+        oldXAxis.remove();
 
-                // y axis
-                const yValues: Array<number> = _.flatMap(dataObjs, obj => obj.values).map(row => +row.value);
-                const yMax = Math.min(_.max(yValues) * 1.02, 100);
-                const yMin = Math.max(_.min(yValues) * 0.98, 0);
-                const y = d3.scaleLinear()
-                    .domain([yMin, yMax])
-                    .range([this.height, 0]);
-                // generate sticks
-                this.g.append<SVGGElement>("g")
-                    .classed("y-axis", true)
-                    .call(d3.axisLeft(y));
+        // y axis
+        const yValues: Array<number> = _.flatMap(dataObjs, obj => obj.values).map(row => +row.value);
+        const yMax = Math.min(_.max(yValues) * 1.02, 100);
+        const yMin = Math.max(_.min(yValues) * 0.98, 0);
+        const y = d3.scaleLinear()
+            .domain([yMin, yMax])
+            .range([this.height, 0]);
+        // generate sticks
+        this.g.append<SVGGElement>("g")
+            .classed("y-axis", true)
+            .call(d3.axisLeft(y));
 
-                // add y label
-                this.g.append<SVGTextElement>("text")
-                    .classed("y-axis", true)
-                    .text(this.brHeatmap.measurement)
-                    .attr("transform", `translate(${-30}, ${this.height / 2}) rotate(270)`)
-                    .style("font-size", 12)
-                    .style("text-anchor", "middle");
+        // add y label
+        this.g.append<SVGTextElement>("text")
+            .classed("y-axis", true)
+            .text(this.brHeatmap.measurement)
+            .attr("transform", `translate(${-30}, ${this.height / 2}) rotate(270)`)
+            .style("font-size", 12)
+            .style("text-anchor", "middle");
 
-                oldYAxis.remove();
+        oldYAxis.remove();
 
-                const line = d3.line<{ date: Date, value: number }>()
-                    .x(function(d) {
-                        return x(d.date)
-                    })
-                    .y(function(d) {
-                        return y(d.value)
-                    })
+        const line = d3.line<{ date: Date, value: number }>()
+            .x(function(d) {
+                return x(d.date)
+            })
+            .y(function(d) {
+                return y(d.value)
+            })
 
-                // add lines
-                let paths: d3.Selection<SVGPathElement, BrLineChartDataObj, SVGGElement, unknown>;
-                if (this.g.selectAll("#line-chart-path-g").size() > 0) {
-                    paths = this.g.select<SVGGElement>("#line-chart-path-g")
-                        .selectAll<SVGPathElement, BrLineChartDataObj>("path")
-                        .data(dataObjs, (d: BrLineChartDataObj) => d.nation + d.br);
-                } else {
-                    paths = this.g.append<SVGGElement>("g")
-                        .attr("id", "line-chart-path-g")
-                        .style("fill", "None")
-                        .selectAll<SVGPathElement, BrLineChartDataObj>("path")
-                        .data(dataObjs, (d: BrLineChartDataObj) => d.nation + d.br);
-                }
+        // add lines
+        let paths: d3.Selection<SVGPathElement, BrLineChartDataObj, SVGGElement, unknown>;
+        if (this.g.selectAll("#line-chart-path-g").size() > 0) {
+            paths = this.g.select<SVGGElement>("#line-chart-path-g")
+                .selectAll<SVGPathElement, BrLineChartDataObj>("path")
+                .data(dataObjs, (d: BrLineChartDataObj) => d.nation + d.br);
+        } else {
+            paths = this.g.append<SVGGElement>("g")
+                .attr("id", "line-chart-path-g")
+                .style("fill", "None")
+                .selectAll<SVGPathElement, BrLineChartDataObj>("path")
+                .data(dataObjs, (d: BrLineChartDataObj) => d.nation + d.br);
+        }
 
-                // remove lines for removed selection
-                paths.exit().transition()
-                    .duration(500)
-                    .style("opacity", 0)
-                    .remove();
+        // remove lines for removed selection
+        paths.exit().transition()
+            .duration(500)
+            .style("opacity", 0)
+            .remove();
 
-                // shift the lines with re-adjusted y-axis range
-                paths.transition()
-                    .duration(500)
-                    .attr("d", (d: BrLineChartDataObj) => line(d.values))
-                    .attr("stroke", d => this.brHeatmap.colorPool.get(d));
+        // shift the lines with re-adjusted y-axis range
+        paths.transition()
+            .duration(500)
+            .attr("d", (d: BrLineChartDataObj) => line(d.values))
+            .attr("stroke", d => this.brHeatmap.colorPool.get(d));
 
-                // add lines for new selected data
-                paths.enter()
-                    .append<SVGPathElement>("path")
-                    .style("opacity", 0)
-                    .style("stroke-width", 3)
-                    .transition()
-                    .duration(500)
-                    .style("opacity", 1)
-                    .attr("d", (d: BrLineChartDataObj) => line(d.values))
-                    .attr("stroke", (d: BrLineChartDataObj) => this.brHeatmap.colorPool.get(d));
+        // add lines for new selected data
+        paths.enter()
+            .append<SVGPathElement>("path")
+            .style("opacity", 0)
+            .style("stroke-width", 3)
+            .transition()
+            .duration(500)
+            .style("opacity", 1)
+            .attr("d", (d: BrLineChartDataObj) => line(d.values))
+            .attr("stroke", (d: BrLineChartDataObj) => this.brHeatmap.colorPool.get(d));
 
-                resolve(this);
-            });
-        });
+        return this;
     }
 
     get brHeatmap(): BrHeatmap {
         return Container.get(BrHeatmap);
     }
 
-    async reset(): Promise<Plot> {
+    reset(): BrLineChart {
         this.g.html(null);
-        return await new Promise((resolve) => resolve(this));
+        return this;
     }
 
     private extractData(data: Array<TimeseriesRow>): BrLineChartData {
@@ -255,10 +250,7 @@ export class StackLineChart extends LineChart {
     }
 
     async update(...args: any[]): Promise<Plot> {
-
-        return await new Promise(resolve => {
-            resolve(this)
-        })
+        return this;
     }
 
 }

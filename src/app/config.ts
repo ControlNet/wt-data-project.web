@@ -1,3 +1,5 @@
+import * as _ from "lodash"
+import * as d3 from "d3";
 import { Container } from "../utils";
 
 
@@ -96,38 +98,24 @@ class TooltipConfig extends AbstractConfig {
 }
 
 export class Config {
-    static load(json: ConfigJson) {
-        const bindMap: Array<{key: string, value: any}> = [
-            {key: Config.BrHeatmapPage.BrHeatmap.svgHeight, value: json.BrHeatmapPage.BrHeatmap.svgHeight},
-            {key: Config.BrHeatmapPage.BrHeatmap.svgWidth, value: json.BrHeatmapPage.BrHeatmap.svgWidth},
-            {key: Config.BrHeatmapPage.BrHeatmap.margin, value: json.BrHeatmapPage.BrHeatmap.margin},
-            {key: Config.BrHeatmapPage.BrHeatmap.mainSvgId, value: json.BrHeatmapPage.BrHeatmap.mainSvgId},
-
-            {key: Config.BrHeatmapPage.ColorBar.svgHeight, value: json.BrHeatmapPage.ColorBar.svgHeight},
-            {key: Config.BrHeatmapPage.ColorBar.svgWidth, value: json.BrHeatmapPage.ColorBar.svgWidth},
-            {key: Config.BrHeatmapPage.ColorBar.margin, value: json.BrHeatmapPage.ColorBar.margin},
-
-            {key: Config.BrHeatmapPage.BrLineChart.svgHeight, value: json.BrHeatmapPage.BrLineChart.svgHeight},
-            {key: Config.BrHeatmapPage.BrLineChart.svgWidth, value: json.BrHeatmapPage.BrLineChart.svgWidth},
-            {key: Config.BrHeatmapPage.BrLineChart.margin, value: json.BrHeatmapPage.BrLineChart.margin},
-
-            {key: Config.BrHeatmapPage.Legend.svgHeight, value: json.BrHeatmapPage.Legend.svgHeight},
-            {key: Config.BrHeatmapPage.Legend.svgWidth, value: json.BrHeatmapPage.Legend.svgWidth},
-            {key: Config.BrHeatmapPage.Legend.margin, value: json.BrHeatmapPage.Legend.margin},
-
-            {key: Config.BrHeatmapPage.Tooltip.parentSvgId, value: json.BrHeatmapPage.Tooltip.parentSvgId},
-            {key: Config.BrHeatmapPage.Tooltip.opacity, value: json.BrHeatmapPage.Tooltip.opacity},
-            {key: Config.BrHeatmapPage.Tooltip.nRow, value: json.BrHeatmapPage.Tooltip.nRow},
-            {key: Config.BrHeatmapPage.Tooltip.rectWidth, value: json.BrHeatmapPage.Tooltip.rectWidth},
-            {key: Config.BrHeatmapPage.Tooltip.rectXBias, value: json.BrHeatmapPage.Tooltip.rectXBias},
-            {key: Config.BrHeatmapPage.Tooltip.rectYBias, value: json.BrHeatmapPage.Tooltip.rectYBias},
-            {key: Config.BrHeatmapPage.Tooltip.textXBias, value: json.BrHeatmapPage.Tooltip.textXBias},
-            {key: Config.BrHeatmapPage.Tooltip.textYBias, value: json.BrHeatmapPage.Tooltip.textYBias},
-        ];
-
-        bindMap.forEach(({key, value}) => {
-            Container.bind(key).toConstantValue(value);
-        });
+    static async load(): Promise<void> {
+        return new Promise(resolve => {
+                d3.json("/config/params.json", (json: ConfigJson) => {
+                    _.keys(json).forEach((page: keyof Config) => {
+                        const pageJson = json[page];
+                        _.keys(pageJson).forEach(plot => {
+                            const plotJson = pageJson[plot];
+                            _.keys(plotJson).forEach(attr => {
+                                const key = Config[page][plot][attr];
+                                const value = plotJson[attr];
+                                Container.bind(key).toConstantValue(value);
+                            })
+                        })
+                    })
+                    resolve();
+                });
+            }
+        )
     }
 
     static BrHeatmapPage = class {

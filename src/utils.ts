@@ -148,6 +148,7 @@ export class MousePosition {
         this.y = y;
     }
 }
+
 // IOC containers
 export function Singleton(serviceIdentifier: inversifyInterfaces.ServiceIdentifier<any>) {
     return fluentProvide(serviceIdentifier).inSingletonScope().done();

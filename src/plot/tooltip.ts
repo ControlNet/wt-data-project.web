@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import * as _ from "lodash";
-import { Container, Inject, Injectable, MousePosition, Provider } from "../utils";
+import { Inject, Injectable, MousePosition, Provider } from "../utils";
 import { Plot } from "./plot";
 import { Config } from "../app/config";
 
@@ -20,24 +20,6 @@ export abstract class Tooltip extends Plot {
     g: d3.Selection<SVGGElement, any, HTMLElement, unknown>;
     rect: d3.Selection<SVGRectElement, any, HTMLElement, unknown>;
     text: d3.Selection<SVGTextElement, any, HTMLElement, unknown>;
-
-    constructor(
-        parentSvgSelector: d3.Selection<SVGSVGElement, any, HTMLElement, unknown>, opacity: number,
-        nRow: number, width: number,
-        rectXBias: number, rectYBias: number,
-        textXBias: number, textYBias: number
-    ) {
-        super();
-        // this.parentSvg = d3.select(`#${parentSvgSelector}`);
-        this.parentSvg = parentSvgSelector;
-        this.opacity = opacity;
-        this.nRow = nRow;
-        this.rectWidth = width;
-        this.rectXBias = rectXBias;
-        this.rectYBias = rectYBias;
-        this.textXBias = textXBias;
-        this.textYBias = textYBias;
-    }
 
     init(): Tooltip {
         // select parent svg
@@ -100,10 +82,10 @@ export abstract class Tooltip extends Plot {
         return this;
     }
 
-    update(textArr: Array<string>, mousePos: MousePosition): Promise<Tooltip> {
+    async update(textArr: Array<string>, mousePos: MousePosition): Promise<Tooltip> {
         this.updateRect(mousePos);
         this.updateText(textArr, mousePos);
-        return Promise.resolve(this);
+        return this;
     }
 
     hide(): Tooltip {

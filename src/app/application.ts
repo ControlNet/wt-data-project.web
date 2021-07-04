@@ -23,29 +23,26 @@ export class Application {
 
     static run(): void {
 
-        d3.json("https://raw.githubusercontent.com/ControlNet/wt-data-project.data/master/metadata.json", (metadata: Array<Metadata>) => {
+        d3.json("https://raw.githubusercontent.com/ControlNet/wt-data-project.data/master/metadata.json", async (metadata: Array<Metadata>) => {
+            Container.importProvider();
+            await Config.load();
 
-            d3.json("/config/params.json", (json: ConfigJson) => {
-                Container.importProvider();
-                Config.load(json);
+            Application.metadata = metadata;
+            // initialize the dates
+            Application.dates = Application.metadata
+                .filter(each => each.type === "joined")
+                .map(each => each.date)
+                .reverse();
+            // initialize the pages
+            Application.pages = Application.Pages.map(Container.get);
+            Application.pages.forEach(page => page.init());
 
-                Application.metadata = metadata;
-                // initialize the dates
-                Application.dates = Application.metadata
-                    .filter(each => each.type === "joined")
-                    .map(each => each.date)
-                    .reverse();
-                // initialize the pages
-                Application.pages = Application.Pages.map(Container.get);
-                Application.pages.forEach(page => page.init());
+            // initialize the links
+            Application.links = Application.Links.map(Container.get);
+            Application.links.forEach(link => link.init());
 
-                // initialize the links
-                Application.links = Application.Links.map(Container.get);
-                Application.links.forEach(link => link.init());
-
-                // render the first page
-                Application.pages[0].update();
-            })
+            // render the first page
+            Application.pages[0].update();
 
         })
     }

@@ -33,8 +33,8 @@ export class BrHeatmap extends Plot {
     }
 
     async resetSubPlots() {
-        await this.table.reset();
-        await this.lineChart.reset();
+        this.table.reset();
+        this.lineChart.reset();
         await this.legend.update();
     }
 
@@ -125,8 +125,6 @@ export class BrHeatmap extends Plot {
             })
             return out;
         },
-
-
     }
 
     init(): BrHeatmap {

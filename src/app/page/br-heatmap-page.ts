@@ -2,13 +2,7 @@ import { Application } from "../application";
 import { Page } from "./page";
 import * as d3 from "d3";
 import { Container, Singleton, utils } from "../../utils";
-import { ColorBar } from "../../plot/color-bar";
-import { BrLineChart } from "../../plot/line-chart";
-import { Legend } from "../../plot/legend";
-import { Table } from "../../plot/table";
 import { BrHeatmap } from "../../plot/br-heatmap";
-import { Config } from "../config";
-import { BrHeatmapTooltip } from "../../plot/tooltip";
 
 
 @Singleton(BRHeatMapPage)
@@ -108,8 +102,6 @@ export class BRHeatMapPage extends Page {
 
         this.plot = Container.get(BrHeatmap);
         Container.rebind(BrHeatmap).toConstantValue(this.plot);
-
-        // Container.bind(ColorBar).to(ColorBar).withParams(this.plot);
 
         this.plot.init();
 

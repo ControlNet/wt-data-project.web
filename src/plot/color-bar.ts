@@ -12,7 +12,7 @@ export class ColorBar extends Plot {
     @Inject(Config.BrHeatmapPage.ColorBar.margin) readonly margin: Margin;
     valueMin: number;
     valueMax: number;
-    value2color: any;
+    value2color: Value2Color;
 
     init(): ColorBar {
         this.svg = d3.select<HTMLDivElement, unknown>("#content")
@@ -107,7 +107,7 @@ export class ColorBar extends Plot {
             .attr("transform", "translate(" + legendWidth + ", 0)")
             .call(legendAxis);
 
-        return await new Promise(resolve => resolve(this));
+        return this;
     }
 
     get brHeatmap(): BrHeatmap {

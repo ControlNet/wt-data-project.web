@@ -21,7 +21,7 @@ export class Table extends Plot {
 
     async update(): Promise<Table> {
         // remove previous
-        await this.reset();
+        this.reset();
 
         const clazz = this.brHeatmap.clazz;
         const brRange = +this.brHeatmap.brRange;
@@ -59,13 +59,13 @@ export class Table extends Plot {
                 })
             })
         })
-        return await new Promise(resolve => resolve(this));
+        return this;
     }
 
-    async reset(): Promise<Plot> {
+    reset(): Table {
         // remove previous
         this.table.html(null);
-        return await new Promise(resolve => resolve(this));
+        return this;
     }
 
     selectColumns(data: JoinedData): Array<TableRow> {

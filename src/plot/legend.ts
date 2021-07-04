@@ -76,7 +76,7 @@ export class Legend extends Plot {
                     .style("font-size", 12.5);
             })
 
-        return await new Promise(resolve => resolve(this));
+        return this;
     }
 
     get brHeatmap(): BrHeatmap {
@@ -85,6 +85,6 @@ export class Legend extends Plot {
 
     async reset(): Promise<Plot> {
         this.g.html(null)
-        return await new Promise(resolve => resolve(this));
+        return this;
     }
 }
