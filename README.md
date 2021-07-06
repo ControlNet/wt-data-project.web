@@ -1,8 +1,19 @@
-<img src="https://github.com/ControlNet/wt-data-project.web/blob/main/img/preview.gif">
+![](https://github.com/ControlNet/wt-data-project.web/blob/main/img/preview.png)
 # wt-data-project.web
 A visualization web application for wt-data-project.
 
 # [Visualization Link](https://wt.controlnet.space)
+
+## Features
+
+Mouse tooltip in heatmap.
+![brheatmap-tooltip](https://github.com/ControlNet/wt-data-project.web/blob/main/img/brheatmap-tooltip.gif)
+
+Click to check the data trends.
+![brheatmap-click](https://github.com/ControlNet/wt-data-project.web/blob/main/img/brheatmap-click.gif)
+
+View raw data.
+![brheatmap-raws](https://github.com/ControlNet/wt-data-project.web/blob/main/img/brheatmap-raws.gif)
 
 ## Todo List
 <div id="todo-list-section">
