@@ -1,3 +1,4 @@
+<img src="https://github.com/ControlNet/wt-data-project.web/blob/main/img/preview.gif">
 # wt-data-project.web
 A visualization web application for wt-data-project.
 
