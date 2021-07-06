@@ -1,4 +1,3 @@
-![](https://github.com/ControlNet/wt-data-project.web/blob/main/img/preview.png)
 # wt-data-project.web
 A visualization web application for wt-data-project.
 
