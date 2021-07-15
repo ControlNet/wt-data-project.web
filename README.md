@@ -12,7 +12,6 @@ A visualization web application for wt-data-project.
             <img src="https://img.shields.io/github/forks/ControlNet/wt-data-project.data?style=flat-square" alt="">
             <img src="https://img.shields.io/github/stars/ControlNet/wt-data-project.data?style=flat-square" alt="">
             <img src="https://img.shields.io/github/last-commit/ControlNet/wt-data-project.data/master?style=flat-square" alt="">
-            <img src="https://img.shields.io/github/workflow/status/ControlNet/wt-data-project.data/push-to-gitee?label=push-to-gitee&style=flat-square" alt="">
         </td>
     </tr>
     <tr>
