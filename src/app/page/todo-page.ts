@@ -12,7 +12,7 @@ export class TodoPage extends Page {
     update(): void {
         // remove old content of previous page
         this.removeOld();
-        d3.text("https://raw.githubusercontent.com/ControlNet/wt-data-project.web/main/README.md", function(md) {
+        d3.text("https://wt.controlnet.space/README.md", function(md) {
             d3.select("#content")
                 .html(marked(md))
                 .html(d3.select("div#todo-list-section").html())

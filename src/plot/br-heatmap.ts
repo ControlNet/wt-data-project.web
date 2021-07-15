@@ -330,7 +330,7 @@ export class BrHeatmap extends Plot {
     }
 
     get dataPath(): string {
-        return `https://raw.githubusercontent.com/ControlNet/wt-data-project.data/master/${this.mode.toLowerCase()}_ranks_${this.brRange}.csv`
+        return `https://controlnet.space/wt-data-project.data/${this.mode.toLowerCase()}_ranks_${this.brRange}.csv`
     }
 
     get date(): string {

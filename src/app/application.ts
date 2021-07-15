@@ -23,7 +23,7 @@ export class Application {
 
     static run(): void {
 
-        d3.json("https://raw.githubusercontent.com/ControlNet/wt-data-project.data/master/metadata.json", async (metadata: Array<Metadata>) => {
+        d3.json("https://controlnet.space/wt-data-project.data/metadata.json", async (metadata: Array<Metadata>) => {
             Container.importProvider();
             await Config.load();
 

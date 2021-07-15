@@ -96,7 +96,7 @@ export class Table extends Plot {
     }
 
     get dataPath(): string {
-        return `https://raw.githubusercontent.com/ControlNet/wt-data-project.data/master/joined/${this.brHeatmap.date}.csv`;
+        return `https://controlnet.space/wt-data-project.data/joined/${this.brHeatmap.date}.csv`;
     }
 }
 
