@@ -1,8 +1,10 @@
-import { Application } from "../application";
 import { Page } from "./page";
-import * as d3 from "d3";
-import { Container, Singleton, utils } from "../../utils";
+import { Container, Inject, Singleton, utils } from "../../utils";
 import { BrHeatmap } from "../../plot/br-heatmap";
+import { Sidebar } from "../global-env";
+import { BrRangeSelect, ClassSelect, DateSelect, MeasurementSelect, ModeSelect, Select } from "../sidebar/select";
+import * as d3 from "d3";
+import { BRRange, Clazz, Measurement, Mode } from "../options";
 
 
 @Singleton(BRHeatMapPage)
@@ -10,107 +12,54 @@ export class BRHeatMapPage extends Page {
     plot: BrHeatmap;
     readonly id = "br-heatmap";
     readonly name = "BR HeatMap";
+    @Inject(Sidebar) sidebar: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
 
     update(): void {
         // remove old plot
         this.removeOld();
-        // init sidebar
-        const sidebar = d3.select<HTMLDivElement, unknown>("#sidebar");
-
         // add date selection
-        const dateSelection = sidebar.append<HTMLLabelElement>("label")
-            .text("Date: ")
-            .append("select")
-            .attr("id", "date-selection")
-            .classed("br-heatmap-selection", true);
-
-        Application.dates.forEach(date => {
-            dateSelection.append<HTMLOptionElement>("option")
-                .attr("value", date)
-                .html(date);
-        })
+        Container.get<Select>(DateSelect).init();
         // add class selection
-        sidebar.append<HTMLLabelElement>("label")
-            .text("Class: ")
-            .append<HTMLSelectElement>("select")
-            .attr("id", "class-selection")
-            .classed("br-heatmap-selection", true)
-            .selectAll()
-            .data([
-                {id: "Ground_vehicles", text: "Ground Vehicles"},
-                {id: "Aviation", text: "Aviation"}
-            ])
-            .enter()
-            .append<HTMLOptionElement>("option")
-            .attr("value", d => d.id)
-            .attr("selected", d => d.id === "Ground_vehicles" ? "selected" : undefined)
-            .html(d => d.text);
-
+        Container.get<Select>(ClassSelect).init();
         // add mode selection for measurement
-        sidebar.append<HTMLLabelElement>("label")
-            .text("Mode: ")
-            .append<HTMLSelectElement>("select")
-            .attr("id", "mode-selection")
-            .classed("br-heatmap-selection", true)
-            .selectAll()
-            .data([
-                {id: "ab", text: "AB"},
-                {id: "rb", text: "RB"},
-                {id: "sb", text: "SB"}
-            ])
-            .enter()
-            .append<HTMLOptionElement>("option")
-            .attr("value", d => d.id)
-            .attr("selected", d => d.id === "rb" ? "selected" : undefined)
-            .html(d => d.text);
-
+        Container.get<Select>(ModeSelect).init();
         // add measurement selection
-        sidebar.append<HTMLLabelElement>("label")
-            .text("Measurement: ")
-            .append<HTMLSelectElement>("select")
-            .attr("id", "measurement-selection")
-            .classed("br-heatmap-selection", true)
-            .selectAll()
-            .data([
-                {id: "win_rate", text: "Win Rate"},
-                {id: "battles_sum", text: "Battles"}
-            ])
-            .enter()
-            .append<HTMLOptionElement>("option")
-            .attr("value", d => d.id)
-            .attr("selected", d => d.id === "win_rate" ? "selected" : undefined)
-            .html(d => d.text);
-
+        Container.get<Select>(MeasurementSelect).init();
         // br range selection
-        sidebar.append<HTMLLabelElement>("label")
-            .text("BR Range: ")
-            .append<HTMLSelectElement>("select")
-            .attr("id", "br-range-selection")
-            .classed("br-heatmap-selection", true)
-            .selectAll()
-            .data([
-                {id: "0"},
-                {id: "1"}
-            ])
-            .enter()
-            .append<HTMLOptionElement>("option")
-            .attr("value", d => d.id)
-            .attr("selected", d => d.id === "1" ? "selected" : undefined)
-            .html(d => d.id);
-
+        Container.get<Select>(BrRangeSelect).init();
         // init main content plot
         // rebind the container to BrHeatmap constructor to new a object
         Container.rebind(BrHeatmap).toSelf();
         this.plot = Container.get(BrHeatmap);
         // rebind the plot object as constant value for other subplots
         Container.rebind(BrHeatmap).toConstantValue(this.plot);
-
         this.plot.init();
 
-        utils.setEvent.byClass("br-heatmap-selection")
+        // change any selection will refresh the BrHeatmap.
+        utils.setEvent.byClass("plot-selection")
             .onchange(() => this.plot.update(false));
         // override some selection forcing re-download time-series data
         utils.setEvent.byIds("mode-selection", "br-range-selection")
             .onchange(() => this.plot.update(true));
+    }
+
+    get date(): string {
+        return utils.getSelectedValue("date-selection");
+    }
+
+    get clazz(): Clazz {
+        return utils.getSelectedValue("class-selection");
+    }
+
+    get mode(): Mode {
+        return utils.getSelectedValue("mode-selection");
+    }
+
+    get measurement(): Measurement {
+        return utils.getSelectedValue("measurement-selection");
+    }
+
+    get brRange(): BRRange {
+        return utils.getSelectedValue("br-range-selection");
     }
 }

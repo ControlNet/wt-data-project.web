@@ -2,18 +2,16 @@ import * as d3 from "d3";
 import { Plot } from "./plot";
 import { BrHeatmap, SquareInfo } from "./br-heatmap";
 import { Config, Margin } from "../app/config";
-import { Container, Inject, Provider } from "../utils";
+import { Container, Inject, Injectable, nationColors, Provider } from "../utils";
+import { nations } from "../app/global-env";
+import { Nation } from "../data/wiki-data";
 
 
-@Provider(Legend)
-export class Legend extends Plot {
-    @Inject(Config.BrHeatmapPage.Legend.svgHeight) readonly svgHeight: number;
-    @Inject(Config.BrHeatmapPage.Legend.svgWidth) readonly svgWidth: number;
-    @Inject(Config.BrHeatmapPage.Legend.margin) readonly margin: Margin;
-
+@Injectable
+abstract class Legend extends Plot {
     init(): Legend {
         // build new plot in the content div of page
-        this.svg = d3.select<HTMLDivElement, unknown>("#content")
+        this.svg = this.content
             .append<SVGSVGElement>("svg")
             .attr("height", this.svgHeight)
             .attr("width", this.svgWidth)
@@ -21,11 +19,17 @@ export class Legend extends Plot {
         this.g = this.svg.append<SVGGElement>("g")
             .attr("id", "legend-g")
             .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`);
-
         return this;
     }
+}
 
-    async update(): Promise<Legend> {
+@Provider(BrHeatmapLegend)
+export class BrHeatmapLegend extends Legend {
+    @Inject(Config.BrHeatmapPage.Legend.svgHeight) readonly svgHeight: number;
+    @Inject(Config.BrHeatmapPage.Legend.svgWidth) readonly svgWidth: number;
+    @Inject(Config.BrHeatmapPage.Legend.margin) readonly margin: Margin;
+
+    async update(): Promise<BrHeatmapLegend> {
         const legends = this.g.selectAll<SVGGElement, SquareInfo>("g")
             .data(this.brHeatmap.selected, (info: SquareInfo) => info.nation + info.br);
 
@@ -86,5 +90,46 @@ export class Legend extends Plot {
     async reset(): Promise<Plot> {
         this.g.html(null)
         return this;
+    }
+}
+
+
+@Provider(StackedLineChartLegend)
+export class StackedLineChartLegend extends Legend {
+    @Inject(Config.StackedAreaPage.Legend.svgHeight) readonly svgHeight: number;
+    @Inject(Config.StackedAreaPage.Legend.svgWidth) readonly svgWidth: number;
+    @Inject(Config.StackedAreaPage.Legend.margin) readonly margin: Margin;
+
+    update(): Promise<StackedLineChartLegend> {
+        const legends = this.g.selectAll<SVGGElement, SquareInfo>("g")
+            .data(nations);
+
+        const height = this.height;
+
+        // new legend
+        legends.enter()
+            .append<SVGGElement>("g")
+            .classed("legend-row", true)
+            .each(function(d: Nation, i: number) {
+                // add rect
+                d3.select(this)
+                    .append<SVGRectElement>("rect")
+                    .classed("legend-rect", true)
+                    .attr("x", 5)
+                    .attr("y", height - 30 - 30 * i)
+                    .attr("width", 20)
+                    .attr("height", 20)
+                    .style("fill", nationColors.get(d));
+                // add text
+                d3.select(this)
+                    .append<SVGTextElement>("text")
+                    .attr("x", 35)
+                    .attr("y", height - 15 - 30 * i)
+                    .text(d)
+                    .attr("text-anchor", "start")
+                    .style("font-size", 12.5);
+            });
+
+        return Promise.resolve(this);
     }
 }

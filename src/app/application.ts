@@ -11,6 +11,9 @@ import "../plot/line-chart";
 import "../plot/legend";
 import "../plot/table";
 import "../plot/tooltip";
+import { GlobalEnv } from "./global-env";
+import "./sidebar/sidebar-element";
+import "./sidebar/select";
 
 
 export class Application {
@@ -24,8 +27,10 @@ export class Application {
     static run(): void {
 
         d3.json("https://controlnet.space/wt-data-project.data/metadata.json", async (metadata: Array<Metadata>) => {
+            // init Container constants
             Container.importProvider();
             await Config.load();
+            GlobalEnv.init();
 
             Application.metadata = metadata;
             // initialize the dates

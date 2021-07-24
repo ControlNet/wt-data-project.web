@@ -1,6 +1,6 @@
 import { TsRow } from "./ts-data";
 import { WikiRow } from "./wiki-data";
-import { Mode } from "./options";
+import { Mode } from "../app/options";
 import { Getter } from "./getter";
 
 export type JoinedData = Array<JoinedRow>;

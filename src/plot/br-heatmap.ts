@@ -5,11 +5,12 @@ import { TimeseriesData, TimeseriesRow, TimeseriesRowGetter } from "../data/time
 import { categoricalColors, COLORS, CONT_COLORS, Inject, MousePosition, Provider, utils } from "../utils";
 import { ColorBar } from "./color-bar";
 import { BrLineChart, BrLineChartDataObj } from "./line-chart";
-import { Legend } from "./legend";
+import { BrHeatmapLegend } from "./legend";
 import { Table } from "./table";
-import { BRRange, Clazz, Measurement, Mode } from "../data/options";
 import { BrHeatmapTooltip, Tooltip } from "./tooltip";
 import { Config, Margin } from "../app/config";
+import { brs, Content, nations } from "../app/global-env";
+import { BRHeatMapPage } from "../app/page/br-heatmap-page";
 
 
 @Provider(BrHeatmap)
@@ -20,9 +21,11 @@ export class BrHeatmap extends Plot {
     @Inject(Config.BrHeatmapPage.BrHeatmap.mainSvgId) readonly mainSvgId: string;
     @Inject(ColorBar) readonly colorBar: ColorBar;
     @Inject(BrLineChart) readonly lineChart: BrLineChart;
-    @Inject(Legend) readonly legend: Legend;
+    @Inject(BrHeatmapLegend) readonly legend: BrHeatmapLegend;
     @Inject(Table) readonly table: Table;
     @Inject(BrHeatmapTooltip) readonly tooltip: Tooltip;
+    @Inject(Content) readonly content: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>
+    @Inject(BRHeatMapPage) readonly page: BRHeatMapPage;
 
     selected: Array<SquareInfo> = [];
 
@@ -68,7 +71,7 @@ export class BrHeatmap extends Plot {
             await self.tooltip.update([
                 `Nation: ${d.nation}`,
                 `BR: ${d.br}`,
-                `${self.measurement}: ${_.round(d.value, 3)}`
+                `${self.page.measurement}: ${_.round(d.value, 3)}`
             ], mousePos);
         }
     }
@@ -129,7 +132,7 @@ export class BrHeatmap extends Plot {
 
     init(): BrHeatmap {
         // build new plot in the content div of page
-        this.svg = d3.select<HTMLDivElement, unknown>("#content")
+        this.svg = this.content
             .append<SVGSVGElement>("svg")
             .attr("height", this.svgHeight)
             .attr("width", this.svgWidth)
@@ -143,8 +146,8 @@ export class BrHeatmap extends Plot {
         d3.csv(this.dataPath, async (data: TimeseriesData) => {
             // init
             const dataObjs = this.extractData(data)
-            const squareWidth = this.width / utils.nations.length;
-            const squareHeight = this.height / utils.brs[this.brRange].length;
+            const squareWidth = this.width / nations.length;
+            const squareHeight = this.height / brs[this.page.brRange].length;
             // build axis
             const {x, y} = this.buildAxis();
 
@@ -237,7 +240,7 @@ export class BrHeatmap extends Plot {
         // x-axis
         const x = d3.scaleBand()
             .range([0, this.width])
-            .domain(utils.nations);
+            .domain(nations);
 
         this.g.append("g")
             .attr("id", "br-heatmap-x")
@@ -249,7 +252,7 @@ export class BrHeatmap extends Plot {
         // y-axis
         const y = d3.scaleBand()
             .range([this.height, 0])
-            .domain(utils.brs[this.brRange]);
+            .domain(brs[this.page.brRange]);
 
         this.g.append("g")
             .attr("id", "br-heatmap-y")
@@ -261,9 +264,9 @@ export class BrHeatmap extends Plot {
     }
 
     private extractData(data: Array<TimeseriesRow>): Array<SquareInfo> {
-        return data.filter(row => row.date === this.date && row.cls === this.clazz)
+        return data.filter(row => row.date === this.page.date && row.cls === this.page.clazz)
             .map(row => {
-                const get = new TimeseriesRowGetter(row, this.mode, this.measurement);
+                const get = new TimeseriesRowGetter(row, this.page.mode, this.page.measurement);
                 return {
                     nation: row.nation,
                     br: get.br,
@@ -279,7 +282,7 @@ export class BrHeatmap extends Plot {
         let valueMin: number;
         let valueMax: number;
 
-        switch (this.measurement) {
+        switch (this.page.measurement) {
             case "win_rate":
                 valueMin = 0;
                 valueMax = 100;
@@ -288,12 +291,12 @@ export class BrHeatmap extends Plot {
                     .domain([valueMin, valueMax])
                     .range([0, 1]);
 
-                if (this.clazz === "Ground_vehicles") {
+                if (this.page.clazz === "Ground_vehicles") {
                     range2color = d3.scaleLinear<string, string>()
                         .domain([0, 0.05, 0.4, 0.5, 0.6, 0.95, 1.0])
                         .range([CONT_COLORS.WHITE, CONT_COLORS.BLACK, CONT_COLORS.RED, CONT_COLORS.YELLOW, CONT_COLORS.GREEN, CONT_COLORS.BLACK, CONT_COLORS.BLACK])
                         .interpolate(d3.interpolateHcl)
-                } else if (this.clazz === "Aviation") {
+                } else if (this.page.clazz === "Aviation") {
                     range2color = d3.scaleLinear<string, string>()
                         .domain([0, 0.01, 0.5, 0.6, 0.7, 0.99, 1.0])
                         .range([CONT_COLORS.WHITE, CONT_COLORS.BLACK, CONT_COLORS.RED, CONT_COLORS.YELLOW, CONT_COLORS.GREEN, CONT_COLORS.BLACK, CONT_COLORS.BLACK])
@@ -330,27 +333,7 @@ export class BrHeatmap extends Plot {
     }
 
     get dataPath(): string {
-        return `https://controlnet.space/wt-data-project.data/${this.mode.toLowerCase()}_ranks_${this.brRange}.csv`
-    }
-
-    get date(): string {
-        return utils.getSelectedValue("date-selection");
-    }
-
-    get clazz(): Clazz {
-        return utils.getSelectedValue("class-selection");
-    }
-
-    get mode(): Mode {
-        return utils.getSelectedValue("mode-selection");
-    }
-
-    get measurement(): Measurement {
-        return utils.getSelectedValue("measurement-selection");
-    }
-
-    get brRange(): BRRange {
-        return utils.getSelectedValue("br-range-selection");
+        return `https://controlnet.space/wt-data-project.data/${this.page.mode.toLowerCase()}_ranks_${this.page.brRange}.csv`
     }
 }
 

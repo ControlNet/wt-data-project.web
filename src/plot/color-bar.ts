@@ -3,6 +3,8 @@ import { Plot } from "./plot";
 import { BrHeatmap, Value2Color } from "./br-heatmap";
 import { Container, Inject, Provider, utils } from "../utils";
 import { Config, Margin } from "../app/config";
+import { Content } from "../app/global-env";
+import { BRHeatMapPage } from "../app/page/br-heatmap-page";
 
 
 @Provider(ColorBar)
@@ -10,12 +12,14 @@ export class ColorBar extends Plot {
     @Inject(Config.BrHeatmapPage.ColorBar.svgHeight) readonly svgHeight: number;
     @Inject(Config.BrHeatmapPage.ColorBar.svgWidth) readonly svgWidth: number;
     @Inject(Config.BrHeatmapPage.ColorBar.margin) readonly margin: Margin;
+    @Inject(Content) readonly content: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>
+    @Inject(BRHeatMapPage) readonly page: BRHeatMapPage;
     valueMin: number;
     valueMax: number;
     value2color: Value2Color;
 
     init(): ColorBar {
-        this.svg = d3.select<HTMLDivElement, unknown>("#content")
+        this.svg = this.content
             .append<SVGSVGElement>("svg")
             .attr("height", this.svgHeight)
             .attr("width", this.svgWidth)
@@ -32,7 +36,7 @@ export class ColorBar extends Plot {
         this.valueMax = valueMax;
         this.value2color = value2color;
 
-        const scale = this.brHeatmap.measurement === "battles_sum" ? "log" : "linear";
+        const scale = this.page.measurement === "battles_sum" ? "log" : "linear";
         const samples = scale === "log"
             ? utils.logspace(this.valueMin, this.valueMax, 100)
             : utils.linspace(this.valueMin, this.valueMax, 100);

@@ -1,4 +1,4 @@
-import { Mode } from "./options";
+import { Mode } from "../app/options";
 
 export abstract class Getter {
     protected readonly abstract data: Gettable;

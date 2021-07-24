@@ -1,14 +1,18 @@
-import * as _ from "lodash"
 import { Container, ObjChainMap } from "../utils";
 
 
 export interface ConfigJson {
     readonly BrHeatmapPage: {
-        readonly BrHeatmap: BrHeatmapConfigJson
-        readonly ColorBar: PlotConfigJson
-        readonly BrLineChart: PlotConfigJson
-        readonly Legend: PlotConfigJson
-        readonly Tooltip: TooltipConfigJson
+        readonly BrHeatmap: MainPlotConfigJson;
+        readonly ColorBar: PlotConfigJson;
+        readonly BrLineChart: PlotConfigJson;
+        readonly Legend: PlotConfigJson;
+        readonly Tooltip: TooltipConfigJson;
+    }
+
+    readonly StackedAreaPage: {
+        readonly StackedLineChart: MainPlotConfigJson;
+        readonly Legend: PlotConfigJson;
     }
 }
 
@@ -20,13 +24,13 @@ export class Margin {
 }
 
 interface PlotConfigJson {
-    readonly svgHeight: number
-    readonly svgWidth: number
-    readonly margin: Margin
+    readonly svgHeight: number;
+    readonly svgWidth: number;
+    readonly margin: Margin;
 }
 
-interface BrHeatmapConfigJson extends PlotConfigJson {
-    readonly mainSvgId: string
+interface MainPlotConfigJson extends PlotConfigJson {
+    readonly mainSvgId: string;
 }
 
 interface TooltipConfigJson {
@@ -41,58 +45,66 @@ interface TooltipConfigJson {
 }
 
 abstract class AbstractConfig {
-    readonly name: string;
+    readonly plot: string;
+    readonly page: string;
 
-    constructor(name: string) {
-        this.name = name;
+    constructor(page: string, name: string) {
+        this.page = page;
+        this.plot = name;
     }
 }
 
 class PlotConfig extends AbstractConfig {
     get svgHeight(): string {
-        return `${this.name}.svgHeight`;
+        return `${this.page}.${this.plot}.svgHeight`;
     };
 
     get svgWidth(): string {
-        return `${this.name}.svgWidth`;
+        return `${this.page}.${this.plot}.svgWidth`;
     }
 
     get margin(): string {
-        return `${this.name}.margin`;
+        return `${this.page}.${this.plot}.margin`;
+    }
+}
+
+class MainPlotConfig extends PlotConfig {
+    get mainSvgId() {
+        return `${this.page}.${this.plot}.mainSvgId`;
     }
 }
 
 class TooltipConfig extends AbstractConfig {
     get parentSvgId(): string {
-        return `${this.name}.parentSvgId`;
+        return `${this.page}.${this.plot}.parentSvgId`;
     }
 
     get opacity(): string {
-        return `${this.name}.opacity`;
+        return `${this.page}.${this.plot}.opacity`;
     }
 
     get nRow(): string {
-        return `${this.name}.nRow`;
+        return `${this.page}.${this.plot}.nRow`;
     }
 
     get rectWidth(): string {
-        return `${this.name}.rectWidth`;
+        return `${this.page}.${this.plot}.rectWidth`;
     }
 
     get rectXBias(): string {
-        return `${this.name}.rectXBias`;
+        return `${this.page}.${this.plot}.rectXBias`;
     }
 
     get rectYBias(): string {
-        return `${this.name}.rectYBias`;
+        return `${this.page}.${this.plot}.rectYBias`;
     }
 
     get textXBias(): string {
-        return `${this.name}.textXBias`;
+        return `${this.page}.${this.plot}.textXBias`;
     }
 
     get textYBias(): string {
-        return `${this.name}.textYBias`;
+        return `${this.page}.${this.plot}.textYBias`;
     }
 }
 
@@ -114,15 +126,16 @@ export class Config {
     }
 
     static BrHeatmapPage = class {
-        static BrHeatmap = new (class extends PlotConfig {
-            get mainSvgId() {
-                return `${this.name}.mainSvgId`;
-            }
-        })("BrHeatmap");
-        static ColorBar = new PlotConfig("ColorBar");
-        static BrLineChart = new PlotConfig("BrLineChart");
-        static Legend = new PlotConfig("Legend");
-        static Tooltip = new TooltipConfig("Tooltip")
+        static BrHeatmap = new MainPlotConfig("BrHeatmapPage", "BrHeatmap");
+        static ColorBar = new PlotConfig("BrHeatmapPage", "ColorBar");
+        static BrLineChart = new PlotConfig("BrHeatmapPage", "BrLineChart");
+        static Legend = new PlotConfig("BrHeatmapPage", "Legend");
+        static Tooltip = new TooltipConfig("BrHeatmapPage", "Tooltip")
+    }
+
+    static StackedAreaPage = class {
+        static StackedLineChart = new MainPlotConfig("StackedAreaPage", "StackedLineChart");
+        static Legend = new PlotConfig("StackedAreaPage", "Legend");
     }
 }
 

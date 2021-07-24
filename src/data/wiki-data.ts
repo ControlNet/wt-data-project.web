@@ -2,7 +2,7 @@ export type WikiData = Array<WikiRow>
 
 export interface WikiRow {
     name: string
-    nation: string
+    nation: Nation
     cls: string
     ab_br: number
     rb_br: number
@@ -18,3 +18,5 @@ export interface WikiRow {
     sb_rp_rate: number
     sb_sl_rate: number
 }
+
+export type Nation = "USA" | "Germany" | "USSR" | "Britain" | "Japan" | "France" | "Italy" | "China" | "Sweden";

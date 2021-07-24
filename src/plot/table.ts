@@ -3,15 +3,19 @@ import { BrHeatmap, SquareInfo } from "./br-heatmap";
 import * as d3 from "d3";
 import { JoinedData, JoinedRow, JoinedRowGetter } from "../data/joined-data";
 import * as _ from "lodash";
-import { Container, Provider } from "../utils";
+import { Container, Inject, Provider } from "../utils";
+import { Content } from "../app/global-env";
+import { BRHeatMapPage } from "../app/page/br-heatmap-page";
 
 
 @Provider(Table)
 export class Table extends Plot {
     table: d3.Selection<HTMLTableElement, unknown, HTMLElement, unknown>
+    @Inject(Content) readonly content: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>
+    @Inject(BRHeatMapPage) page: BRHeatMapPage;
 
     init(): Table {
-        this.table = d3.select<HTMLDivElement, unknown>("#content")
+        this.table = this.content
             .append<HTMLDivElement>("div")
             .attr("id", "selected-table-div")
             .append<HTMLTableElement>("table")
@@ -23,8 +27,8 @@ export class Table extends Plot {
         // remove previous
         this.reset();
 
-        const clazz = this.brHeatmap.clazz;
-        const brRange = +this.brHeatmap.brRange;
+        const clazz = this.page.clazz;
+        const brRange = +this.page.brRange;
 
         d3.csv(this.dataPath, (data: JoinedData) => {
             // filter the data
@@ -34,7 +38,7 @@ export class Table extends Plot {
 
                 return data.filter(d => {
                     // filter br
-                    const get = new JoinedRowGetter(d, this.brHeatmap.mode);
+                    const get = new JoinedRowGetter(d, this.page.mode);
                     const br = get.br;
                     const filterBr = () => br <= lowerBr + brRange && br >= lowerBr;
                     // filter nation
@@ -69,7 +73,7 @@ export class Table extends Plot {
     }
 
     selectColumns(data: JoinedData): Array<TableRow> {
-        const mode = this.brHeatmap.mode;
+        const mode = this.page.mode;
         return data.map((d: JoinedRow) => {
             const get = new JoinedRowGetter(d, mode)
             return {
@@ -96,7 +100,7 @@ export class Table extends Plot {
     }
 
     get dataPath(): string {
-        return `https://controlnet.space/wt-data-project.data/joined/${this.brHeatmap.date}.csv`;
+        return `https://controlnet.space/wt-data-project.data/joined/${this.page.date}.csv`;
     }
 }
 

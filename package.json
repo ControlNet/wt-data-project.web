@@ -3,7 +3,6 @@
     "build": "webpack",
     "watch": "webpack --watch"
   },
-
   "dependencies": {
     "@types/d3": "^4.11.0",
     "@types/d3-array": "^1.2.1",
@@ -14,6 +13,7 @@
     "@types/d3-interpolate": "^1.1.5",
     "@types/d3-scale": "^1.0.4",
     "@types/d3-selection": "^1.1.0",
+    "@types/d3-shape": "^1.2.0",
     "@types/d3-transition": "^1.1.0",
     "@types/lodash": "^4.14.170",
     "@types/marked": "^2.0.3",

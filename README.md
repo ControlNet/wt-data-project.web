@@ -52,12 +52,13 @@ This repo is still in progress.
 
  - [x] Battle rating heatmap 
     - [x] Interactive trend graph
-        - [ ] Compatible for "battles" data
+        - [x] Compatible for "battles" data
         - [ ] Mouse tooltip
         - [ ] Adjustable date range
     - [x] Display table with selected data  
     - [x] Mouse tooltip
     - [ ] New measurement: average repair fees
- - [ ] Trend graph
+ - [x] Trend graph
+    - [ ] Mouse tooltip
  - [ ] Other animated graphs
 </div>

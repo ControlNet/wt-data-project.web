@@ -51,5 +51,28 @@
       "textXBias": -25,
       "textYBias": -20
     }
+  },
+  "StackedAreaPage": {
+    "StackedLineChart": {
+      "svgHeight": 800,
+      "svgWidth": 1200,
+      "margin": {
+        "top": 20,
+        "right": 30,
+        "bottom": 30,
+        "left": 100
+      },
+      "mainSvgId": "main-svg"
+    },
+    "Legend": {
+      "svgHeight": 800,
+      "svgWidth": 160,
+      "margin": {
+        "top": 20,
+        "right": 5,
+        "bottom": 30,
+        "left": 5
+      }
+    }
   }
 }
