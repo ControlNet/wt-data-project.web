@@ -4,7 +4,7 @@ import { Plot } from "./plot";
 import { BrHeatmap } from "./br-heatmap";
 import { TimeseriesData, TimeseriesRow, TimeseriesRowGetter } from "../data/timeseries-data";
 import { Container, Inject, Injectable, nationColors, Provider, utils } from "../utils";
-import { BRRange, Clazz, Measurement, Mode } from "../app/options";
+import { BRRange, Clazz, Measurement, Mode, Scale } from "../app/options";
 import { Config, Margin } from "../app/config";
 import { nations } from "../app/global-env";
 import { BRHeatMapPage } from "../app/page/br-heatmap-page";
@@ -252,13 +252,6 @@ interface TimeseriesDataCache {
     data: TimeseriesData;
 }
 
-interface StackedLineChartCache {
-    clazz: Clazz;
-    mode: Mode;
-    data: Array<d3.Series<StackedLineChartDataObj, Nation>>;
-}
-
-
 @Provider(StackedLineChart)
 export class StackedLineChart extends LineChart {
     @Inject(Config.StackedAreaPage.StackedLineChart.svgHeight) readonly svgHeight: number;
@@ -279,7 +272,7 @@ export class StackedLineChart extends LineChart {
             const stacks = d3.stack<StackedLineChartDataObj, Nation>()
                 .keys(nations)(dataObjs);
 
-            this.dataCache.push({clazz: this.page.clazz, data: stacks, mode: this.page.mode});
+            this.dataCache.push({clazz: this.page.clazz, data: stacks, mode: this.page.mode, scale: this.page.scale});
 
             // x axis
             this.x = d3.scaleUtc()
@@ -317,7 +310,8 @@ export class StackedLineChart extends LineChart {
             areas.enter()
                 .append("path")
                 .attr("fill", ({key}) => nationColors.get(key))
-                .attr("d", area);
+                .attr("d", area)
+                .style("stroke", "black");
 
             this.updateSubPlots().then();
         })
@@ -361,7 +355,7 @@ export class StackedLineChart extends LineChart {
 
     private setYAxis(stacks: Array<d3.Series<StackedLineChartDataObj, Nation>>) {
         // y axis
-        const yMax = d3.max(stacks[nations.length - 1], d => d[1]);
+        const yMax = this.page.scale === "value" ? d3.max(stacks[nations.length - 1], d => d[1]) : 1;
         const yMin = 0;
 
         const y = d3.scaleLinear()
@@ -387,6 +381,7 @@ export class StackedLineChart extends LineChart {
         for (const cache of this.dataCache) {
             if (this.page.clazz === cache.clazz
                 && this.page.mode === cache.mode
+                && this.page.scale === cache.scale
             ) {
                 return cache.data;
             }
@@ -395,11 +390,13 @@ export class StackedLineChart extends LineChart {
         return new Promise(resolve => {
             d3.csv(this.dataPath, (data: TimeseriesData) => {
                 const dataObjs = this.groupBy(this.extractData(data));
+                console.log(dataObjs);
                 const stacks = d3.stack<StackedLineChartDataObj, Nation>()
                     .keys(nations)(dataObjs);
                 this.dataCache.push({
                     clazz: this.page.clazz,
                     mode: this.page.mode,
+                    scale: this.page.scale,
                     data: stacks
                 });
                 resolve(stacks);
@@ -443,7 +440,28 @@ export class StackedLineChart extends LineChart {
                 dataMap.set(dateStr, newObj);
             }
         });
-        return Array.from(dataMap.values());
+        // scale as percentage if the option is chosen
+        const dataObjs = Array.from(dataMap.values());
+        switch (this.page.scale) {
+            case "value":
+                return dataObjs;
+            case "percentage":
+                return dataObjs.map(({Britain, China, France, Germany, Italy, Japan, Sweden, USA, USSR, date}) => {
+                    const s = _.sum([Britain, China, France, Germany, Italy, Japan, Sweden, USA, USSR]);
+                    return {
+                        Britain: Britain / s,
+                        China: China / s,
+                        France: France / s,
+                        Germany: Germany / s,
+                        Italy: Italy / s,
+                        Japan: Japan / s,
+                        Sweden: Sweden / s,
+                        USA: USA / s,
+                        USSR: USSR / s,
+                        date: date
+                    }
+                });
+        }
     }
 
     async updateSubPlots() {
@@ -453,6 +471,14 @@ export class StackedLineChart extends LineChart {
     get dataPath(): string {
         return `https://controlnet.space/wt-data-project.data/${this.page.mode.toLowerCase()}_ranks_all.csv`
     }
+}
+
+
+interface StackedLineChartCache {
+    clazz: Clazz;
+    mode: Mode;
+    scale: Scale;
+    data: Array<d3.Series<StackedLineChartDataObj, Nation>>;
 }
 
 type StackedLineChartData = Array<StackedLineChartRow>;

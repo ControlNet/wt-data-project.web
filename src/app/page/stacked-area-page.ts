@@ -2,9 +2,9 @@ import { Page } from "./page";
 import { Container, Inject, Singleton, utils } from "../../utils";
 import { Sidebar } from "../global-env";
 import * as d3 from "d3";
-import { ClassSelect, ModeSelect, Select } from "../sidebar/select";
+import { ClassSelect, ModeSelect, ScaleSelect, Select } from "../sidebar/select";
 import { StackedLineChart } from "../../plot/line-chart";
-import { BRRange, Clazz, Measurement, Mode } from "../options";
+import { BRRange, Clazz, Measurement, Mode, Scale } from "../options";
 
 
 @Singleton(StackedAreaPage)
@@ -21,6 +21,8 @@ export class StackedAreaPage extends Page {
         Container.get<Select>(ClassSelect).init();
         // add mode selection for measurement
         Container.get<Select>(ModeSelect).init();
+        // add scale selection
+        Container.get<Select>(ScaleSelect).init();
 
         // init main plot
         Container.rebind(StackedLineChart).toSelf();
@@ -40,5 +42,9 @@ export class StackedAreaPage extends Page {
 
     get mode(): Mode {
         return utils.getSelectedValue("mode-selection");
+    }
+
+    get scale(): Scale {
+        return utils.getSelectedValue("scale-selection");
     }
 }

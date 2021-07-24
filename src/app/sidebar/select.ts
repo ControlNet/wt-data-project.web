@@ -182,3 +182,15 @@ Container.bind(BrRangeSelect).toDynamicValue(() => {
         .data.add({id: "1", text: "1"})
         .default("1");
 })
+
+// scale select for absolute value or percentage
+export const ScaleSelect = Symbol("ScaleSelect");
+Container.bind(ScaleSelect).toDynamicValue(() => {
+    return Container.get(SelectBuilder)
+        .id("scale-selection")
+        .label("Scale: ")
+        .class.add("plot-selection")
+        .data.add({id: "value", text: "Value"})
+        .data.add({id: "percentage", text: "Percentage"})
+        .default("value");
+})
