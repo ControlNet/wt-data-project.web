@@ -33,8 +33,9 @@ jobs:
         rm tsconfig.json
         rm webpack.config.js
         rm webpack.prod.js
+        sed -i 's/dist//g' .gitignore
 
-    - name: Init git
+    - name: Init git and commit
       env:
         WT_DATA_WEB_PRIVATE: ${{ secrets.WT_DATA_WEB_PRIVATE }}
       run: |
@@ -44,10 +45,12 @@ jobs:
         ssh-keyscan github.com >> ~/.ssh/known_hosts
         git config --global user.email "smczx@hotmail.com"
         git config --global user.name "ControlNet"
-        git remote add origin-ssh git@github.com:ControlNet/wt-data-project.web.git
-
-    - name: Commit and push
-      run: |
+        rm -rf .git
+        git init
         git add -A
         git commit -m "update"
+        git remote add origin-ssh git@github.com:ControlNet/wt-data-project.web.git
+
+    - name: Push
+      run: |
         git push origin-ssh HEAD:web -f
