@@ -20,6 +20,7 @@ A visualization web application for wt-data-project.
             <img src="https://img.shields.io/github/forks/ControlNet/wt-data-project.web?style=flat-square" alt="">
             <img src="https://img.shields.io/github/stars/ControlNet/wt-data-project.web?style=flat-square" alt="">
             <img src="https://img.shields.io/github/last-commit/ControlNet/wt-data-project.web?style=flat-square" alt="">
+            <img src="https://img.shields.io/github/workflow/status/ControlNet/wt-data-project.web/build?style=flat-square" alt="">
             <img src="https://img.shields.io/website?style=flat-square&up_message=online&url=https%3A%2F%2Fwt.controlnet.space" alt="">
         </td>
     </tr>
