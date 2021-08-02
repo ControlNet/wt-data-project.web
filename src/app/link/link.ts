@@ -1,4 +1,3 @@
-import * as d3 from "d3";
 import { NavTab } from "../nav-tab"
 import { Injectable } from "../../utils";
 
@@ -7,8 +6,8 @@ export abstract class Link extends NavTab {
     abstract readonly url: string;
 
     init(): void {
-        d3.select<HTMLDivElement, unknown>("#navbar")
-            .append("li")
+        this.navbar
+            .append<HTMLLIElement>("li")
             .append("a")
             .attr("id", this.id)
             .attr("href", this.url)
