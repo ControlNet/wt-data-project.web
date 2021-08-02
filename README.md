@@ -67,3 +67,9 @@ This repo is still in progress.
     - [ ] Mouse tooltip
  - [ ] Other animated graphs
 </div>
+
+## Acknowledge
+
+- [kroeden](https://github.com/kroeden) for making logo.
+- [Gaijin](https://warthunder.com/) for developing War Thunder.
+- [thunderskill](http://thunderskill.com/en) for WT statistics data.
