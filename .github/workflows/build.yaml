@@ -27,11 +27,16 @@ jobs:
 
     - name: Clean files
       run: |
+        mv img/logo.ico .
+        mv img/logo64.png .
         rm -R img
         rm -R src
         rm tsconfig.json
         rm webpack.config.js
         rm webpack.prod.js
+        mkdir img
+        mv logo.ico img
+        mv logo64.png img
         sed -i 's/dist//g' .gitignore
 
     - name: Init git and commit
