@@ -4,11 +4,14 @@ import { Nation } from "../data/wiki-data";
 
 export class GlobalEnv {
     static init() {
+        Container.bind(Navbar).toConstantValue(navbar);
         Container.bind(Sidebar).toConstantValue(sidebar);
         Container.bind(Content).toConstantValue(content);
     }
 }
 
+export const Navbar = Symbol("Navbar");
+const navbar = d3.select<HTMLDivElement, unknown>("#navbar")
 export const Sidebar = Symbol("Sidebar");
 const sidebar = d3.select<HTMLDivElement, unknown>("#sidebar");
 export const Content = Symbol("Content");

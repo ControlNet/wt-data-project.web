@@ -16,6 +16,14 @@ ul#navbar > li {
     float: left;
 }
 
+#nav-logo {
+    text-align: center;
+    height: 32px;
+    display: block;
+    margin: 0 auto;
+    padding: 8.5px 0 8.5px 8.5px;
+}
+
 ul#navbar > li > a {
     display: block;
     color: #EEFFFF;

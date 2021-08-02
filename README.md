@@ -1,6 +1,10 @@
 # wt-data-project.web
 A visualization web application for wt-data-project.
 
+<div align="center">
+   <img src="https://github.com/ControlNet/wt-data-project.web/raw/dev/img/logo400.png" alt="">
+</div>
+
 <table>
     <tr>
         <th>Repository</th>

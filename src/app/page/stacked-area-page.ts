@@ -4,7 +4,7 @@ import { Sidebar } from "../global-env";
 import * as d3 from "d3";
 import { ClassSelect, ModeSelect, ScaleSelect, Select } from "../sidebar/select";
 import { StackedLineChart } from "../../plot/line-chart";
-import { BRRange, Clazz, Measurement, Mode, Scale } from "../options";
+import { Clazz, Mode, Scale } from "../options";
 
 
 @Singleton(StackedAreaPage)

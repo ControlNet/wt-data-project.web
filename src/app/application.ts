@@ -14,9 +14,12 @@ import "../plot/tooltip";
 import { GlobalEnv } from "./global-env";
 import "./sidebar/sidebar-element";
 import "./sidebar/select";
+import { Logo, LogoClass } from "./image/logo";
 
 
 export class Application {
+    static Logo: LogoClass;
+    static logo: Logo;
     static Pages: Array<PageClass<any>>;
     static pages: Array<Page>;
     static metadata: Array<Metadata>;
@@ -38,6 +41,10 @@ export class Application {
                 .filter(each => each.type === "joined")
                 .map(each => each.date)
                 .reverse();
+            // initialize the logo
+            Application.logo = Container.get(Application.Logo);
+            Application.logo.init();
+
             // initialize the pages
             Application.pages = Application.Pages.map(Container.get);
             Application.pages.forEach(page => page.init());
@@ -54,6 +61,11 @@ export class Application {
 
     static build = {
         withBlank() {
+            return Application.build;
+        },
+
+        withLogo(Logo: LogoClass) {
+            Application.Logo = Logo;
             return Application.build;
         },
 

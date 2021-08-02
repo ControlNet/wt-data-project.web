@@ -5,8 +5,10 @@ import { TodoPage } from "./app/page/todo-page";
 import { WebRepo } from "./app/link/web-repo";
 import { DataRepo } from "./app/link/data-repo";
 import { GithubLink } from "./app/link/github-link";
+import { Logo } from "./app/image/logo";
 
 Application.build
+    .withLogo(Logo)
     .withPages(BRHeatMapPage, StackedAreaPage, TodoPage)
     .withLinks(WebRepo, DataRepo, GithubLink)
     .class

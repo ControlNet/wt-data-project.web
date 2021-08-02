@@ -8,8 +8,8 @@ export abstract class Page extends NavTab {
     plot: Plot;
 
     init(): void {
-        d3.select<HTMLDivElement, unknown>("#navbar")
-            .append("li")
+        this.navbar
+            .append<HTMLLIElement>("li")
             .append("a")
             .attr("id", this.id)
             .attr("href", `#${this.id}`)
