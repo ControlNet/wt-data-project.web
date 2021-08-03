@@ -264,16 +264,16 @@ export class Localization {
             lang = "en-US";
         }
         const {Navbar, Sidebar, BrHeatmapPage, StackedAreaPage, Nation}: LocalizationJson =
-            await (await fetch(`/config/i13n/${lang}.json`)).json();
+            await (await fetch(`/config/i18n/${lang}.json`)).json();
 
-        // set navbar i13n
+        // set navbar i18n
         Object.entries(Navbar).forEach(([layer, value]) => {
             const attr = layer as keyof NavbarLocalization;
             const key = Localization.Navbar[attr];
             Container.bind(key).toConstantValue(value);
         })
 
-        // set sidebar i13n
+        // set sidebar i18n
         new ObjChainMap()
             .addLayer(() => Sidebar)
             .addLayer((selection: keyof typeof Sidebar) => Sidebar[selection])
@@ -284,7 +284,7 @@ export class Localization {
                 Container.bind(key).toConstantValue(value);
             })
 
-        // set BrHeatmapPage i13n
+        // set BrHeatmapPage i18n
         new ObjChainMap()
             .addLayer(() => BrHeatmapPage)
             .addLayer((plot: keyof typeof BrHeatmapPage) => BrHeatmapPage[plot])
@@ -295,7 +295,7 @@ export class Localization {
                 Container.bind(key).toConstantValue(value);
             })
 
-        // set StackedAreaPage i13n
+        // set StackedAreaPage i18n
         new ObjChainMap()
             .addLayer(() => StackedAreaPage)
             .addLayer((plot: keyof typeof StackedAreaPage) => StackedAreaPage[plot])
