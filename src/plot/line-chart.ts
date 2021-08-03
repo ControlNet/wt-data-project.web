@@ -85,7 +85,7 @@ export class BrLineChart extends LineChart {
         // add x label
         this.g.append<SVGTextElement>("text")
             .classed("x-axis", true)
-            .text(Container.get(Localization.BrHeatmapPage.BrLineChart.Date))
+            .text(Container.get(Localization.BrHeatmapPage.BrLineChart.date))
             .attr("transform", `translate(${this.width / 2}, ${this.height + 30})`)
             .style("font-size", 12)
             .style("text-anchor", "middle");
@@ -289,7 +289,7 @@ export class StackedLineChart extends LineChart {
             // add x label
             this.g.append<SVGTextElement>("text")
                 .classed("x-axis", true)
-                .text(Container.get(Localization.StackedAreaPage.StackedLineChart.Date))
+                .text(Container.get(Localization.StackedAreaPage.StackedLineChart.date))
                 .attr("transform", `translate(${this.width / 2}, ${this.height + 30})`)
                 .style("font-size", 12)
                 .style("text-anchor", "middle");
@@ -369,7 +369,7 @@ export class StackedLineChart extends LineChart {
         // add y label
         this.g.append<SVGTextElement>("text")
             .classed("y-axis", true)
-            .text(Container.get(Localization.StackedAreaPage.StackedLineChart.Battles))
+            .text(Container.get(Localization.StackedAreaPage.StackedLineChart.battles))
             .attr("transform", `translate(${-60}, ${this.height / 2}) rotate(270)`)
             .style("font-size", 12)
             .style("text-anchor", "middle");

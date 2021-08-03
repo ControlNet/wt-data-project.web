@@ -9,46 +9,46 @@
   },
   "Sidebar": {
     "Date": {
-      "Label": "日期: "
+      "label": "日期: "
     },
     "Class": {
-      "Label": "载具类型: ",
-      "GroundVehicles": "地面载具",
-      "Aviation": "空中载具"
+      "label": "载具类型: ",
+      "groundVehicles": "地面载具",
+      "aviation": "空中载具"
     },
     "Mode": {
-      "Label": "游戏模式: ",
-      "Ab": "街机娱乐",
-      "Rb": "历史性能",
-      "Sb": "全真模拟"
+      "label": "游戏模式: ",
+      "ab": "街机娱乐",
+      "rb": "历史性能",
+      "sb": "全真模拟"
     },
     "Measurement": {
-      "Label": "指标: ",
-      "WinRate": "胜率",
-      "BattlesSum": "游戏场次"
+      "label": "指标: ",
+      "winRate": "胜率",
+      "battlesSum": "游戏场次"
     },
     "BrRange": {
-      "Label": "分房区间: "
+      "label": "分房区间: "
     },
     "Scale": {
-      "Label": "比例: ",
-      "Value": "数值",
-      "Percentage": "百分比"
+      "label": "比例: ",
+      "value": "数值",
+      "percentage": "百分比"
     }
   },
   "BrHeatmapPage": {
     "Tooltip": {
-      "Nation": "国家: ",
-      "Br": "分房: "
+      "nation": "国家: ",
+      "br": "分房: "
     },
     "BrLineChart": {
-      "Date": "日期"
+      "date": "日期"
     }
   },
   "StackedAreaPage": {
     "StackedLineChart": {
-      "Date": "日期",
-      "Battles": "游戏场次"
+      "date": "日期",
+      "battles": "游戏场次"
     }
   },
   "Nation": {

@@ -70,8 +70,8 @@ export class BrHeatmap extends Plot {
                 d3.mouse(this)[1]
             );
             await self.tooltip.update([
-                `${Container.get(Localization.BrHeatmapPage.Tooltip.Nation)}${Container.get<NationTranslator>(Localization.Nation)(d.nation)}`,
-                `${Container.get(Localization.BrHeatmapPage.Tooltip.Br)}${d.br}`,
+                `${Container.get(Localization.BrHeatmapPage.Tooltip.nation)}${Container.get<NationTranslator>(Localization.Nation)(d.nation)}`,
+                `${Container.get(Localization.BrHeatmapPage.Tooltip.br)}${d.br}`,
                 `${Container.get<MeasurementTranslator>(Localization.Measurement)(self.page.measurement)}: ${_.round(d.value, 3)}`
             ], mousePos);
         }

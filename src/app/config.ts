@@ -155,41 +155,41 @@ interface LocalizationJson {
 
     readonly Sidebar: {
         readonly Mode: {
-            readonly Label: string,
-            readonly Ab: string,
-            readonly Rb: string,
-            readonly Sb: string
+            readonly label: string,
+            readonly ab: string,
+            readonly rb: string,
+            readonly sb: string
         }
         readonly Measurement: {
-            readonly Label: string,
-            readonly WinRate: string,
-            readonly BattlesSum: string
+            readonly label: string,
+            readonly winRate: string,
+            readonly battlesSum: string
         }
         readonly BrRange: {
-            readonly Label: string
+            readonly label: string
         }
         readonly Scale: {
-            readonly Label: string,
-            readonly Value: string,
-            readonly Percentage: string
+            readonly label: string,
+            readonly value: string,
+            readonly percentage: string
         }
     }
 
     readonly BrHeatmapPage: {
         readonly Tooltip: {
-            readonly Nation: string,
-            readonly Br: string
+            readonly nation: string,
+            readonly br: string
         }
 
         readonly BrLineChart: {
-            readonly Date: string
+            readonly date: string
         }
     }
 
     readonly StackedAreaPage: {
         readonly StackedLineChart: {
-            readonly Date: string,
-            readonly Battles: string
+            readonly date: string,
+            readonly battles: string
         }
     }
 
@@ -244,8 +244,8 @@ class SelectionLocalization extends AbstractLocalization {
         this.selection = selection;
     }
 
-    get Label(): string {
-        return `${this.class}.${this.layout}.${this.selection}.Label`;
+    get label(): string {
+        return `${this.class}.${this.layout}.${this.selection}.label`;
     }
 }
 
@@ -313,9 +313,9 @@ export class Localization {
         Container.bind<MeasurementTranslator>(Localization.Measurement).toFunction((m: Measurement) => {
             switch (m) {
                 case "win_rate":
-                    return Container.get(Localization.Sidebar.Measurement.WinRate);
+                    return Container.get(Localization.Sidebar.Measurement.winRate);
                 case "battles_sum":
-                    return Container.get(Localization.Sidebar.Measurement.BattlesSum);
+                    return Container.get(Localization.Sidebar.Measurement.battlesSum);
             }
         })
     }
@@ -325,73 +325,73 @@ export class Localization {
         static Date = new SelectionLocalization("Sidebar", "Date");
 
         static Class = new class extends SelectionLocalization {
-            get GroundVehicles(): string {
-                return `${this.class}.${this.layout}.${this.selection}.GroundVehicles`;
+            get groundVehicles(): string {
+                return `${this.class}.${this.layout}.${this.selection}.groundVehicles`;
             }
-            get Aviation(): string {
-                return `${this.class}.${this.layout}.${this.selection}.Aviation`
+            get aviation(): string {
+                return `${this.class}.${this.layout}.${this.selection}.aviation`
             }
         }("Sidebar", "Class");
 
         static Mode = new class extends SelectionLocalization {
-            get Ab(): string {
-                return `${this.class}.${this.layout}.${this.selection}.Ab`;
+            get ab(): string {
+                return `${this.class}.${this.layout}.${this.selection}.ab`;
             }
-            get Rb(): string {
-                return `${this.class}.${this.layout}.${this.selection}.Rb`;
+            get rb(): string {
+                return `${this.class}.${this.layout}.${this.selection}.rb`;
             }
-            get Sb(): string {
-                return `${this.class}.${this.layout}.${this.selection}.Sb`;
+            get sb(): string {
+                return `${this.class}.${this.layout}.${this.selection}.sb`;
             }
         }("Sidebar", "Mode");
 
         static Measurement = new class extends SelectionLocalization {
-            get WinRate(): string {
-                return `${this.class}.${this.layout}.${this.selection}.WinRate`;
+            get winRate(): string {
+                return `${this.class}.${this.layout}.${this.selection}.winRate`;
             }
-            get BattlesSum(): string {
-                return `${this.class}.${this.layout}.${this.selection}.BattlesSum`;
+            get battlesSum(): string {
+                return `${this.class}.${this.layout}.${this.selection}.battlesSum`;
             }
         }("Sidebar", "Measurement");
 
         static BrRange = new SelectionLocalization("Sidebar", "BrRange");
 
         static Scale = new class extends SelectionLocalization {
-            get Value(): string {
-                return `${this.class}.${this.layout}.${this.selection}.Value`;
+            get value(): string {
+                return `${this.class}.${this.layout}.${this.selection}.value`;
             }
-            get Percentage(): string {
-                return `${this.class}.${this.layout}.${this.selection}.Percentage`;
+            get percentage(): string {
+                return `${this.class}.${this.layout}.${this.selection}.percentage`;
             }
         }("Sidebar", "Scale")
     };
 
     static BrHeatmapPage = {
         Tooltip: new class {
-            get Nation() {
-                return "Localization.BrHeatmapPage.Tooltip.Nation";
+            get nation() {
+                return "Localization.BrHeatmapPage.Tooltip.nation";
             }
 
-            get Br() {
-                return "Localization.BrHeatmapPage.Tooltip.Br";
+            get br() {
+                return "Localization.BrHeatmapPage.Tooltip.br(";
             }
         }(),
 
         BrLineChart: new class {
-            get Date() {
-                return "Localization.BrHeatmapPage.BrLineChart.Date";
+            get date() {
+                return "Localization.BrHeatmapPage.BrLineChart.date";
             }
         }()
     }
 
     static StackedAreaPage = {
         StackedLineChart: new class {
-            get Date(): string {
-                return "Localization.StackedAreaPage.StackedLineChart.Date";
+            get date(): string {
+                return "Localization.StackedAreaPage.StackedLineChart.date";
             }
 
-            get Battles(): string {
-                return "Localization.StackedAreaPage.StackedLineChart.Battles";
+            get battles(): string {
+                return "Localization.StackedAreaPage.StackedLineChart.battles";
             }
         }()
     }

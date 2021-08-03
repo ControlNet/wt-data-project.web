@@ -9,46 +9,46 @@
   },
   "Sidebar": {
     "Date": {
-      "Label": "Date: "
+      "label": "Date: "
     },
     "Class": {
-      "Label": "Class: ",
-      "GroundVehicles": "Ground Vehicles",
-      "Aviation": "Aviation"
+      "label": "Class: ",
+      "groundVehicles": "Ground Vehicles",
+      "aviation": "Aviation"
     },
     "Mode": {
-      "Label": "Mode: ",
-      "Ab": "AB",
-      "Rb": "RB",
-      "Sb": "SB"
+      "label": "Mode: ",
+      "ab": "AB",
+      "rb": "RB",
+      "sb": "SB"
     },
     "Measurement": {
-      "Label": "Measurement: ",
-      "WinRate": "Win Rate",
-      "BattlesSum": "Battles"
+      "label": "Measurement: ",
+      "winRate": "Win Rate",
+      "battlesSum": "Battles"
     },
     "BrRange": {
-      "Label": "BR Range: "
+      "label": "BR Range: "
     },
     "Scale": {
-      "Label": "Scale: ",
-      "Value": "Value",
-      "Percentage": "Percentage"
+      "label": "Scale: ",
+      "value": "Value",
+      "percentage": "Percentage"
     }
   },
   "BrHeatmapPage": {
     "Tooltip": {
-      "Nation": "Nation: ",
-      "Br": "BR: "
+      "nation": "Nation: ",
+      "br": "BR: "
     },
     "BrLineChart": {
-      "Date": "Date"
+      "date": "Date"
     }
   },
   "StackedAreaPage": {
     "StackedLineChart": {
-      "Date": "Date",
-      "Battles": "Battles"
+      "date": "Date",
+      "battles": "Battles"
     }
   },
   "Nation": {

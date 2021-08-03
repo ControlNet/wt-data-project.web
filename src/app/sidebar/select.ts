@@ -128,7 +128,7 @@ export const DateSelect = Symbol("DateSelect");
 Container.bind(DateSelect).toDynamicValue(() => {
     return Container.get(SelectBuilder)
         .id("date-selection")
-        .label(Container.get(Localization.Sidebar.Date.Label))
+        .label(Container.get(Localization.Sidebar.Date.label))
         .class.add("plot-selection")
         .data.set(Application.dates.map(date => {
         return {id: date, text: date}
@@ -140,10 +140,10 @@ export const ClassSelect = Symbol("ClassSelect");
 Container.bind(ClassSelect).toDynamicValue(() => {
     return Container.get(SelectBuilder)
         .id("class-selection")
-        .label(Container.get(Localization.Sidebar.Class.Label))
+        .label(Container.get(Localization.Sidebar.Class.label))
         .class.add("plot-selection")
-        .data.add({id: "Ground_vehicles", text: Container.get(Localization.Sidebar.Class.GroundVehicles)})
-        .data.add({id: "Aviation", text: Container.get(Localization.Sidebar.Class.Aviation)})
+        .data.add({id: "Ground_vehicles", text: Container.get(Localization.Sidebar.Class.groundVehicles)})
+        .data.add({id: "Aviation", text: Container.get(Localization.Sidebar.Class.aviation)})
         .default("Ground_vehicles");
 })
 
@@ -152,11 +152,11 @@ export const ModeSelect = Symbol("ModeSelect");
 Container.bind(ModeSelect).toDynamicValue(() => {
     return Container.get(SelectBuilder)
         .id("mode-selection")
-        .label(Container.get(Localization.Sidebar.Mode.Label))
+        .label(Container.get(Localization.Sidebar.Mode.label))
         .class.add("plot-selection")
-        .data.add({id: "ab", text: Container.get(Localization.Sidebar.Mode.Ab)})
-        .data.add({id: "rb", text: Container.get(Localization.Sidebar.Mode.Rb)})
-        .data.add({id: "sb", text: Container.get(Localization.Sidebar.Mode.Sb)})
+        .data.add({id: "ab", text: Container.get(Localization.Sidebar.Mode.ab)})
+        .data.add({id: "rb", text: Container.get(Localization.Sidebar.Mode.rb)})
+        .data.add({id: "sb", text: Container.get(Localization.Sidebar.Mode.sb)})
         .default("rb");
 })
 
@@ -165,10 +165,10 @@ export const MeasurementSelect = Symbol("MeasurementSelect");
 Container.bind(MeasurementSelect).toDynamicValue(() => {
     return Container.get(SelectBuilder)
         .id("measurement-selection")
-        .label(Container.get(Localization.Sidebar.Measurement.Label))
+        .label(Container.get(Localization.Sidebar.Measurement.label))
         .class.add("plot-selection")
-        .data.add({id: "win_rate", text: Container.get(Localization.Sidebar.Measurement.WinRate)})
-        .data.add({id: "battles_sum", text: Container.get(Localization.Sidebar.Measurement.BattlesSum)})
+        .data.add({id: "win_rate", text: Container.get(Localization.Sidebar.Measurement.winRate)})
+        .data.add({id: "battles_sum", text: Container.get(Localization.Sidebar.Measurement.battlesSum)})
         .default("win_rate");
 })
 
@@ -177,7 +177,7 @@ export const BrRangeSelect = Symbol("BrRangeSelect");
 Container.bind(BrRangeSelect).toDynamicValue(() => {
     return Container.get(SelectBuilder)
         .id("br-range-selection")
-        .label(Container.get(Localization.Sidebar.BrRange.Label))
+        .label(Container.get(Localization.Sidebar.BrRange.label))
         .class.add("plot-selection")
         .data.add({id: "0", text: "0"})
         .data.add({id: "1", text: "1"})
@@ -189,9 +189,9 @@ export const ScaleSelect = Symbol("ScaleSelect");
 Container.bind(ScaleSelect).toDynamicValue(() => {
     return Container.get(SelectBuilder)
         .id("scale-selection")
-        .label(Container.get(Localization.Sidebar.Scale.Label))
+        .label(Container.get(Localization.Sidebar.Scale.label))
         .class.add("plot-selection")
-        .data.add({id: "value", text: Container.get(Localization.Sidebar.Scale.Value)})
-        .data.add({id: "percentage", text: Container.get(Localization.Sidebar.Scale.Percentage)})
+        .data.add({id: "value", text: Container.get(Localization.Sidebar.Scale.value)})
+        .data.add({id: "percentage", text: Container.get(Localization.Sidebar.Scale.percentage)})
         .default("value");
 })
