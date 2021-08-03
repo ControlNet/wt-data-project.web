@@ -1,6 +1,7 @@
 import { Container, ObjChainMap } from "../utils";
 import { Nation } from "../data/wiki-data";
 import { Measurement } from "./options";
+import * as d3 from "d3";
 
 
 export interface ConfigJson {
@@ -257,6 +258,7 @@ export class Localization {
 
         try {
             lang = navigator.language === "zh-CN" || navigator.language === "zh" ? "zh-CN" : "en-US";
+            d3.select("html").attr("lang", lang)
         } catch (e) {
             console.error(e);
             lang = "en-US";
