@@ -3,6 +3,7 @@ import { Container, Inject, Provider } from "../../utils";
 import { Sidebar } from "../global-env";
 import * as d3 from "d3";
 import { Application } from "../application";
+import { Localization } from "../config";
 
 
 @Provider(Select)
@@ -127,7 +128,7 @@ export const DateSelect = Symbol("DateSelect");
 Container.bind(DateSelect).toDynamicValue(() => {
     return Container.get(SelectBuilder)
         .id("date-selection")
-        .label("Date: ")
+        .label(Container.get(Localization.Sidebar.Date.Label))
         .class.add("plot-selection")
         .data.set(Application.dates.map(date => {
         return {id: date, text: date}
@@ -139,10 +140,10 @@ export const ClassSelect = Symbol("ClassSelect");
 Container.bind(ClassSelect).toDynamicValue(() => {
     return Container.get(SelectBuilder)
         .id("class-selection")
-        .label("Class: ")
+        .label(Container.get(Localization.Sidebar.Class.Label))
         .class.add("plot-selection")
-        .data.add({id: "Ground_vehicles", text: "Ground Vehicles"})
-        .data.add({id: "Aviation", text: "Aviation"})
+        .data.add({id: "Ground_vehicles", text: Container.get(Localization.Sidebar.Class.GroundVehicles)})
+        .data.add({id: "Aviation", text: Container.get(Localization.Sidebar.Class.Aviation)})
         .default("Ground_vehicles");
 })
 
@@ -151,11 +152,11 @@ export const ModeSelect = Symbol("ModeSelect");
 Container.bind(ModeSelect).toDynamicValue(() => {
     return Container.get(SelectBuilder)
         .id("mode-selection")
-        .label("Mode: ")
+        .label(Container.get(Localization.Sidebar.Mode.Label))
         .class.add("plot-selection")
-        .data.add({id: "ab", text: "AB"})
-        .data.add({id: "rb", text: "RB"})
-        .data.add({id: "sb", text: "SB"})
+        .data.add({id: "ab", text: Container.get(Localization.Sidebar.Mode.Ab)})
+        .data.add({id: "rb", text: Container.get(Localization.Sidebar.Mode.Rb)})
+        .data.add({id: "sb", text: Container.get(Localization.Sidebar.Mode.Sb)})
         .default("rb");
 })
 
@@ -164,10 +165,10 @@ export const MeasurementSelect = Symbol("MeasurementSelect");
 Container.bind(MeasurementSelect).toDynamicValue(() => {
     return Container.get(SelectBuilder)
         .id("measurement-selection")
-        .label("Measurement: ")
+        .label(Container.get(Localization.Sidebar.Measurement.Label))
         .class.add("plot-selection")
-        .data.add({id: "win_rate", text: "Win Rate"})
-        .data.add({id: "battles_sum", text: "Battles"})
+        .data.add({id: "win_rate", text: Container.get(Localization.Sidebar.Measurement.WinRate)})
+        .data.add({id: "battles_sum", text: Container.get(Localization.Sidebar.Measurement.BattlesSum)})
         .default("win_rate");
 })
 
@@ -176,7 +177,7 @@ export const BrRangeSelect = Symbol("BrRangeSelect");
 Container.bind(BrRangeSelect).toDynamicValue(() => {
     return Container.get(SelectBuilder)
         .id("br-range-selection")
-        .label("BR Range: ")
+        .label(Container.get(Localization.Sidebar.BrRange.Label))
         .class.add("plot-selection")
         .data.add({id: "0", text: "0"})
         .data.add({id: "1", text: "1"})
@@ -188,9 +189,9 @@ export const ScaleSelect = Symbol("ScaleSelect");
 Container.bind(ScaleSelect).toDynamicValue(() => {
     return Container.get(SelectBuilder)
         .id("scale-selection")
-        .label("Scale: ")
+        .label(Container.get(Localization.Sidebar.Scale.Label))
         .class.add("plot-selection")
-        .data.add({id: "value", text: "Value"})
-        .data.add({id: "percentage", text: "Percentage"})
+        .data.add({id: "value", text: Container.get(Localization.Sidebar.Scale.Value)})
+        .data.add({id: "percentage", text: Container.get(Localization.Sidebar.Scale.Percentage)})
         .default("value");
 })

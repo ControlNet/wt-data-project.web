@@ -1,9 +1,10 @@
 import { Link } from "./link";
-import { Singleton } from "../../utils";
+import { Inject, Singleton } from "../../utils";
+import { Localization } from "../config";
 
 @Singleton(DataRepo)
 export class DataRepo extends Link {
+    @Inject(Localization.Navbar.DataRepo) readonly name: string;
     readonly id = "data-repo";
-    readonly name = "Data";
     readonly url = "https://github.com/ControlNet/wt-data-project.data";
 }

@@ -5,13 +5,14 @@ import { Sidebar } from "../global-env";
 import { BrRangeSelect, ClassSelect, DateSelect, MeasurementSelect, ModeSelect, Select } from "../sidebar/select";
 import * as d3 from "d3";
 import { BRRange, Clazz, Measurement, Mode } from "../options";
+import { Localization } from "../config";
 
 
 @Singleton(BRHeatMapPage)
 export class BRHeatMapPage extends Page {
     plot: BrHeatmap;
     readonly id = "br-heatmap";
-    readonly name = "BR HeatMap";
+    @Inject(Localization.Navbar.BrHeatmap) readonly name: string;
     @Inject(Sidebar) sidebar: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
 
     update(): void {

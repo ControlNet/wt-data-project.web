@@ -5,13 +5,14 @@ import * as d3 from "d3";
 import { ClassSelect, ModeSelect, ScaleSelect, Select } from "../sidebar/select";
 import { StackedLineChart } from "../../plot/line-chart";
 import { Clazz, Mode, Scale } from "../options";
+import { Localization } from "../config";
 
 
 @Singleton(StackedAreaPage)
 export class StackedAreaPage extends Page {
     plot: StackedLineChart;
     readonly id = "stacked-area";
-    readonly name = "Trends";
+    @Inject(Localization.Navbar.StackedArea) readonly name: string;
     @Inject(Sidebar) sidebar: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
 
     update(): void {

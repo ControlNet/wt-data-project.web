@@ -2,15 +2,16 @@ import * as d3 from "d3";
 import * as _ from "lodash";
 import { Plot } from "./plot";
 import { TimeseriesData, TimeseriesRow, TimeseriesRowGetter } from "../data/timeseries-data";
-import { categoricalColors, COLORS, CONT_COLORS, Inject, MousePosition, Provider, utils } from "../utils";
+import { categoricalColors, COLORS, CONT_COLORS, Container, Inject, MousePosition, Provider, utils } from "../utils";
 import { ColorBar } from "./color-bar";
 import { BrLineChart, BrLineChartDataObj } from "./line-chart";
 import { BrHeatmapLegend } from "./legend";
 import { Table } from "./table";
 import { BrHeatmapTooltip, Tooltip } from "./tooltip";
-import { Config, Margin } from "../app/config";
+import { Config, Localization, Margin, MeasurementTranslator, NationTranslator } from "../app/config";
 import { brs, Content, nations } from "../app/global-env";
 import { BRHeatMapPage } from "../app/page/br-heatmap-page";
+import { Nation } from "../data/wiki-data";
 
 
 @Provider(BrHeatmap)
@@ -69,9 +70,9 @@ export class BrHeatmap extends Plot {
                 d3.mouse(this)[1]
             );
             await self.tooltip.update([
-                `Nation: ${d.nation}`,
-                `BR: ${d.br}`,
-                `${self.page.measurement}: ${_.round(d.value, 3)}`
+                `${Container.get(Localization.BrHeatmapPage.Tooltip.Nation)}${Container.get<NationTranslator>(Localization.Nation)(d.nation)}`,
+                `${Container.get(Localization.BrHeatmapPage.Tooltip.Br)}${d.br}`,
+                `${Container.get<MeasurementTranslator>(Localization.Measurement)(self.page.measurement)}: ${_.round(d.value, 3)}`
             ], mousePos);
         }
     }
@@ -246,7 +247,8 @@ export class BrHeatmap extends Plot {
             .attr("id", "br-heatmap-x")
             .style("font-size", 13)
             .attr("transform", `translate(0, ${this.height + 10})`)
-            .call(d3.axisBottom(x).tickSize(0))
+            .call(d3.axisBottom(x).tickSize(0)
+                .tickFormat(Container.get<NationTranslator>(Localization.Nation)))
             .select("#main-g g path.domain").remove()
 
         // y-axis
@@ -338,7 +340,7 @@ export class BrHeatmap extends Plot {
 }
 
 export interface SquareInfo {
-    nation: string;
+    nation: Nation;
     br: string;
     lowerBr: number;
     value: number;

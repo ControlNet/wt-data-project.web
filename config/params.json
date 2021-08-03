@@ -6,7 +6,7 @@
       "margin": {
         "top": 20,
         "right": 30,
-        "bottom": 30,
+        "bottom": 40,
         "left": 100
       },
       "mainSvgId": "main-svg"
@@ -17,7 +17,7 @@
       "margin": {
         "top": 20,
         "right": 40,
-        "bottom": 30,
+        "bottom": 40,
         "left": 0
       }
     },
@@ -27,7 +27,7 @@
       "margin": {
         "top": 10,
         "right": 20,
-        "bottom": 30,
+        "bottom": 40,
         "left": 50
       }
     },
@@ -37,7 +37,7 @@
       "margin": {
         "top": 20,
         "right": 5,
-        "bottom": 30,
+        "bottom": 40,
         "left": 5
       }
     },
@@ -59,7 +59,7 @@
       "margin": {
         "top": 20,
         "right": 30,
-        "bottom": 30,
+        "bottom": 40,
         "left": 100
       },
       "mainSvgId": "main-svg"
@@ -70,7 +70,7 @@
       "margin": {
         "top": 20,
         "right": 5,
-        "bottom": 30,
+        "bottom": 40,
         "left": 5
       }
     }

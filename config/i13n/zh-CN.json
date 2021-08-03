@@ -1,0 +1,65 @@
+{
+  "Navbar": {
+    "BrHeatmap": "分房热力图",
+    "StackedArea": "总体趋势图",
+    "TodoList": "待定计划",
+    "WebRepo": "GitHub源码",
+    "DataRepo": "数据",
+    "Github": "作者ControlNet"
+  },
+  "Sidebar": {
+    "Date": {
+      "Label": "日期: "
+    },
+    "Class": {
+      "Label": "载具类型: ",
+      "GroundVehicles": "地面载具",
+      "Aviation": "空中载具"
+    },
+    "Mode": {
+      "Label": "游戏模式: ",
+      "Ab": "街机娱乐",
+      "Rb": "历史性能",
+      "Sb": "全真模拟"
+    },
+    "Measurement": {
+      "Label": "指标: ",
+      "WinRate": "胜率",
+      "BattlesSum": "游戏场次"
+    },
+    "BrRange": {
+      "Label": "分房区间: "
+    },
+    "Scale": {
+      "Label": "比例: ",
+      "Value": "数值",
+      "Percentage": "百分比"
+    }
+  },
+  "BrHeatmapPage": {
+    "Tooltip": {
+      "Nation": "国家: ",
+      "Br": "分房: "
+    },
+    "BrLineChart": {
+      "Date": "日期"
+    }
+  },
+  "StackedAreaPage": {
+    "StackedLineChart": {
+      "Date": "日期",
+      "Battles": "游戏场次"
+    }
+  },
+  "Nation": {
+    "USA": "美国",
+    "Germany": "德国",
+    "USSR": "苏联",
+    "Britain": "英国",
+    "Japan": "日本",
+    "France": "法国",
+    "Italy": "意大利",
+    "China": "中国",
+    "Sweden": "瑞典"
+  }
+}

@@ -5,7 +5,7 @@ import { BrHeatmap } from "./br-heatmap";
 import { TimeseriesData, TimeseriesRow, TimeseriesRowGetter } from "../data/timeseries-data";
 import { Container, Inject, Injectable, nationColors, Provider, utils } from "../utils";
 import { BRRange, Clazz, Measurement, Mode, Scale } from "../app/options";
-import { Config, Margin } from "../app/config";
+import { Config, Localization, Margin, MeasurementTranslator } from "../app/config";
 import { nations } from "../app/global-env";
 import { BRHeatMapPage } from "../app/page/br-heatmap-page";
 import { StackedAreaPage } from "../app/page/stacked-area-page";
@@ -85,7 +85,7 @@ export class BrLineChart extends LineChart {
         // add x label
         this.g.append<SVGTextElement>("text")
             .classed("x-axis", true)
-            .text("Date")
+            .text(Container.get(Localization.BrHeatmapPage.BrLineChart.Date))
             .attr("transform", `translate(${this.width / 2}, ${this.height + 30})`)
             .style("font-size", 12)
             .style("text-anchor", "middle");
@@ -111,7 +111,7 @@ export class BrLineChart extends LineChart {
         // add y label
         this.g.append<SVGTextElement>("text")
             .classed("y-axis", true)
-            .text(this.page.measurement)
+            .text(Container.get<MeasurementTranslator>(Localization.Measurement)(this.page.measurement))
             .attr("transform", `translate(${-30}, ${this.height / 2}) rotate(270)`)
             .style("font-size", 12)
             .style("text-anchor", "middle");
@@ -289,7 +289,7 @@ export class StackedLineChart extends LineChart {
             // add x label
             this.g.append<SVGTextElement>("text")
                 .classed("x-axis", true)
-                .text("Date")
+                .text(Container.get(Localization.StackedAreaPage.StackedLineChart.Date))
                 .attr("transform", `translate(${this.width / 2}, ${this.height + 30})`)
                 .style("font-size", 12)
                 .style("text-anchor", "middle");
@@ -369,8 +369,8 @@ export class StackedLineChart extends LineChart {
         // add y label
         this.g.append<SVGTextElement>("text")
             .classed("y-axis", true)
-            .text("Battles")
-            .attr("transform", `translate(${-30}, ${this.height / 2}) rotate(270)`)
+            .text(Container.get(Localization.StackedAreaPage.StackedLineChart.Battles))
+            .attr("transform", `translate(${-60}, ${this.height / 2}) rotate(270)`)
             .style("font-size", 12)
             .style("text-anchor", "middle");
         return y;
@@ -390,7 +390,6 @@ export class StackedLineChart extends LineChart {
         return new Promise(resolve => {
             d3.csv(this.dataPath, (data: TimeseriesData) => {
                 const dataObjs = this.groupBy(this.extractData(data));
-                console.log(dataObjs);
                 const stacks = d3.stack<StackedLineChartDataObj, Nation>()
                     .keys(nations)(dataObjs);
                 this.dataCache.push({

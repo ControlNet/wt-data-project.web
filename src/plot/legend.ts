@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { Plot } from "./plot";
 import { BrHeatmap, SquareInfo } from "./br-heatmap";
-import { Config, Margin } from "../app/config";
+import { Config, Localization, Margin, NationTranslator } from "../app/config";
 import { Container, Inject, Injectable, nationColors, Provider } from "../utils";
 import { nations } from "../app/global-env";
 import { Nation } from "../data/wiki-data";
@@ -75,7 +75,7 @@ export class BrHeatmapLegend extends Legend {
                     .append<SVGTextElement>("text")
                     .attr("x", 35)
                     .attr("y", height - 15 - 30 * i)
-                    .text(`${d.nation} ${d.br}`)
+                    .text(`${Container.get<NationTranslator>(Localization.Nation)(d.nation)} ${d.br}`)
                     .attr("text-anchor", "start")
                     .style("font-size", 12.5);
             })

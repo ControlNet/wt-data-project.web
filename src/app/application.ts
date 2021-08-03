@@ -2,7 +2,7 @@ import { Page, PageClass } from "./page/page";
 import { Metadata } from "../data/metadata";
 import * as d3 from "d3";
 import { Link, LinkClass } from "./link/link";
-import { Config } from "./config";
+import { Config, Localization } from "./config";
 import { Container } from "../utils";
 import "reflect-metadata";
 import "../plot/br-heatmap";
@@ -33,6 +33,7 @@ export class Application {
             // init Container constants
             Container.importProvider();
             await Config.load();
+            await Localization.load();
             GlobalEnv.init();
 
             Application.metadata = metadata;
