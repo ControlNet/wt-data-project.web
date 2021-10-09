@@ -40,13 +40,12 @@ jobs:
         sed -i 's/dist//g' .gitignore
         sed -i 's/\/data//g' .gitignore
 
-    - name: Download data
-      run: |
-        git clone --depth 1 https://github.com/ControlNet/wt-data-project.data.git data
-        cd data
-        ls -al
-        chmod 777 -R .git
-        rm -R .git
+#    - name: Download data
+#      run: |
+#        git clone --depth 1 https://github.com/ControlNet/wt-data-project.data.git data
+#        cd data
+#        chmod 777 -R .git
+#        rm -R .git
 
     - name: Init git and commit
       env:

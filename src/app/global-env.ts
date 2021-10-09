@@ -33,4 +33,4 @@ export const brs = {
     ]
 };
 
-export const dataUrl = "/data";
+export const dataUrl = "https://controlnet.space/wt-data-project.data";
