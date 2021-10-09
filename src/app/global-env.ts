@@ -33,4 +33,4 @@ export const brs = {
     ]
 };
 
-export const dataUrl = "";
+export const dataUrl = "/data";
