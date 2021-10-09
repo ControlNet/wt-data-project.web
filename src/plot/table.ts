@@ -4,7 +4,7 @@ import * as d3 from "d3";
 import { JoinedData, JoinedRow, JoinedRowGetter } from "../data/joined-data";
 import * as _ from "lodash";
 import { Container, Inject, Provider } from "../utils";
-import { Content } from "../app/global-env";
+import { Content, dataUrl } from "../app/global-env";
 import { BRHeatMapPage } from "../app/page/br-heatmap-page";
 
 
@@ -100,7 +100,7 @@ export class Table extends Plot {
     }
 
     get dataPath(): string {
-        return `https://controlnet.space/wt-data-project.data/joined/${this.page.date}.csv`;
+        return `${dataUrl}/joined/${this.page.date}.csv`;
     }
 }
 

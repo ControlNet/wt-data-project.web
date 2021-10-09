@@ -38,6 +38,11 @@ jobs:
         mv logo.ico img
         mv logo64.png img
         sed -i 's/dist//g' .gitignore
+        sed -i 's/data//g' .gitignore
+
+    - name: Download data
+      run: |
+        git clone https://github.com/ControlNet/wt-data-project.data.git data
 
     - name: Init git and commit
       env:

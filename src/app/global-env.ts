@@ -32,3 +32,5 @@ export const brs = {
         '11.0'
     ]
 };
+
+export const dataUrl = "";

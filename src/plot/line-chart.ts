@@ -6,7 +6,7 @@ import { TimeseriesData, TimeseriesRow, TimeseriesRowGetter } from "../data/time
 import { Container, Inject, Injectable, nationColors, Provider, utils } from "../utils";
 import { BRRange, Clazz, Measurement, Mode, Scale } from "../app/options";
 import { Config, Localization, Margin, MeasurementTranslator } from "../app/config";
-import { nations } from "../app/global-env";
+import { dataUrl, nations } from "../app/global-env";
 import { BRHeatMapPage } from "../app/page/br-heatmap-page";
 import { StackedAreaPage } from "../app/page/stacked-area-page";
 import { Nation } from "../data/wiki-data";
@@ -468,7 +468,7 @@ export class StackedLineChart extends LineChart {
     }
 
     get dataPath(): string {
-        return `https://controlnet.space/wt-data-project.data/${this.page.mode.toLowerCase()}_ranks_all.csv`
+        return `${dataUrl}/${this.page.mode.toLowerCase()}_ranks_all.csv`
     }
 }
 

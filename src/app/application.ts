@@ -11,7 +11,7 @@ import "../plot/line-chart";
 import "../plot/legend";
 import "../plot/table";
 import "../plot/tooltip";
-import { GlobalEnv } from "./global-env";
+import { dataUrl, GlobalEnv } from "./global-env";
 import "./sidebar/sidebar-element";
 import "./sidebar/select";
 import { Logo, LogoClass } from "./image/logo";
@@ -29,7 +29,7 @@ export class Application {
 
     static run(): void {
 
-        d3.json("https://controlnet.space/wt-data-project.data/metadata.json", async (metadata: Array<Metadata>) => {
+        d3.json(`${dataUrl}/metadata.json`, async (metadata: Array<Metadata>) => {
             // init Container constants
             Container.importProvider();
             await Config.load();

@@ -9,7 +9,7 @@ import { BrHeatmapLegend } from "./legend";
 import { Table } from "./table";
 import { BrHeatmapTooltip, Tooltip } from "./tooltip";
 import { Config, Localization, Margin, MeasurementTranslator, NationTranslator } from "../app/config";
-import { brs, Content, nations } from "../app/global-env";
+import { brs, Content, dataUrl, nations } from "../app/global-env";
 import { BRHeatMapPage } from "../app/page/br-heatmap-page";
 import { Nation } from "../data/wiki-data";
 
@@ -335,7 +335,7 @@ export class BrHeatmap extends Plot {
     }
 
     get dataPath(): string {
-        return `https://controlnet.space/wt-data-project.data/${this.page.mode.toLowerCase()}_ranks_${this.page.brRange}.csv`
+        return `${dataUrl}/${this.page.mode.toLowerCase()}_ranks_${this.page.brRange}.csv`
     }
 }
 

@@ -99,3 +99,4 @@ node_modules
 .ipynb_checkpoints
 *.ipynb
 dist
+/data
