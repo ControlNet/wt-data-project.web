@@ -6,10 +6,11 @@ import { WebRepo } from "./app/link/web-repo";
 import { DataRepo } from "./app/link/data-repo";
 import { GithubLink } from "./app/link/github-link";
 import { Logo } from "./app/image/logo";
+import { GithubIssue } from "./app/link/github-issue";
 
 Application.build
     .withLogo(Logo)
     .withPages(BRHeatMapPage, StackedAreaPage, TodoPage)
-    .withLinks(WebRepo, DataRepo, GithubLink)
+    .withLinks(WebRepo, DataRepo, GithubIssue, GithubLink)
     .class
     .run()

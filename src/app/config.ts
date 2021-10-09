@@ -150,6 +150,7 @@ interface LocalizationJson {
         readonly TodoList: string,
         readonly WebRepo: string,
         readonly DataRepo: string,
+        readonly Issues: string,
         readonly Github: string
     }
 
@@ -228,6 +229,9 @@ class NavbarLocalization extends AbstractLocalization {
     }
     get DataRepo(): string {
         return `${this.class}.${this.layout}.DataRepo`;
+    }
+    get Issues(): string {
+        return `${this.class}.${this.layout}.Issues`;
     }
     get Github(): string {
         return `${this.class}.${this.layout}.Github`;
