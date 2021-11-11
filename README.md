@@ -65,6 +65,7 @@ This repo is still in progress.
     - [ ] New measurement: average repair fees
  - [x] Trend graph
     - [ ] Mouse tooltip
+ - [ ] Dark mode
  - [ ] Other animated graphs
 </div>
 
