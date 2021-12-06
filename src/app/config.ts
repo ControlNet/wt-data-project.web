@@ -262,7 +262,8 @@ export class Localization {
 
         try {
             lang = navigator.language === "zh-CN" || navigator.language === "zh" ? "zh-CN" : "en-US";
-            d3.select("html").attr("lang", lang)
+            d3.select("html").attr("lang", lang);
+            d3.select("#stat").style("display", null);
         } catch (e) {
             console.error(e);
             lang = "en-US";
