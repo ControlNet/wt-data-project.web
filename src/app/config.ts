@@ -259,11 +259,20 @@ export type MeasurementTranslator = (m: Measurement) => string;
 export class Localization {
     static async load() {
         let lang;
+        let is_zh = false;
 
         try {
-            lang = navigator.language === "zh-CN" || navigator.language === "zh" ? "zh-CN" : "en-US";
+            if (navigator.language === "zh-CN" || navigator.language === "zh") {
+                lang = "zh-CN";
+                is_zh = true;
+            } else {
+                lang = "en-US";
+            }
             d3.select("html").attr("lang", lang);
-            d3.select("#stat").style("display", null);
+
+            if (is_zh) {
+                d3.select("#stat").style("display", null);
+            }
         } catch (e) {
             console.error(e);
             lang = "en-US";
