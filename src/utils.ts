@@ -122,6 +122,7 @@ export const nationColors: Map<Nation, COLORS> = new Map(<Array<[Nation, COLORS]
     France: COLORS.AZURE,
     Germany: COLORS.GRAY,
     Italy: COLORS.GREEN,
+    Israel: COLORS.BLACK,
     Japan: COLORS.PURPLE,
     Sweden: COLORS.YELLOW,
     USA: COLORS.SKY,

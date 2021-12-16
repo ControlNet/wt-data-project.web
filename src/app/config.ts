@@ -203,7 +203,8 @@ interface LocalizationJson {
         readonly France: string,
         readonly Italy: string,
         readonly China: string,
-        readonly Sweden: string
+        readonly Sweden: string,
+        readonly Israel: string
     }
 }
 
@@ -387,7 +388,7 @@ export class Localization {
             }
 
             get br() {
-                return "Localization.BrHeatmapPage.Tooltip.br(";
+                return "Localization.BrHeatmapPage.Tooltip.br";
             }
         }(),
 

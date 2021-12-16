@@ -19,4 +19,4 @@ export interface WikiRow {
     sb_sl_rate: number
 }
 
-export type Nation = "USA" | "Germany" | "USSR" | "Britain" | "Japan" | "France" | "Italy" | "China" | "Sweden";
+export type Nation = "USA" | "Germany" | "USSR" | "Britain" | "Japan" | "France" | "Italy" | "China" | "Sweden" | "Israel";

@@ -429,6 +429,7 @@ export class StackedLineChart extends LineChart {
                     France: 0,
                     Germany: 0,
                     Italy: 0,
+                    Israel: 0,
                     Japan: 0,
                     Sweden: 0,
                     USA: 0,
@@ -445,14 +446,15 @@ export class StackedLineChart extends LineChart {
             case "value":
                 return dataObjs;
             case "percentage":
-                return dataObjs.map(({Britain, China, France, Germany, Italy, Japan, Sweden, USA, USSR, date}) => {
-                    const s = _.sum([Britain, China, France, Germany, Italy, Japan, Sweden, USA, USSR]);
+                return dataObjs.map(({Britain, China, France, Germany, Italy, Israel, Japan, Sweden, USA, USSR, date}) => {
+                    const s = _.sum([Britain, China, France, Germany, Italy, Israel, Japan, Sweden, USA, USSR]);
                     return {
                         Britain: Britain / s,
                         China: China / s,
                         France: France / s,
                         Germany: Germany / s,
                         Italy: Italy / s,
+                        Israel: Israel / s,
                         Japan: Japan / s,
                         Sweden: Sweden / s,
                         USA: USA / s,
@@ -499,4 +501,5 @@ interface StackedLineChartDataObj {
     Italy: number;
     China: number;
     Sweden: number;
+    Israel: number
 }
