@@ -164,7 +164,7 @@ export class BrHeatmap extends Plot {
 
             // add heat squares
             this.g.selectAll()
-                .data(dataObjs)
+                .data(dataObjs, d => d.nation + d.lowerBr)
                 .enter()
                 .append<SVGRectElement>("rect")
                 .attr("x", d => x(d.nation))
@@ -193,7 +193,7 @@ export class BrHeatmap extends Plot {
         if (reDownload) {
             // if need re-download data
             d3.csv(this.dataPath, (data: TimeseriesData) => {
-                this.updateSquares(data)
+                this.updateSquares(data);
                 this.cache = data;
             })
         } else {
@@ -222,8 +222,9 @@ export class BrHeatmap extends Plot {
         this.value2color = await this.getValue2color();
 
         // change fill of squares
-        const rects = this.g.selectAll("rect")
-            .data(dataObjs);
+        const rects = this.g
+            .selectAll<SVGRectElement, SquareInfo>("rect")
+            .data(dataObjs, d => d.nation + d.lowerBr);
 
         rects.enter()
             .transition()
