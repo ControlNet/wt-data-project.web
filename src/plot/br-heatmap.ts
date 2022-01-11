@@ -267,7 +267,7 @@ export class BrHeatmap extends Plot {
     }
 
     private extractData(data: Array<TimeseriesRow>): Array<SquareInfo> {
-        return data.filter(row => row.date === this.page.date && row.cls === this.page.clazz)
+        const dataObjs = data.filter(row => row.date === this.page.date && row.cls === this.page.clazz)
             .map(row => {
                 const get = new TimeseriesRowGetter(row, this.page.mode, this.page.measurement);
                 return {
@@ -277,6 +277,22 @@ export class BrHeatmap extends Plot {
                     value: get.value
                 }
             });
+
+        const blankObjs: Array<SquareInfo> = [];
+        nations.forEach(nation => {
+            brs[this.page.brRange].forEach(br => {
+                if (!dataObjs.find(obj => obj.nation === nation && obj.br === br)) {
+                    blankObjs.push({
+                        nation,
+                        br,
+                        value: 0,
+                        lowerBr: +br.split("~")[0].replace(" ", ""),
+                    })
+                }
+            })
+        })
+
+        return dataObjs.concat(blankObjs);
     }
 
     private async getValue2color(): Promise<Value2Color> {
