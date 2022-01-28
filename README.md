@@ -74,3 +74,4 @@ This repo is still in progress.
 - [kroeden](https://github.com/kroeden) for making logo.
 - [Gaijin](https://warthunder.com/) for developing War Thunder.
 - [thunderskill](http://thunderskill.com/en) for WT statistics data.
+- [FlareFlo](https://github.com/FlareFlo) for providing vehicle name matching.
