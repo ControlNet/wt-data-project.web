@@ -58,7 +58,7 @@ This repo is still in progress.
  - [x] Battle rating heatmap 
     - [x] Interactive trend graph
         - [x] Compatible for "battles" data
-        - [ ] Mouse tooltip
+        - [x] Mouse tooltip
         - [ ] Adjustable date range
     - [x] Display table with selected data  
     - [x] Mouse tooltip

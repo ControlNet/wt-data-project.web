@@ -49,7 +49,25 @@
       "rectXBias": -30,
       "rectYBias": -35,
       "textXBias": -25,
-      "textYBias": -20
+      "textYBias": -20,
+      "leftShiftXThreshold": 130,
+      "downShiftYThreshold": 40,
+      "leftShiftOffset": 150,
+      "downShiftOffset": 70
+    },
+    "LineChartTooltip": {
+      "parentSvgId": "line-chart-svg",
+      "opacity": 0.8,
+      "nRow": 20,
+      "rectWidth": 155,
+      "rectXBias": -165,
+      "rectYBias": -35,
+      "textXBias": -160,
+      "textYBias": -20,
+      "leftShiftXThreshold": 160,
+      "downShiftYThreshold": 40,
+      "leftShiftOffset": 175,
+      "downShiftOffset": 70
     }
   },
   "StackedAreaPage": {

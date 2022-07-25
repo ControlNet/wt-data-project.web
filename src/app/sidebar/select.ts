@@ -131,8 +131,8 @@ Container.bind(DateSelect).toDynamicValue(() => {
         .label(Container.get(Localization.Sidebar.Date.label))
         .class.add("plot-selection")
         .data.set(Application.dates.map(date => {
-        return {id: date, text: date}
-    }));
+            return {id: date, text: date}
+        }));
 })
 
 // class selection for choosing ground_vehicles or aviation.

@@ -3,14 +3,16 @@ import * as _ from "lodash";
 import { Plot } from "./plot";
 import { BrHeatmap } from "./br-heatmap";
 import { TimeseriesData, TimeseriesRow, TimeseriesRowGetter } from "../data/timeseries-data";
-import { Container, Inject, Injectable, nationColors, Provider, utils } from "../utils";
+import { Container, Inject, Injectable, MousePosition, nationColors, Provider, utils } from "../utils";
 import { BRRange, Clazz, Measurement, Mode, Scale } from "../app/options";
-import { Config, Localization, Margin, MeasurementTranslator } from "../app/config";
+import { Config, Localization, Margin, MeasurementTranslator, NationTranslator } from "../app/config";
 import { dataUrl, nations } from "../app/global-env";
 import { BRHeatMapPage } from "../app/page/br-heatmap-page";
 import { StackedAreaPage } from "../app/page/stacked-area-page";
 import { Nation } from "../data/wiki-data";
 import { StackedLineChartLegend } from "./legend";
+import { LineChartTooltip, Tooltip } from "./tooltip";
+import { Application } from "../app/application";
 
 
 @Injectable
@@ -36,7 +38,55 @@ export class BrLineChart extends LineChart {
     @Inject(Config.BrHeatmapPage.BrLineChart.svgWidth) readonly svgWidth: number;
     @Inject(Config.BrHeatmapPage.BrLineChart.margin) readonly margin: Margin;
     @Inject(BRHeatMapPage) readonly page: BRHeatMapPage;
+    @Inject(LineChartTooltip) readonly tooltip: Tooltip;
     dataCache: Array<TimeseriesDataCache> = [];
+    selected: Array<BrLineChartDataObj>;
+    selectedDate: number;
+    xAxis: d3.ScaleTime<number, number>;
+    readonly allDates = Application.dates.map(utils.parseDate).map(date => date.getTime()).reverse();
+
+    get mouseleaveEvent(): () => void {
+        const self = this;
+        return function(): void {
+            self.tooltip.hide();
+        };
+    }
+
+    get mouseoverEvent(): () => void {
+        const self = this;
+        return function(): void {
+            if (self.selected.length > 0) {
+                self.tooltip.appear();
+            } else {
+                self.tooltip.hide();
+            }
+        }
+    }
+
+    get mousemoveEvent(): () => void {
+        const self = this;
+        return async function(): Promise<void> {
+            const mousePos = new MousePosition(
+                d3.mouse(this)[0],
+                d3.mouse(this)[1]
+            );
+            const xValue = self.xAxis.invert(mousePos.x - self.margin.left);
+            self.selectedDate = utils.findClosest(self.allDates, xValue.getTime());
+            await self.tooltip.update(self.selected.map(dataObj => {
+                return `${Container.get<NationTranslator>(Localization.Nation)(dataObj.nation)} ` +
+                    `${dataObj.br}: ${_.round(dataObj.values.find(value => value.date.getTime() === self.selectedDate)?.value, 3)}`
+            }), mousePos);
+        }
+    }
+
+    init(): LineChart {
+        super.init();
+        this.tooltip.init();
+        this.svg.on("mousemove", this.mousemoveEvent);
+        this.svg.on("mouseleave", this.mouseleaveEvent);
+        this.svg.on("mouseover", this.mouseoverEvent);
+        return this;
+    }
 
     private async searchInCache(): Promise<TimeseriesData> {
         // search dataObj in cache
@@ -70,11 +120,14 @@ export class BrLineChart extends LineChart {
 
         const data = await this.searchInCache();
         const dataObjs: Array<BrLineChartDataObj> = this.groupBy(this.extractData(data));
+        this.selected = dataObjs;
 
         // x axis
         const x = d3.scaleUtc()
             .domain(d3.extent(data, d => utils.parseDate(d.date)))
             .range([0, this.width]);
+        this.xAxis = x;
+
         // generate sticks
         this.g.append<SVGGElement>("g")
             .classed("x-axis", true)

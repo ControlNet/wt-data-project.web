@@ -11,6 +11,7 @@ export interface ConfigJson {
         readonly BrLineChart: PlotConfigJson;
         readonly Legend: PlotConfigJson;
         readonly Tooltip: TooltipConfigJson;
+        readonly LineChartTooltip: TooltipConfigJson;
     }
 
     readonly StackedAreaPage: {
@@ -45,6 +46,10 @@ interface TooltipConfigJson {
     readonly rectYBias: number;
     readonly textXBias: number;
     readonly textYBias: number;
+    readonly leftShiftXThreshold: number;
+    readonly downShiftYThreshold: number;
+    readonly leftShiftOffset: number;
+    readonly downShiftOffset: number;
 }
 
 abstract class AbstractConfig {
@@ -110,6 +115,22 @@ class TooltipConfig extends AbstractConfig {
     get textYBias(): string {
         return `${this.class}.${this.page}.${this.plot}.textYBias`;
     }
+
+    get leftShiftXThreshold(): string {
+        return `${this.class}.${this.page}.${this.plot}.leftShiftXThreshold`;
+    }
+
+    get downShiftYThreshold(): string {
+        return `${this.class}.${this.page}.${this.plot}.downShiftYThreshold`;
+    }
+
+    get leftShiftOffset(): string {
+        return `${this.class}.${this.page}.${this.plot}.leftShiftOffset`;
+    }
+
+    get downShiftOffset(): string {
+        return `${this.class}.${this.page}.${this.plot}.downShiftOffset`;
+    }
 }
 
 
@@ -135,6 +156,7 @@ export class Config {
         static BrLineChart = new PlotConfig("BrHeatmapPage", "BrLineChart");
         static Legend = new PlotConfig("BrHeatmapPage", "Legend");
         static Tooltip = new TooltipConfig("BrHeatmapPage", "Tooltip")
+        static LineChartTooltip = new TooltipConfig("BrHeatmapPage", "LineChartTooltip");
     }
 
     static StackedAreaPage = class {

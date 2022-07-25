@@ -93,6 +93,42 @@ export namespace utils {
             return obj;
         }
     }
+
+    // find closest value in ordered array
+    // using binary search
+    export function findClosest(array: Array<number>, target: number): number {
+        const n = array.length;
+
+        if (target <= array[0])
+            return array[0];
+        if (target >= array[n - 1])
+            return array[n - 1];
+
+        function getClosest(val1: number, val2: number) {
+            if (target - val1 >= val2 - target)
+                return val2;
+            else
+                return val1;
+        }
+
+        // Doing binary search
+        let low = 0, high = n, mid = 0;
+        while (low < high) {
+            mid = Math.floor((low + high) / 2)
+            if (array[mid] === target)
+                return array[mid];
+            if (target < array[mid]) {
+                if (mid > 0 && target > array[mid - 1])
+                    return getClosest(array[mid - 1], array[mid]);
+                high = mid;
+            } else {
+                if (mid < n - 1 && target < array[mid + 1])
+                    return getClosest(array[mid], array[mid + 1]);
+                low = mid + 1;
+            }
+        }
+        return array[mid];
+    }
 }
 
 export enum COLORS {
