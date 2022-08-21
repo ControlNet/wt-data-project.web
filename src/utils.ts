@@ -357,7 +357,7 @@ export class WasmUtils {
         const filteredIndexes = WasmUtils.wasm.extract_data(dataCls, dataNation, dataBr, selectedNation, selectedBr,
             WasmUtils.clazz2int(clazz));
 
-        const out = Array.from(filteredIndexes).map(i => data[i]).map(d => {
+        return Array.from(filteredIndexes).map(i => data[i]).map(d => {
             const get = new TimeseriesRowGetter(d, mode, measurement);
             return {
                 date: utils.parseDate(d.date),
@@ -366,6 +366,5 @@ export class WasmUtils {
                 value: get.value
             }
         });
-        return out;
     }
 }

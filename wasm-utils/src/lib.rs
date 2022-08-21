@@ -10,12 +10,17 @@ use wasm_bindgen::prelude::*;
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[wasm_bindgen]
-extern {}
+extern "C" {}
 
 #[wasm_bindgen]
-pub fn extract_data(data_cls: &Uint8Array, data_nation: &Uint8Array, data_br: &Float32Array,
-                    selected_nation: &Uint8Array, selected_br: &Float32Array,
-                    clazz: u8) -> Uint32Array {
+pub fn extract_data(
+    data_cls: &Uint8Array,
+    data_nation: &Uint8Array,
+    data_br: &Float32Array,
+    selected_nation: &Uint8Array,
+    selected_br: &Float32Array,
+    clazz: u8,
+) -> Uint32Array {
     panic::set_hook(Box::new(console_error_panic_hook::hook));
     let mut filtered_indexes: Vec<u32> = Vec::new();
     for i in 0..data_cls.length() {
