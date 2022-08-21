@@ -5,6 +5,7 @@
     "watch": "webpack --watch"
   },
   "dependencies": {
+    "wasm-utils": "file:wasm-utils/pkg",
     "d3": "^4.11.0",
     "d3-array": "^1.2.1",
     "d3-axis": "^1.0.8",

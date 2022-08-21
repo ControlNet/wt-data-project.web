@@ -1,12 +1,12 @@
 import { Gettable, Getter } from "./getter";
-import { Measurement, Mode } from "../app/options";
+import { Clazz, Measurement, Mode } from "../app/options";
 import { Nation } from "./wiki-data";
 
 export type TimeseriesData<T extends TimeseriesRow = TimeseriesRow> = Array<T>;
 
 export interface TimeseriesRow extends Gettable {
     nation: Nation
-    cls: string
+    cls: Clazz
     date: string
 }
 

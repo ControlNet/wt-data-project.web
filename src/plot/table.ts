@@ -13,6 +13,7 @@ export class Table extends Plot {
     table: d3.Selection<HTMLTableElement, unknown, HTMLElement, unknown>
     @Inject(Content) readonly content: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>
     @Inject(BRHeatMapPage) page: BRHeatMapPage;
+    cache: Map<string, JoinedData> = new Map();
 
     init(): Table {
         this.table = this.content
@@ -23,44 +24,54 @@ export class Table extends Plot {
         return this;
     }
 
+    async searchInCache(): Promise<JoinedData> {
+        const key = this.page.date;
+        if (this.cache.has(key)) {
+            return this.cache.get(key);
+        } else {
+            return new Promise(resolve => d3.csv(this.dataPath, (data: JoinedData) => {
+                this.cache.set(key, data);
+                resolve(data);
+            }));
+        }
+    }
+
     async update(): Promise<Table> {
         // remove previous
         this.reset();
 
         const clazz = this.page.clazz;
         const brRange = +this.page.brRange;
+        const data = await this.searchInCache();
+        // filter the data
+        const filtered = this.brHeatmap.selected.map((selected: SquareInfo) => {
+            const lowerBr = selected.lowerBr;
+            const nation = selected.nation;
 
-        d3.csv(this.dataPath, (data: JoinedData) => {
-            // filter the data
-            const filtered = this.brHeatmap.selected.map((selected: SquareInfo) => {
-                const lowerBr = selected.lowerBr;
-                const nation = selected.nation;
+            return data.filter(d => {
+                // filter br
+                const get = new JoinedRowGetter(d, this.page.mode);
+                const br = get.br;
+                const filterBr = () => br <= lowerBr + brRange && br >= lowerBr;
+                // filter nation
+                const filterNation = () => d.nation === nation;
+                // filter class
+                const filterClass = () => d.cls === clazz;
+                return filterBr() && filterNation() && filterClass();
+            })
+        }).flat();
 
-                return data.filter(d => {
-                    // filter br
-                    const get = new JoinedRowGetter(d, this.page.mode);
-                    const br = get.br;
-                    const filterBr = () => br <= lowerBr + brRange && br >= lowerBr;
-                    // filter nation
-                    const filterNation = () => d.nation === nation;
-                    // filter class
-                    const filterClass = () => d.cls === clazz;
-                    return filterBr() && filterNation() && filterClass();
-                })
-            }).flat();
+        // select columns with selected mode
+        const tableData = this.selectColumns(_.uniqBy(filtered, d => d.name));
+        const keys = <Array<keyof TableRow>>_.keys(tableData[0]);
+        // init table header
+        this.table.append("tr").selectAll().data(keys).enter().append("th").html(d => d);
 
-            // select columns with selected mode
-            const tableData = this.selectColumns(_.uniqBy(filtered, d => d.name));
-            const keys = <Array<keyof TableRow>>_.keys(tableData[0]);
-            // init table header
-            this.table.append("tr").selectAll().data(keys).enter().append("th").html(d => d);
-
-            // generate table rows from content
-            tableData.forEach((tableRow: TableRow) => {
-                const tr = this.table.append("tr");
-                keys.forEach(key => {
-                    tr.append("td").html(<string>tableRow[key]);
-                })
+        // generate table rows from content
+        tableData.forEach((tableRow: TableRow) => {
+            const tr = this.table.append("tr");
+            keys.forEach(key => {
+                tr.append("td").html(<string>tableRow[key]);
             })
         })
         return this;

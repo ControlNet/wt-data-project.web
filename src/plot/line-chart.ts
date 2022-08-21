@@ -3,8 +3,8 @@ import * as _ from "lodash";
 import { Plot } from "./plot";
 import { BrHeatmap } from "./br-heatmap";
 import { TimeseriesData, TimeseriesRow, TimeseriesRowGetter } from "../data/timeseries-data";
-import { Container, Inject, Injectable, MousePosition, nationColors, Provider, utils } from "../utils";
-import { BRRange, Clazz, Measurement, Mode, Scale } from "../app/options";
+import { Container, Inject, Injectable, MousePosition, nationColors, Provider, utils, WasmUtils } from "../utils";
+import { Clazz, Mode, Scale } from "../app/options";
 import { Config, Localization, Margin, MeasurementTranslator, NationTranslator } from "../app/config";
 import { dataUrl, nations } from "../app/global-env";
 import { BRHeatMapPage } from "../app/page/br-heatmap-page";
@@ -39,7 +39,6 @@ export class BrLineChart extends LineChart {
     @Inject(Config.BrHeatmapPage.BrLineChart.margin) readonly margin: Margin;
     @Inject(BRHeatMapPage) readonly page: BRHeatMapPage;
     @Inject(LineChartTooltip) readonly tooltip: Tooltip;
-    dataCache: Array<TimeseriesDataCache> = [];
     selected: Array<BrLineChartDataObj>;
     selectedDate: number;
     xAxis: d3.ScaleTime<number, number>;
@@ -88,38 +87,13 @@ export class BrLineChart extends LineChart {
         return this;
     }
 
-    private async searchInCache(): Promise<TimeseriesData> {
-        // search dataObj in cache
-        for (const cache of this.dataCache) {
-            if (this.page.clazz === cache.clazz
-                && this.page.brRange === cache.brRange
-                && this.page.mode === cache.mode
-                && this.page.measurement === cache.measurement
-            ) {
-                return cache.data;
-            }
-        }
-        // else generate a new cache
-        return new Promise(resolve => {
-            d3.csv(this.brHeatmap.dataPath, (data: TimeseriesData) => {
-                this.dataCache.push({
-                    brRange: this.page.brRange,
-                    clazz: this.page.clazz,
-                    measurement: this.page.measurement,
-                    mode: this.page.mode,
-                    data: data
-                });
-                resolve(data);
-            })
-        });
-    }
-
     async update(): Promise<BrLineChart> {
         const oldXAxis = this.g.selectAll<SVGElement, unknown>(".x-axis");
         const oldYAxis = this.g.selectAll<SVGElement, unknown>(".y-axis");
 
-        const data = await this.searchInCache();
-        const dataObjs: Array<BrLineChartDataObj> = this.groupBy(this.extractData(data));
+        const data = this.brHeatmap.cache;
+        // const dataObjs: Array<BrLineChartDataObj> = this.groupBy(this.extractData(data));
+        const dataObjs = this.groupBy(WasmUtils.extractData(data, this.brHeatmap.selected, this.page.clazz, this.page.mode, this.page.measurement));
         this.selected = dataObjs;
 
         // x axis
@@ -228,24 +202,25 @@ export class BrLineChart extends LineChart {
         return this;
     }
 
-    private extractData(data: Array<TimeseriesRow>): BrLineChartData {
-        return data.filter(row => {
-            const get = new TimeseriesRowGetter(row, this.page.mode, this.page.measurement);
-            return this.brHeatmap.selected.some(
-                info => info.nation === row.nation
-                    && info.br === get.br
-                    && this.page.clazz === row.cls
-            )
-        }).map(row => {
-            const get = new TimeseriesRowGetter(row, this.page.mode, this.page.measurement);
-            return {
-                date: utils.parseDate(row.date),
-                nation: row.nation,
-                br: get.br,
-                value: get.value
-            }
-        });
-    }
+    // private extractData(data: Array<TimeseriesRow>): BrLineChartData {
+    //     const results = data.filter(row => {
+    //         const get = new TimeseriesRowGetter(row, this.page.mode, this.page.measurement);
+    //         return this.brHeatmap.selected.some(
+    //             info => info.nation === row.nation
+    //                 && info.br === get.br
+    //                 && this.page.clazz === row.cls
+    //         )
+    //     }).map(row => {
+    //         const get = new TimeseriesRowGetter(row, this.page.mode, this.page.measurement);
+    //         return {
+    //             date: utils.parseDate(row.date),
+    //             nation: row.nation,
+    //             br: get.br,
+    //             value: get.value
+    //         }
+    //     });
+    //     return results;
+    // }
 
     private groupBy(data: BrLineChartData): Array<BrLineChartDataObj> {
         const result: Array<BrLineChartDataObj> = [];
@@ -282,7 +257,7 @@ export class BrLineChart extends LineChart {
     }
 }
 
-type BrLineChartData = Array<BrLineChartRow>;
+export type BrLineChartData = Array<BrLineChartRow>;
 
 interface BrLineChartRow {
     date: Date;
@@ -295,14 +270,6 @@ export interface BrLineChartDataObj {
     br: string;
     nation: Nation;
     values: Array<{ date: Date, value: number }>
-}
-
-interface TimeseriesDataCache {
-    clazz: Clazz;
-    mode: Mode;
-    measurement: Measurement;
-    brRange: BRRange;
-    data: TimeseriesData;
 }
 
 @Provider(StackedLineChart)

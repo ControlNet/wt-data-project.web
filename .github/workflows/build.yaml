@@ -13,6 +13,14 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
+    - name: Setup rust wasm
+      run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+    - name: Build wasm
+      run: |
+        cd wasm-utils
+        wasm-pack build
+
     - name: Use Node.js 16.x
       uses: actions/setup-node@v1
       with:
@@ -31,6 +39,7 @@ jobs:
         mv img/logo64.png .
         rm -R img
         rm -R src
+        rm -R wasm-utils
         rm tsconfig.json
         rm webpack.config.js
         rm webpack.prod.js

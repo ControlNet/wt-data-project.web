@@ -3,7 +3,7 @@ import { Metadata } from "../data/metadata";
 import * as d3 from "d3";
 import { Link, LinkClass } from "./link/link";
 import { Config, Localization } from "./config";
-import { Container } from "../utils";
+import { Container, WasmUtils } from "../utils";
 import "reflect-metadata";
 import "../plot/br-heatmap";
 import "../plot/color-bar";
@@ -30,6 +30,8 @@ export class Application {
     static run(): void {
 
         d3.json(`${dataUrl}/metadata.json`, async (metadata: Array<Metadata>) => {
+            // load wasm module
+            await WasmUtils.init();
             // init Container constants
             Container.importProvider();
             await Config.load();
