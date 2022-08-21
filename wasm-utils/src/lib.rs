@@ -1,7 +1,6 @@
 use std::panic;
 
-use js_sys::{Float32Array, Int32Array, Object, Uint32Array, Uint8Array};
-use serde::{Serialize};
+use js_sys::{Float32Array, Uint32Array, Uint8Array};
 use wasm_bindgen::prelude::*;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
