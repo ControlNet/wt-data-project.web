@@ -4,6 +4,7 @@ on:
   push:
     branches-ignore:
       - main
+      - web
   pull_request:
     branches:
       - '*'
