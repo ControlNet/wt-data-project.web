@@ -136,7 +136,7 @@ class TooltipConfig extends AbstractConfig {
 
 export class Config {
     static async load(): Promise<void> {
-        const json: ConfigJson = await (await fetch("/config/params.json")).json()
+        const json: ConfigJson = await (await fetch("config/params.json")).json()
 
         new ObjChainMap()
             .addLayer(() => json)
@@ -301,7 +301,7 @@ export class Localization {
             lang = "en-US";
         }
         const {Navbar, Sidebar, BrHeatmapPage, StackedAreaPage, Nation}: LocalizationJson =
-            await (await fetch(`/config/i18n/${lang}.json`)).json();
+            await (await fetch(`config/i18n/${lang}.json`)).json();
 
         // set navbar i18n
         Object.entries(Navbar).forEach(([layer, value]) => {
