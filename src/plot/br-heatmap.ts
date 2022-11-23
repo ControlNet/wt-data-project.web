@@ -42,11 +42,11 @@ export class BrHeatmap extends Plot {
         await this.legend.update();
     }
 
-    eventWrapper<T extends (d: SquareInfo, node: SVGRectElement) => void | Promise<void>>(cb: T)
+    static eventWrapper<T extends (d: SquareInfo, node: SVGRectElement) => void | Promise<void>>(cb: T)
     : (d: SquareInfo, i: number, n: SVGRectElement[]) => void {
         return (d, i, n) =>
             // https://stackoverflow.com/questions/27746304/how-to-check-if-an-object-is-a-promise/27760489#27760489
-            Promise.resolve((cb.bind(this) as T)(d, n[i])).then(() => console.log(cb.name));
+            Promise.resolve((cb.bind(this) as T)(d, n[i])).then(() => {});
     }
 
     onPointerLeave(_: SquareInfo, node: SVGRectElement): void {
@@ -168,10 +168,10 @@ export class BrHeatmap extends Plot {
                 .style("fill", d => this.value2color(d.value))
                 .style("stroke-width", 1)
                 .style("stroke", "black")
-                .on("pointerover", this.eventWrapper(this.onPointerOver))
-                .on("pointerleave", this.eventWrapper(this.onPointerLeave))
-                .on("pointermove", this.eventWrapper(this.onPointerMove))
-                .on("click", this.eventWrapper(this.onClick));
+                .on("pointerover", BrHeatmap.eventWrapper(this.onPointerOver))
+                .on("pointerleave", BrHeatmap.eventWrapper(this.onPointerLeave))
+                .on("pointermove", BrHeatmap.eventWrapper(this.onPointerMove))
+                .on("click", BrHeatmap.eventWrapper(this.onClick));
 
             this.cache = data;
 
