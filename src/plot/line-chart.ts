@@ -184,7 +184,7 @@ export class BrLineChart extends LineChart {
         return this;
     }
 
-    brHeatmap(): BrHeatmap {
+    get brHeatmap(): BrHeatmap {
         return Container.get(BrHeatmap);
     }
 
@@ -480,7 +480,7 @@ export class StackedLineChart extends LineChart {
         await this.legend.update();
     }
 
-    dataPath(): string {
+    get dataPath(): string {
         return `${dataUrl}/${this.page.mode.toLowerCase()}_ranks_all.csv`
     }
 }
