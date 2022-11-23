@@ -11,7 +11,7 @@ export abstract class Link extends NavTab {
             .append("a")
             .attr("id", this.id)
             .attr("href", this.url)
-            .attr("rel", "noopener noreferrer")
+            .attr("rel", "noopener")
             .attr("target", "_blank")
             .classed("link-tab", true)
             .html(this.name)
