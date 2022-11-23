@@ -44,46 +44,37 @@ export class BrLineChart extends LineChart {
     xAxis: d3.ScaleTime<number, number>;
     readonly allDates = Application.dates.map(utils.parseDate).map(date => date.getTime()).reverse();
 
-    get mouseleaveEvent(): () => void {
-        const self = this;
-        return function(): void {
-            self.tooltip.hide();
-        };
+    onPointerLeave(_: SquareInfo, _2: SVGRectElement): void {
+        this.tooltip.hide();
     }
 
-    get mouseoverEvent(): () => void {
-        const self = this;
-        return function(): void {
-            if (self.selected.length > 0) {
-                self.tooltip.appear();
-            } else {
-                self.tooltip.hide();
-            }
+    onPointerOver(_: SquareInfo, _2: SVGRectElement): void {
+        if (this.selected.length > 0) {
+            this.tooltip.appear();
+        } else {
+            this.tooltip.hide();
         }
     }
 
-    get mousemoveEvent(): () => void {
-        const self = this;
-        return async function(): Promise<void> {
-            const mousePos = new MousePosition(
-                d3.mouse(this)[0],
-                d3.mouse(this)[1]
-            );
-            const xValue = self.xAxis.invert(mousePos.x - self.margin.left);
-            self.selectedDate = utils.findClosest(self.allDates, xValue.getTime());
-            await self.tooltip.update(self.selected.map(dataObj => {
-                return `${Container.get<NationTranslator>(Localization.Nation)(dataObj.nation)} ` +
-                    `${dataObj.br}: ${_.round(dataObj.values.find(value => value.date.getTime() === self.selectedDate)?.value, 3)}`
-            }), mousePos);
-        }
+    async onPointerMove(_: SquareInfo, node: SVGRectElement): Promise<void> {
+        const mousePos = new MousePosition(
+            d3.mouse(node)[0],
+            d3.mouse(node)[1]
+        );
+        const xValue = this.xAxis.invert(mousePos.x - this.margin.left);
+        this.selectedDate = utils.findClosest(this.allDates, xValue.getTime());
+        await this.tooltip.update(this.selected.map(dataObj =>
+            `${Container.get<NationTranslator>(Localization.Nation)(dataObj.nation)} ` +
+                `${dataObj.br}: ${_.round(dataObj.values.find(value => value.date.getTime() === this.selectedDate)?.value, 3)}`
+        ), );
     }
 
     init(): LineChart {
         super.init();
         this.tooltip.init();
-        this.svg.on("mousemove", this.mousemoveEvent);
-        this.svg.on("mouseleave", this.mouseleaveEvent);
-        this.svg.on("mouseover", this.mouseoverEvent);
+        this.svg.on("pointerover", BrHeatmap.eventWrapper(this.onPointerOver));
+        this.svg.on("pointermove", BrHeatmap.eventWrapper(this.onPointerMove));
+        this.svg.on("pointerleave", BrHeatmap.eventWrapper(this.onPointerLeave));
         return this;
     }
 
@@ -193,7 +184,7 @@ export class BrLineChart extends LineChart {
         return this;
     }
 
-    get brHeatmap(): BrHeatmap {
+    brHeatmap(): BrHeatmap {
         return Container.get(BrHeatmap);
     }
 
@@ -489,7 +480,7 @@ export class StackedLineChart extends LineChart {
         await this.legend.update();
     }
 
-    get dataPath(): string {
+    dataPath(): string {
         return `${dataUrl}/${this.page.mode.toLowerCase()}_ranks_all.csv`
     }
 }
