@@ -173,6 +173,7 @@ interface LocalizationJson {
         readonly WebRepo: string,
         readonly DataRepo: string,
         readonly Issues: string,
+        readonly Forum: string,
         readonly Github: string
     }
 
@@ -255,6 +256,9 @@ class NavbarLocalization extends AbstractLocalization {
     }
     get Issues(): string {
         return `${this.class}.${this.layout}.Issues`;
+    }
+    get Forum(): string {
+        return `${this.class}.${this.layout}.Forum`;
     }
     get Github(): string {
         return `${this.class}.${this.layout}.Github`;

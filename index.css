@@ -48,3 +48,9 @@ table, th, td {
     border: 1px solid black;
     border-collapse: collapse;
 }
+
+.new-tag {
+    color: #FFCB6B;
+    font-size: 10px;
+    vertical-align: text-top;
+}

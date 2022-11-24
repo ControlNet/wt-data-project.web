@@ -332,7 +332,7 @@ export class BrHeatmap extends Plot {
 
                 range2color = d3.scaleLinear<string, string>()
                     .domain([0, 0.01, 0.4, 0.5, 0.6, 0.99, 1.0])
-                    .range([CONT_COLORS.WHITE, CONT_COLORS.BLACK, CONT_COLORS.RED, CONT_COLORS.YELLOW, CONT_COLORS.GREEN, CONT_COLORS.BLACK])
+                    .range([CONT_COLORS.WHITE, CONT_COLORS.BLACK, CONT_COLORS.RED, CONT_COLORS.YELLOW, CONT_COLORS.GREEN, CONT_COLORS.BLACK, CONT_COLORS.BLACK])
                     .interpolate(d3.interpolateHcl)
                 break;
         }

@@ -172,8 +172,8 @@ export const nationColors: Map<Nation, COLORS> = new Map(<Array<[Nation, COLORS]
 
 // Colors for continuous values
 export enum CONT_COLORS {
-    RED = "#d11141",
-    YELLOW = "#ffc425",
+    RED = "#D11141",
+    YELLOW = "#FFC425",
     GREEN = "#00b159",
     BLACK = "#2B2B2B",
     WHITE = "#EEFFFF"
