@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import * as _ from "lodash";
 import { Plot } from "./plot";
-import { BrHeatmap } from "./br-heatmap";
+import { BrHeatmap, SquareInfo } from "./br-heatmap";
 import { TimeseriesData, TimeseriesRow, TimeseriesRowGetter } from "../data/timeseries-data";
 import { Container, Inject, Injectable, MousePosition, nationColors, Provider, utils, WasmUtils } from "../utils";
 import { Clazz, Mode, Scale } from "../app/options";
@@ -44,11 +44,11 @@ export class BrLineChart extends LineChart {
     xAxis: d3.ScaleTime<number, number>;
     readonly allDates = Application.dates.map(utils.parseDate).map(date => date.getTime()).reverse();
 
-    onPointerLeave(_: SquareInfo, _2: SVGRectElement): void {
+    onPointerLeave(_: SquareInfo, _2: SVGSVGElement): void {
         this.tooltip.hide();
     }
 
-    onPointerOver(_: SquareInfo, _2: SVGRectElement): void {
+    onPointerOver(_: SquareInfo, _2: SVGSVGElement): void {
         if (this.selected.length > 0) {
             this.tooltip.appear();
         } else {
@@ -56,7 +56,7 @@ export class BrLineChart extends LineChart {
         }
     }
 
-    async onPointerMove(_: SquareInfo, node: SVGRectElement): Promise<void> {
+    async onPointerMove(_d: SquareInfo, node: SVGSVGElement): Promise<void> {
         const mousePos = new MousePosition(
             d3.mouse(node)[0],
             d3.mouse(node)[1]
@@ -66,15 +66,15 @@ export class BrLineChart extends LineChart {
         await this.tooltip.update(this.selected.map(dataObj =>
             `${Container.get<NationTranslator>(Localization.Nation)(dataObj.nation)} ` +
                 `${dataObj.br}: ${_.round(dataObj.values.find(value => value.date.getTime() === this.selectedDate)?.value, 3)}`
-        ), );
+        ), mousePos);
     }
 
     init(): LineChart {
         super.init();
         this.tooltip.init();
-        this.svg.on("pointerover", BrHeatmap.eventWrapper(this.onPointerOver));
-        this.svg.on("pointermove", BrHeatmap.eventWrapper(this.onPointerMove));
-        this.svg.on("pointerleave", BrHeatmap.eventWrapper(this.onPointerLeave));
+        this.svg.on("pointerover", BrHeatmap.eventWrapper<SVGSVGElement, typeof this.onPointerOver>(this.onPointerOver));
+        this.svg.on("pointermove", BrHeatmap.eventWrapper<SVGSVGElement, typeof this.onPointerMove>(this.onPointerMove));
+        this.svg.on("pointerleave", BrHeatmap.eventWrapper<SVGSVGElement, typeof this.onPointerLeave>(this.onPointerLeave));
         return this;
     }
 
