@@ -12,6 +12,7 @@ import { Config, Localization, Margin, MeasurementTranslator, NationTranslator }
 import { brs, Content, dataUrl, nations } from "../app/global-env";
 import { BRHeatMapPage } from "../app/page/br-heatmap-page";
 import { Nation } from "../data/wiki-data";
+import { BrHeatColorMap } from "../misc/color-map-def";
 
 
 @Provider(BrHeatmap)
@@ -27,6 +28,7 @@ export class BrHeatmap extends Plot {
     @Inject(BrHeatmapTooltip) readonly tooltip: Tooltip;
     @Inject(Content) readonly content: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>
     @Inject(BRHeatMapPage) readonly page: BRHeatMapPage;
+    @Inject(BrHeatColorMap) readonly colorMaps: BrHeatColorMap;
 
     selected: Array<SquareInfo> = [];
 
@@ -312,14 +314,14 @@ export class BrHeatmap extends Plot {
 
                 if (this.page.clazz === "Ground_vehicles") {
                     range2color = d3.scaleLinear<string, string>()
-                        .domain([0, 0.05, 0.4, 0.5, 0.6, 0.95, 1.0])
-                        .range([CONT_COLORS.WHITE, CONT_COLORS.BLACK, CONT_COLORS.RED, CONT_COLORS.YELLOW, CONT_COLORS.GREEN, CONT_COLORS.BLACK, CONT_COLORS.BLACK])
-                        .interpolate(d3.interpolateHcl)
+                        .domain(this.colorMaps.win_rate.Ground_vehicles.percentiles)
+                        .range(this.colorMaps.win_rate.Ground_vehicles.colors)
+                        .interpolate(d3.interpolateHsl)
                 } else if (this.page.clazz === "Aviation") {
                     range2color = d3.scaleLinear<string, string>()
-                        .domain([0, 0.01, 0.5, 0.6, 0.7, 0.99, 1.0])
-                        .range([CONT_COLORS.WHITE, CONT_COLORS.BLACK, CONT_COLORS.RED, CONT_COLORS.YELLOW, CONT_COLORS.GREEN, CONT_COLORS.BLACK, CONT_COLORS.BLACK])
-                        .interpolate(d3.interpolateHcl)
+                        .domain(this.colorMaps.win_rate.Aviation.percentiles)
+                        .range(this.colorMaps.win_rate.Aviation.colors)
+                        .interpolate(d3.interpolateHsl)
                 }
                 break;
             case "battles_sum":
@@ -331,9 +333,9 @@ export class BrHeatmap extends Plot {
                     .range([0, 1]);
 
                 range2color = d3.scaleLinear<string, string>()
-                    .domain([0, 0.01, 0.4, 0.5, 0.6, 0.99, 1.0])
-                    .range([CONT_COLORS.WHITE, CONT_COLORS.BLACK, CONT_COLORS.RED, CONT_COLORS.YELLOW, CONT_COLORS.GREEN, CONT_COLORS.BLACK, CONT_COLORS.BLACK])
-                    .interpolate(d3.interpolateHcl)
+                    .domain(this.colorMaps.battles_sum.Ground_vehicles.percentiles)
+                    .range(this.colorMaps.battles_sum.Ground_vehicles.colors)
+                    .interpolate(d3.interpolateHsl)
                 break;
         }
 

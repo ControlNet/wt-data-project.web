@@ -63,6 +63,8 @@ This repo is still in progress.
     - [x] Display table with selected data  
     - [x] Mouse tooltip
     - [ ] New measurement: average repair fees
+    - [x] Improve color map
+    - [ ] Use N/A to represent missing data rather than 0
  - [x] Trend graph
     - [ ] Mouse tooltip
  - [ ] Dark mode
