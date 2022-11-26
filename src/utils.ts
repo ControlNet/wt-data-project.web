@@ -134,6 +134,13 @@ export namespace utils {
         }
         return array[mid];
     }
+
+    export function eventWrapper<S extends SVGRectElement | SVGSVGElement, T extends (d: SquareInfo, node: S)
+        => void | Promise<void>>(thisBinding: unknown, cb: T): (this: S, d: SquareInfo, i: number, n: S[]) => void {
+        return (d, i, n) =>
+            // https://stackoverflow.com/questions/27746304/how-to-check-if-an-object-is-a-promise/27760489#27760489
+            Promise.resolve((cb.bind(thisBinding) as T)(d, n[i])).then(() => {});
+    }
 }
 
 export enum COLORS {
@@ -294,8 +301,10 @@ export class ObjChainMap {
 }
 
 export class WasmUtils {
-    static wasm: { extract_data(data_cls: Uint8Array, data_nation: Uint8Array, data_br: Float32Array,
-            selected_nation: Uint8Array, selected_br: Float32Array, clazz: number): Uint32Array; };
+    static wasm: {
+        extract_data(data_cls: Uint8Array, data_nation: Uint8Array, data_br: Float32Array,
+            selected_nation: Uint8Array, selected_br: Float32Array, clazz: number): Uint32Array;
+    };
 
     static async init() {
         WasmUtils.wasm = await import("wasm-utils");

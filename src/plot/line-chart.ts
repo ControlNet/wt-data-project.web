@@ -72,9 +72,9 @@ export class BrLineChart extends LineChart {
     init(): LineChart {
         super.init();
         this.tooltip.init();
-        this.svg.on("pointerover", BrHeatmap.eventWrapper<SVGSVGElement, typeof this.onPointerOver>(this, this.onPointerOver));
-        this.svg.on("pointermove", BrHeatmap.eventWrapper<SVGSVGElement, typeof this.onPointerMove>(this, this.onPointerMove));
-        this.svg.on("pointerleave", BrHeatmap.eventWrapper<SVGSVGElement, typeof this.onPointerLeave>(this, this.onPointerLeave));
+        this.svg.on("pointerover", utils.eventWrapper<SVGSVGElement, typeof this.onPointerOver>(this, this.onPointerOver));
+        this.svg.on("pointermove", utils.eventWrapper<SVGSVGElement, typeof this.onPointerMove>(this, this.onPointerMove));
+        this.svg.on("pointerleave", utils.eventWrapper<SVGSVGElement, typeof this.onPointerLeave>(this, this.onPointerLeave));
         return this;
     }
 

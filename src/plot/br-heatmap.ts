@@ -44,13 +44,6 @@ export class BrHeatmap extends Plot {
         await this.legend.update();
     }
 
-    static eventWrapper<S extends SVGRectElement | SVGSVGElement, T extends (d: SquareInfo, node: S) => void | Promise<void>>
-    (thisBinding: unknown, cb: T): (this: S, d: SquareInfo, i: number, n: S[]) => void {
-        return (d, i, n) =>
-            // https://stackoverflow.com/questions/27746304/how-to-check-if-an-object-is-a-promise/27760489#27760489
-            Promise.resolve((cb.bind(thisBinding) as T)(d, n[i])).then(() => {});
-    }
-
     onPointerLeave(_: SquareInfo, node: SVGRectElement): void {
         d3.select(node).style("stroke", "black");
         this.tooltip.hide();
@@ -170,10 +163,10 @@ export class BrHeatmap extends Plot {
                 .style("fill", d => this.value2color(d.value))
                 .style("stroke-width", 1)
                 .style("stroke", "black")
-                .on("pointerover", BrHeatmap.eventWrapper<SVGRectElement, typeof this.onPointerOver>(this, this.onPointerOver))
-                .on("pointerleave", BrHeatmap.eventWrapper<SVGRectElement, typeof this.onPointerLeave>(this, this.onPointerLeave))
-                .on("pointermove", BrHeatmap.eventWrapper<SVGRectElement, typeof this.onPointerMove>(this, this.onPointerMove))
-                .on("click", BrHeatmap.eventWrapper<SVGRectElement, typeof this.onClick>(this, this.onClick));
+                .on("pointerover", utils.eventWrapper<SVGRectElement, typeof this.onPointerOver>(this, this.onPointerOver))
+                .on("pointerleave", utils.eventWrapper<SVGRectElement, typeof this.onPointerLeave>(this, this.onPointerLeave))
+                .on("pointermove", utils.eventWrapper<SVGRectElement, typeof this.onPointerMove>(this, this.onPointerMove))
+                .on("click", utils.eventWrapper<SVGRectElement, typeof this.onClick>(this, this.onClick));
 
             this.cache = data;
 
