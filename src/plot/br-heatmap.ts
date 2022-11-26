@@ -44,60 +44,47 @@ export class BrHeatmap extends Plot {
         await this.legend.update();
     }
 
-    get mouseleaveEvent(): () => void {
-        const self = this;
-        return function(): void {
-            d3.select(this).style("stroke", "black");
-            self.tooltip.hide();
-        };
+    onPointerLeave(_: SquareInfo, node: SVGRectElement): void {
+        d3.select(node).style("stroke", "black");
+        this.tooltip.hide();
     }
 
-    get mouseoverEvent(): (d: SquareInfo) => void {
-        const self = this;
-        return function(d: SquareInfo): void {
-            d3.select(this).style("stroke", "white");
-            self.tooltip.appear();
-            self.tooltip.rect
-                .transition()
-                .duration(100)
-                .style("fill", self.value2color(d.value));
-        }
+    onPointerOver(d: SquareInfo, node: SVGRectElement): void {
+        d3.select(node).style("stroke", "white");
+        this.tooltip.appear();
+        this.tooltip.rect
+            .transition()
+            .duration(100)
+            .style("fill", this.value2color(d.value));
     }
 
-    get mousemoveEvent(): (d: SquareInfo) => void {
-        const self = this;
-        return async function(d: SquareInfo): Promise<void> {
-            const mousePos = new MousePosition(
-                d3.mouse(this)[0],
-                d3.mouse(this)[1]
-            );
-            await self.tooltip.update([
-                `${Container.get(Localization.BrHeatmapPage.Tooltip.nation)}${Container.get<NationTranslator>(Localization.Nation)(d.nation)}`,
-                `${Container.get(Localization.BrHeatmapPage.Tooltip.br)}${d.br}`,
-                `${Container.get<MeasurementTranslator>(Localization.Measurement)(self.page.measurement)}: ${_.round(d.value, 3)}`
-            ], mousePos);
-        }
+    async onPointerMove(d: SquareInfo, node: SVGRectElement): Promise<void> {
+        await this.tooltip.update([
+            `${Container.get(Localization.BrHeatmapPage.Tooltip.nation)}${Container.get<NationTranslator>(Localization.Nation)(d.nation)}`,
+            `${Container.get(Localization.BrHeatmapPage.Tooltip.br)}${d.br}`,
+            `${Container.get<MeasurementTranslator>(Localization.Measurement)(this.page.measurement)}: ${_.round(d.value, 3)}`
+        ], new MousePosition(
+            d3.mouse(node)[0],
+            d3.mouse(node)[1]
+        ));
     }
 
-    get clickEvent(): () => void {
-        const self = this;
-        return async function(): Promise<void> {
-            const square: d3.Selection<SVGRectElement, SquareInfo, HTMLElement, any> = d3.select(this);
-            const info: SquareInfo = square.data()[0];
+    async onClick(_: SquareInfo, node: SVGRectElement): Promise<void> {
+        const square: d3.Selection<SVGRectElement, SquareInfo, HTMLElement, any> = d3.select(node);
+        const info: SquareInfo = square.data()[0];
 
-            if (utils.rgbToHex(square.style("fill")).toUpperCase() === COLORS.AZURE) {
-                // if the square is selected
-                square.style("fill", self.value2color(info.value));
-                // remove the item in the `this.selected`
-                self.selected = self.selected.filter(each => each.br !== info.br || each.nation !== info.nation);
-            } else {
-                // if the square is not selected
-                square.style("fill", COLORS.AZURE);
-                // add the item into the `this.selected`
-                self.selected.push(info);
-            }
-            await self.updateSubPlots()
+        if (utils.rgbToHex(square.style("fill")).toUpperCase() === COLORS.AZURE) {
+            // if the square is selected
+            square.style("fill", this.value2color(info.value));
+            // remove the item in the `this.selected`
+            this.selected = this.selected.filter(each => each.br !== info.br || each.nation !== info.nation);
+        } else {
+            // if the square is not selected
+            square.style("fill", COLORS.AZURE);
+            // add the item into the `this.selected`
+            this.selected.push(info);
         }
+        await this.updateSubPlots();
     }
 
     cache: TimeseriesData;
@@ -176,10 +163,10 @@ export class BrHeatmap extends Plot {
                 .style("fill", d => this.value2color(d.value))
                 .style("stroke-width", 1)
                 .style("stroke", "black")
-                .on("mouseover", this.mouseoverEvent)
-                .on("mouseleave", this.mouseleaveEvent)
-                .on("mousemove", this.mousemoveEvent)
-                .on("click", this.clickEvent);
+                .on("pointerover", utils.eventWrapper<SVGRectElement, typeof this.onPointerOver>(this, this.onPointerOver))
+                .on("pointerleave", utils.eventWrapper<SVGRectElement, typeof this.onPointerLeave>(this, this.onPointerLeave))
+                .on("pointermove", utils.eventWrapper<SVGRectElement, typeof this.onPointerMove>(this, this.onPointerMove))
+                .on("click", utils.eventWrapper<SVGRectElement, typeof this.onClick>(this, this.onClick));
 
             this.cache = data;
 
