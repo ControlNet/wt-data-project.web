@@ -1,13 +1,14 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "noImplicitAny": true,
-    "sourceMap": true,
-    "lib": ["es5", "es6", "es2019", "dom"],
-    "experimentalDecorators": true
-  },
-  "exclude": [
-    "dist",
-    "node_modules"
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.config.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.vitest.json"
+    }
   ]
 }
