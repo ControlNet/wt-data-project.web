@@ -2,13 +2,13 @@ import { fileURLToPath, URL } from 'node:url'
 
 import { defineConfig } from 'vite'
 
-const { resolve } = require('path')
 
 import vue from '@vitejs/plugin-vue'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
+import viteWasm from "vite-plugin-wasm"
 
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
@@ -25,7 +25,8 @@ export default defineConfig({
     }),
     Components({
       resolvers:[ElementPlusResolver()]
-    })
+    }),
+    viteWasm()
   ],
   resolve: {
     alias: {

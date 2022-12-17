@@ -1,0 +1,96 @@
+{
+  "BrHeatmapPage": {
+    "BrHeatmap": {
+      "svgHeight": 800,
+      "svgWidth": 600,
+      "margin": {
+        "top": 20,
+        "right": 30,
+        "bottom": 40,
+        "left": 100
+      },
+      "mainSvgId": "main-svg"
+    },
+    "ColorBar": {
+      "svgHeight": 800,
+      "svgWidth": 60,
+      "margin": {
+        "top": 20,
+        "right": 40,
+        "bottom": 40,
+        "left": 0
+      }
+    },
+    "BrLineChart": {
+      "svgHeight": 400,
+      "svgWidth": 500,
+      "margin": {
+        "top": 10,
+        "right": 20,
+        "bottom": 40,
+        "left": 50
+      }
+    },
+    "Legend": {
+      "svgHeight": 400,
+      "svgWidth": 160,
+      "margin": {
+        "top": 20,
+        "right": 5,
+        "bottom": 40,
+        "left": 5
+      }
+    },
+    "Tooltip": {
+      "parentSvgId": "main-svg",
+      "opacity": 0.8,
+      "nRow": 3,
+      "rectWidth": 120,
+      "rectXBias": -30,
+      "rectYBias": -35,
+      "textXBias": -25,
+      "textYBias": -20,
+      "leftShiftXThreshold": 130,
+      "downShiftYThreshold": 40,
+      "leftShiftOffset": 150,
+      "downShiftOffset": 70
+    },
+    "LineChartTooltip": {
+      "parentSvgId": "line-chart-svg",
+      "opacity": 0.8,
+      "nRow": 20,
+      "rectWidth": 155,
+      "rectXBias": -165,
+      "rectYBias": -35,
+      "textXBias": -160,
+      "textYBias": -20,
+      "leftShiftXThreshold": 160,
+      "downShiftYThreshold": 40,
+      "leftShiftOffset": 175,
+      "downShiftOffset": 70
+    }
+  },
+  "StackedAreaPage": {
+    "StackedLineChart": {
+      "svgHeight": 800,
+      "svgWidth": 1200,
+      "margin": {
+        "top": 20,
+        "right": 30,
+        "bottom": 40,
+        "left": 100
+      },
+      "mainSvgId": "main-svg"
+    },
+    "Legend": {
+      "svgHeight": 800,
+      "svgWidth": 160,
+      "margin": {
+        "top": 20,
+        "right": 5,
+        "bottom": 40,
+        "left": 5
+      }
+    }
+  }
+}
