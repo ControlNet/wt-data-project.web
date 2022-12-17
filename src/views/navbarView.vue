@@ -35,15 +35,18 @@
 .navbar > div {
   display: flex;
   align-items: center;
-  height: 64px;
-  padding: 0 20px;
   transition:1s;
+}
+
+.navbar > div > a {
+padding: 20px 16px;
 }
 
 .navbar > div:not(:first-child):hover{
   background: linear-gradient(rgb(0, 0, 0), rgb(30, 158, 218)); ;
   cursor: pointer;
 }
+
 
 .page-tab{
   color: #EEFFFF;
@@ -65,6 +68,7 @@
   position: absolute;
   color: #FFCB6B;
   font-size: 6px;
-  top: -5px;
+  top: 13px;
+  left: 35px;
 }
 </style>
