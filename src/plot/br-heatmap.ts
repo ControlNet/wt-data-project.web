@@ -150,6 +150,9 @@ export class BrHeatmap extends Plot {
 
             // colorMap function
             this.value2color = await this.getValue2color();
+            if (this.table.winRateValue2color === null && this.page.measurement === "win_rate") {
+                this.table.winRateValue2color = this.value2color;
+            }
 
             // add heat squares
             this.g.selectAll()

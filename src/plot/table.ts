@@ -1,5 +1,5 @@
 import { Plot } from "./plot";
-import { BrHeatmap, SquareInfo } from "./br-heatmap";
+import { BrHeatmap, SquareInfo, Value2Color } from "./br-heatmap";
 import * as d3 from "d3";
 import { JoinedData, JoinedRow, JoinedRowGetter } from "../data/joined-data";
 import * as _ from "lodash";
@@ -15,6 +15,7 @@ export class Table extends Plot {
     @Inject(Content) readonly content: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>
     @Inject(BRHeatMapPage) page: BRHeatMapPage;
     cache: Map<string, JoinedData> = new Map();
+    winRateValue2color: Value2Color | null = null
 
     init(): Table {
         this.table = this.content
@@ -87,7 +88,7 @@ export class Table extends Plot {
                     title: "win_rate", field: "win_rate", maxWidth: 95, formatter: cell => {
                         const value = cell.getValue();
                         const element = cell.getElement();
-                        const color = utils.rgbToHex(this.page.plot.value2color(value) as string);
+                        const color = utils.rgbToHex(this.winRateValue2color(value) as string);
                         element.style.backgroundColor = color;
                         element.style.color = utils.genTextColorFromBgColor(color);
                         return value;
