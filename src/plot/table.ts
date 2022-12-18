@@ -3,10 +3,11 @@ import { BrHeatmap, SquareInfo } from "./br-heatmap";
 import * as d3 from "d3";
 import { JoinedData, JoinedRow, JoinedRowGetter } from "../data/joined-data";
 import * as _ from "lodash";
-import { Container, Inject, Provider } from "../utils";
+import { COLORS, Container, Inject, nationColors, Provider, utils } from "../utils";
 import { Content, dataUrl } from "../app/global-env";
 import { BRHeatMapPage } from "../app/page/br-heatmap-page";
-
+import { TabulatorFull as Tabulator } from 'tabulator-tables';
+import "tabulator-tables/dist/css/tabulator.min.css";
 
 @Provider(Table)
 export class Table extends Plot {
@@ -63,16 +64,51 @@ export class Table extends Plot {
 
         // select columns with selected mode
         const tableData = this.selectColumns(_.uniqBy(filtered, d => d.name));
-        const keys = <Array<keyof TableRow>>_.keys(tableData[0]);
-        // init table header
-        this.table.append("tr").selectAll().data(keys).enter().append("th").html(d => d);
-
-        // generate table rows from content
-        tableData.forEach((tableRow: TableRow) => {
-            const tr = this.table.append("tr");
-            keys.forEach(key => {
-                tr.append("td").html(<string>tableRow[key]);
-            })
+        new Tabulator("#selected-table", {
+            data: tableData,
+            layout: "fitColumns",
+            columns: [
+                {title: "ts_name", field: "ts_name"},
+                {title: "wk_name", field: "wk_name"},
+                {
+                    title: "nation", field: "nation", maxWidth: 80, formatter: cell => {
+                        const value = cell.getValue();
+                        const element = cell.getElement();
+                        const color = nationColors.get(value);
+                        element.style.backgroundColor = color;
+                        element.style.color = utils.genTextColorFromBgColor(color);
+                        return value;
+                    }
+                },
+                {title: "class", field: "class", maxWidth: 120},
+                {title: "br", field: "br", maxWidth: 50},
+                {title: "battles", field: "battles", maxWidth: 85},
+                {
+                    title: "win_rate", field: "win_rate", maxWidth: 95, formatter: cell => {
+                        const value = cell.getValue();
+                        const element = cell.getElement();
+                        const color = utils.rgbToHex(this.page.plot.value2color(value) as string);
+                        element.style.backgroundColor = color;
+                        element.style.color = utils.genTextColorFromBgColor(color);
+                        return value;
+                    }
+                },
+                {title: "air_frags_per_battle", field: "air_frags_per_battle"},
+                {title: "air_frags_per_death", field: "air_frags_per_death"},
+                {title: "ground_frags_per_battle", field: "ground_frags_per_battle"},
+                {title: "ground_frags_per_death", field: "ground_frags_per_death"},
+                {
+                    title: "premium", field: "is_premium", maxWidth: 99, formatter: (cell) => {
+                        const value = cell.getValue();
+                        if (value === "True") {
+                            cell.getElement().style.backgroundColor = COLORS.YELLOW;
+                        }
+                        return value;
+                    }
+                },
+                {title: "rp_rate", field: "rp_rate", maxWidth: 84},
+                {title: "sl_rate", field: "sl_rate", maxWidth: 80},
+            ]
         })
         return this;
     }

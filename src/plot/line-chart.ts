@@ -39,7 +39,7 @@ export class BrLineChart extends LineChart {
     @Inject(Config.BrHeatmapPage.BrLineChart.margin) readonly margin: Margin;
     @Inject(BRHeatMapPage) readonly page: BRHeatMapPage;
     @Inject(LineChartTooltip) readonly tooltip: Tooltip;
-    selected: Array<BrLineChartDataObj>;
+    selected: Array<BrLineChartDataObj> | null = null;
     selectedDate: number;
     xAxis: d3.ScaleTime<number, number>;
     readonly allDates = Application.dates.map(utils.parseDate).map(date => date.getTime()).reverse();
@@ -49,7 +49,7 @@ export class BrLineChart extends LineChart {
     }
 
     onPointerOver(_: SquareInfo, _2: SVGSVGElement): void {
-        if (this.selected.length > 0) {
+        if (this.selected?.length > 0) {
             this.tooltip.appear();
         } else {
             this.tooltip.hide();
@@ -61,9 +61,12 @@ export class BrLineChart extends LineChart {
             d3.mouse(node)[0],
             d3.mouse(node)[1]
         );
+        if (this.xAxis === undefined) {
+            return;
+        }
         const xValue = this.xAxis.invert(mousePos.x - this.margin.left);
         this.selectedDate = utils.findClosest(this.allDates, xValue.getTime());
-        await this.tooltip.update(this.selected.map(dataObj =>
+        await this.tooltip.update(this.selected!.map(dataObj =>
             `${Container.get<NationTranslator>(Localization.Nation)(dataObj.nation)} ` +
                 `${dataObj.br}: ${_.round(dataObj.values.find(value => value.date.getTime() === this.selectedDate)?.value, 3)}`
         ), mousePos);

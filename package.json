@@ -19,8 +19,9 @@
     "inversify-binding-decorators": "^4.0.0",
     "lodash": "^4.17.21",
     "marked": "^2.0.3",
-    "typescript": "^4.2.2",
     "reflect-metadata": "^0.1.13",
+    "tabulator-tables": "^5.4.3",
+    "typescript": "^4.2.2",
     "wasm-utils": "file:wasm-utils/pkg"
   },
   "devDependencies": {
@@ -37,8 +38,11 @@
     "@types/d3-transition": "^1.1.0",
     "@types/lodash": "^4.14.170",
     "@types/marked": "^2.0.3",
+    "@types/tabulator-tables": "^5.4.2",
+    "css-loader": "^6.7.3",
+    "style-loader": "^3.3.1",
+    "ts-loader": "^9.2.3",
     "webpack": "^5.40.0",
-    "webpack-cli": "^4.2.0",
-    "ts-loader": "^9.2.3"
+    "webpack-cli": "^4.2.0"
   }
 }

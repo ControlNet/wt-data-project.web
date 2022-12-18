@@ -61,7 +61,7 @@ export namespace utils {
 
     export function formatPower(d: number) {
         const prefix = d < 0 ? "⁻" : "";
-        const number = (d + "").split("").map(function(c: string) {
+        const number = (d + "").split("").map(function (c: string) {
             return "⁰¹²³⁴⁵⁶⁷⁸⁹"[+c];
         }).join("");
         return prefix + number;
@@ -72,6 +72,9 @@ export namespace utils {
         const color = rgb.match(/\d+/g);
         let hex = "#";
 
+        if (color === null && rgb.startsWith("#")) {
+            return rgb;
+        }
         for (let i = 0; i < 3; i++) {
             hex += ("0" + Number(color[i]).toString(16)).slice(-2);
         }
@@ -139,7 +142,33 @@ export namespace utils {
         => void | Promise<void>>(thisBinding: unknown, cb: T): (this: S, d: SquareInfo, i: number, n: S[]) => void {
         return (d, i, n) =>
             // https://stackoverflow.com/questions/27746304/how-to-check-if-an-object-is-a-promise/27760489#27760489
-            Promise.resolve((cb.bind(thisBinding) as T)(d, n[i])).then(() => {});
+            Promise.resolve((cb.bind(thisBinding) as T)(d, n[i])).then(() => {
+            });
+    }
+
+    // https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+    function hexToRgb(hex: string) {
+      // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+      const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+      hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+        return r + r + g + g + b + b;
+      });
+
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      } : null;
+    }
+
+    function color2brightness(hex: string): number {
+        const rgb = hexToRgb(hex);
+        return (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+    }
+
+    export function genTextColorFromBgColor(bgColor: string): string {
+        return color2brightness(bgColor) > 125 ? "black" : "white";
     }
 }
 
@@ -303,7 +332,7 @@ export class ObjChainMap {
 export class WasmUtils {
     static wasm: {
         extract_data(data_cls: Uint8Array, data_nation: Uint8Array, data_br: Float32Array,
-            selected_nation: Uint8Array, selected_br: Float32Array, clazz: number): Uint32Array;
+                     selected_nation: Uint8Array, selected_br: Float32Array, clazz: number): Uint32Array;
     };
 
     static async init() {
