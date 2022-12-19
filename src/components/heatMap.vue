@@ -7,14 +7,14 @@ interface CountryData {
     br:string
 }
 
-interface TabelData{
+interface LabelData {
     country:string
     detail:Array<CountryData>
 }
 
 
 
-const data:Array<TabelData> = []
+const data:Array<LabelData> = []
 
 //todo:编写获取数据部分和 vue store交互部分
 
