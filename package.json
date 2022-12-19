@@ -16,7 +16,9 @@
     "element-plus": "^2.2.26",
     "inversify": "^6.0.1",
     "inversify-binding-decorators": "^4.0.0",
+    "marked": "^4.2.4",
     "pinia": "^2.0.28",
+    "reflect-metadata": "^0.1.13",
     "vite-plugin-wasm": "^3.1.0",
     "vue": "^3.2.45",
     "vue-i18n": "^9.2.2",
@@ -25,6 +27,7 @@
     "wasm-utils": "file:src/d3/wasm-utils/pkg"
   },
   "devDependencies": {
+    "@types/d3": "^7.4.0",
     "@types/jsdom": "^20.0.1",
     "@types/node": "^18.11.12",
     "@vitejs/plugin-vue": "^4.0.0",
