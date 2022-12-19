@@ -1,0 +1,25 @@
+name: build
+
+on:
+  pull_request:
+    branches:
+      - 'feature/vue3'
+
+jobs:
+  build-test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Setup npm
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16.x'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build

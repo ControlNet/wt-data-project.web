@@ -7,14 +7,14 @@ interface CountryData {
     br:string
 }
 
-interface TabelData{
+interface TableData{
     nation:string
     detail:Array<CountryData>
 }
 
 
 
-const data:Array<TabelData> = []
+const data:Array<TableData> = []
 
 //todo:
 
