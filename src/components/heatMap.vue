@@ -2,13 +2,13 @@
 
 
 interface CountryData {
-    country:string,
+    nation:string,
     win:number
     br:string
 }
 
 interface TabelData{
-    country:string
+    nation:string
     detail:Array<CountryData>
 }
 
@@ -16,7 +16,7 @@ interface TabelData{
 
 const data:Array<TabelData> = []
 
-//todo:编写获取数据部分和 vue store交互部分
+//todo:
 
 
 </script>
@@ -31,13 +31,13 @@ const data:Array<TabelData> = []
                 <div class="flex heatmap-table">
                     <div class="flex heatmap-table-col"
                         v-for="item of data"
-                        :key="item.country"
+                        :key="item.nation"
                     >
                         <div class="heatmap-table-cell"
                             v-for="cell of item.detail"
                             :key="cell.win"
                             ></div>
-                        <div class="heatmap-table-country">{{ item.country }}</div>
+                        <div class="heatmap-table-country">{{ item.nation }}</div>
                     </div>
                 </div>
             </div>
@@ -69,7 +69,7 @@ const data:Array<TabelData> = []
 .br-heatmap-y > div {
     height: 26px;
 }
-.heat-mapx{
+.heat-map-x{
     display: flex;
 }
 
@@ -92,6 +92,7 @@ const data:Array<TabelData> = []
 .heatmap-table-cell:hover{
     transform: scale(1.3);
 }
+
 .heatmap-table-country{
     margin-top: 14px;
     font-size: 13px;
