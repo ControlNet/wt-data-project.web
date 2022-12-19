@@ -5,3 +5,8 @@ body {
 a {
  text-decoration: none;
 }
+
+
+.flex{
+    display: flex;
+}

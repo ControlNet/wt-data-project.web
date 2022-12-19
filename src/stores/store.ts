@@ -1,16 +1,15 @@
 import { createStore,Store } from 'vuex'
 import type { InjectionKey } from 'vue'
-import { dataUrl } from '@/d3/src/app/global-env'
 
-export interface metaData {
+export interface MetaData {
   type:string,
-  data:string,
+  date:string,
   path:string
 }
 
 
 export interface State {
-  metaData:Array<metaData> | null
+  metaData:Array<MetaData> 
 }
 
 export const key: InjectionKey<Store<State>> = Symbol()
@@ -18,7 +17,12 @@ export const key: InjectionKey<Store<State>> = Symbol()
 export const d3DataStore = createStore<State>({
   state () {
     return {
-      metaData:null
+      metaData:[]
+    }
+  },
+  getters:{
+    getJoinedMetaData(state){
+      return state.metaData.filter(item => item.type === 'joined')
     }
   },
   mutations: {
@@ -28,9 +32,10 @@ export const d3DataStore = createStore<State>({
   },
   actions: {
     async getMetaData(context){
-      if (context.state.metaData == null){
-        let metaData = await fetch(`${dataUrl}/metaData.json`)
+      if (context.state.metaData.length === 0){
+        let metaData = await fetch(`https:///metadata.json`)
         metaData = await metaData.json()
+        context.commit('updateMetaData',metaData)
       }
       return context.state.metaData
     }
