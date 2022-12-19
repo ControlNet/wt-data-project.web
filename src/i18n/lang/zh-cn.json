@@ -1,30 +1,70 @@
 {
-    "public": {
-        "search": "搜索",
-        "followers": "关注者",
-        "following": "正在关注",
-        "statuses_count": "总推文数",
-        "deleted": "删除",
-        "protected": "保护",
-        "retry": "重试",
-        "profile": "简介",
-        "tweet": "推文",
-        "error": "出错",
-        "translate": "翻译",
-        "loading": "加载中",
-        "timestamp": "时间戳",
-        "origin": "原创",
-        "retweet": "转推",
-        "media": "媒体",
-        "username": "用户名",
-        "group": "组",
-        "user_list": "用户列表",
-        "and": "和",
-        "time": {
-            "second": "秒 | 秒",
-            "minute": "分钟 | 分钟",
-            "hour": "小时 | 小时",
-            "day": "天 | 天"
-        }
+  "public": {
+    "Navbar": {
+      "BrHeatmap": "分房热力图",
+      "StackedArea": "总体趋势图",
+      "TodoList": "待定计划",
+      "WebRepo": "GitHub源码",
+      "DataRepo": "数据",
+      "Issues": "反馈",
+      "Forum": "论坛",
+      "Github": "作者ControlNet"
     },
+    "Sidebar": {
+      "Date": {
+        "label": "日期: "
+      },
+      "Class": {
+        "label": "载具类型: ",
+        "groundVehicles": "地面载具",
+        "aviation": "空中载具"
+      },
+      "Mode": {
+        "label": "游戏模式: ",
+        "ab": "街机娱乐",
+        "rb": "历史性能",
+        "sb": "全真模拟"
+      },
+      "Measurement": {
+        "label": "指标: ",
+        "winRate": "胜率",
+        "battlesSum": "游戏场次"
+      },
+      "BrRange": {
+        "label": "分房区间: "
+      },
+      "Scale": {
+        "label": "比例: ",
+        "value": "数值",
+        "percentage": "百分比"
+      }
+    },
+    "BrHeatmapPage": {
+      "Tooltip": {
+        "nation": "国家: ",
+        "br": "分房: "
+      },
+      "BrLineChart": {
+        "date": "日期"
+      }
+    },
+    "StackedAreaPage": {
+      "StackedLineChart": {
+        "date": "日期",
+        "battles": "游戏场次"
+      }
+    },
+    "Nation": {
+      "USA": "美国",
+      "Germany": "德国",
+      "USSR": "苏联",
+      "Britain": "英国",
+      "Japan": "日本",
+      "France": "法国",
+      "Italy": "意大利",
+      "China": "中国",
+      "Sweden": "瑞典",
+      "Israel": "以色列"
+    }
+  }
 }

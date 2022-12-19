@@ -1,0 +1,70 @@
+{
+  "public": {
+    "Navbar": {
+      "BrHeatmap": "BR HeatMap",
+      "StackedArea": "Trends",
+      "TodoList": "Todo List",
+      "WebRepo": "GitHub",
+      "DataRepo": "Data",
+      "Issues": "Feedback",
+      "Forum": "Forum",
+      "Github": "by ControlNet"
+    },
+    "Sidebar": {
+      "Date": {
+        "label": "Date: "
+      },
+      "Class": {
+        "label": "Class: ",
+        "groundVehicles": "Ground Vehicles",
+        "aviation": "Aviation"
+      },
+      "Mode": {
+        "label": "Mode: ",
+        "ab": "AB",
+        "rb": "RB",
+        "sb": "SB"
+      },
+      "Measurement": {
+        "label": "Measurement: ",
+        "winRate": "Win Rate",
+        "battlesSum": "Battles"
+      },
+      "BrRange": {
+        "label": "BR Range: "
+      },
+      "Scale": {
+        "label": "Scale: ",
+        "value": "Value",
+        "percentage": "Percentage"
+      }
+    },
+    "BrHeatmapPage": {
+      "Tooltip": {
+        "nation": "Nation: ",
+        "br": "BR: "
+      },
+      "BrLineChart": {
+        "date": "Date"
+      }
+    },
+    "StackedAreaPage": {
+      "StackedLineChart": {
+        "date": "Date",
+        "battles": "Battles"
+      }
+    },
+    "Nation": {
+      "USA": "USA",
+      "Germany": "Germany",
+      "USSR": "USSR",
+      "Britain": "Britain",
+      "Japan": "Japan",
+      "France": "France",
+      "Italy": "Italy",
+      "China": "China",
+      "Sweden": "Sweden",
+      "Israel": "Israel"
+    }
+  }
+}
