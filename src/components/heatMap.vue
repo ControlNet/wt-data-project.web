@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { heatMapDataStore } from "@/stores/store" 
+
+import type { Ref } from 'vue'
 
 
 interface CountryData {
@@ -8,16 +12,21 @@ interface CountryData {
 }
 
 interface TableData{
-    nation:string
-    detail:Array<CountryData>
+    nation: string
+    detail: Array<CountryData>
 }
 
 
 
-const data:Array<TableData> = []
+const data: Array<TableData> = []
 
 //todo:
 
+
+const selectDate :Ref<string> = ref('')
+const selectBr :Ref<Number> = ref(0)
+
+heatMapDataStore.dispatch("getCsvDataBySelected")
 
 </script>
 

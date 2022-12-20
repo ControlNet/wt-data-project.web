@@ -1,3 +1,5 @@
+import type { Parser } from 'csv-parse/browser/esm/index'
+
 export type WikiData = Array<WikiRow>
 
 export type TsData = Array<TsRow>
@@ -5,6 +7,25 @@ export type TsData = Array<TsRow>
 export type TimeseriesData<T extends TimeseriesRow = TimeseriesRow> = Array<T>;
 
 export type Nation = "USA" | "Germany" | "USSR" | "Britain" | "Japan" | "France" | "Italy" | "China" | "Sweden" | "Israel";
+
+export type BRRange = "0" | "1";
+
+export type Measurement = "win_rate" | "battles_sum";
+
+export type Mode = "ab" | "rb" | "sb";
+
+export type Clazz = "Aviation" | "Ground_vehicles";
+
+export abstract class Getter {
+    protected readonly abstract data: Gettable;
+    protected readonly abstract mode: Mode;
+
+}
+
+export interface Gettable {
+}
+
+
 
 export interface WikiRow {
     name: string
@@ -103,4 +124,19 @@ export interface JoinedRow extends TsRow, WikiRow {
 export interface TimeseriesCol{
     nation:string
     detail:Array<TimeseriesRow>
+}
+
+
+export interface HeatMapState {
+    metaData:Array<MetaData>,
+    selectedDate:string,
+    selectedVehiclesType:string,
+    selectedGameModeType:Mode,
+    csvDataUrl:string,
+    csvParser:Parser
+}
+
+export interface OnSomeSelectChange {
+    is:string,
+    newValue:string
 }
