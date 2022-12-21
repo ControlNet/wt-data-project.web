@@ -1,10 +1,11 @@
 <script setup lang="ts">
-  import navbarView from "@/views/navbarView.vue"
+  import NavbarView from "@/views/NavbarView.vue"
+  import GlobalLayoutVue from "./Layout/GlobalLayout.vue";
 </script>
 
 <template>
   <el-container direction="vertical">
-    <navbarView></navbarView>
+    <NavbarView></NavbarView>
     <RouterView></RouterView>
   </el-container>
   <!----
