@@ -2,7 +2,7 @@ import type { TimeseriesABRow, TimeseriesRBRow, TimeseriesRow, TimeseriesSBRow }
 import { Getter } from "@/utils/getter/getter";
 import type { Measurement, Mode } from "@/types/options";
 
-type TimeseriesRow<T> = T extends 'ab'
+type TimeseriesRow<T> = T extends 'ab' // currently useless since the value of `TimeseriesRowGetter.mode` haven't been specialized
     ? TimeseriesABRow
     : T extends 'rb'
         ? TimeseriesRBRow
@@ -23,14 +23,14 @@ export class TimeseriesRowGetter<T extends TimeseriesRow = TimeseriesRow> extend
     }
 
     get value(): number {
-        return +this.data[`${this.mode}_${this.measurement}`] as unknown as TimeseriesRow<typeof this.mode>;
+        return Number((this.data as unknown as TimeseriesRow<typeof this.mode>)[`${this.mode}_${this.measurement}`]);
     }
 
     get br(): string {
-        return this.data[`${this.mode}_br`] as unknown as TimeseriesRow<typeof this.mode>;
+        return String((this.data as unknown as TimeseriesRow<typeof this.mode>)[`${this.mode}_br`]);
     }
 
     get lowerBr(): number {
-        return +this.data[`${this.mode}_lower_br`] as unknown as TimeseriesRow<typeof this.mode>;
+        return Number((this.data as unknown as TimeseriesRow<typeof this.mode>)[`${this.mode}_lower_br`]);
     }
 }
