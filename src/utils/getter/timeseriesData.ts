@@ -2,7 +2,9 @@ import type { TimeseriesABRow, TimeseriesRBRow, TimeseriesRow, TimeseriesSBRow }
 import { Getter } from "@/utils/getter/getter";
 import type { Measurement, Mode } from "@/types/options";
 
-type TimeseriesRow<T> = T extends 'ab' // currently useless since the value of `TimeseriesRowGetter.mode` haven't been specialized
+// currently useless since the value of `TimeseriesRowGetter.mode` haven't been specialized
+// https://github.com/ControlNet/wt-data-project.web/pull/10#discussion_r1054797252
+type TimeseriesRow<T> = T extends 'ab'
     ? TimeseriesABRow
     : T extends 'rb'
         ? TimeseriesRBRow
