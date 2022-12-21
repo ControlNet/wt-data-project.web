@@ -22,7 +22,6 @@ const _useMetadataStore = defineStore({
             const metadata: MetadataArray | undefined = await d3.json(`${dataUrl}/metadata.json`)
             if (metadata !== undefined) {
                 this.metadata = metadata
-            console.log("metadataStore: fromServer: metadata")
             }
         }
     },

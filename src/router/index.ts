@@ -10,6 +10,10 @@ export default createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
+            path: "/",
+            redirect: "/br-heatmap"
+        },
+        {
             name: "GlobalLayout",
             path: "/",
             component: GlobalLayoutVue,
@@ -25,10 +29,6 @@ export default createRouter({
                     component: StackedAreaViewVue
                 }
             ]
-        },
-        {
-            path: "/",
-            redirect: "/br-heatmap"
         },
         {
             name: "/todo-list",

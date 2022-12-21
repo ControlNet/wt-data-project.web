@@ -98,6 +98,8 @@ async function updateSquares(data: TimeseriesData) {
 
     rects.transition()
         .style("fill", d => value2color!(d.value));
+
+    await Promise.resolve()
 }
 
 onMounted(async () => {
@@ -105,12 +107,9 @@ onMounted(async () => {
     // only update the plot after mounted
     inputStore.$onAction(({name, after}) => {
         after(async () => {
-            if (name === "setBrRange" || name === "setMode") {
-                await update(true)
-            } else {
-                await update(false)
-            }
-        })
+            const reDownload = name === "setBrRange" || name === "setMode";
+            await update(reDownload);
+        });
     })
 })
 

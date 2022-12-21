@@ -5,10 +5,10 @@ import Sidebar from "@/components/Sidebar.vue";
 
 <template>
     <el-container class="container">
-        <Sidebar></Sidebar>
+        <Sidebar/>
         <el-divider style="height: auto;" direction="vertical"/>
-        <el-main id="d3enterPoint">
-            <RouterView></RouterView>
+        <el-main>
+            <RouterView/>
         </el-main>
     </el-container>
 </template>

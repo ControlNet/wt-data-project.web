@@ -5,7 +5,7 @@
 
 <template>
     <el-header class="navbar">
-      <div><img class="log64" src="@/assets/logo/logo64.png"/></div>
+      <div><img class="log64" src="/logo/logo64.png" alt=""/></div>
       <div><router-link to="/br-heatmap"><a class="page-tab">{{$t('Navbar.BrHeatmap')}}</a></router-link></div>
       <div><router-link to="/stacked-area"><a class="page-tab">{{$t('Navbar.StackedArea')}}</a></router-link></div>
       <div><router-link to="/todo-list" class="todo-list">{{$t('Navbar.TodoList')}}</router-link></div>
