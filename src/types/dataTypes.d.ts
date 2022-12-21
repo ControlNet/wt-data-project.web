@@ -52,13 +52,23 @@ export interface TsRow {
     alt_name: string
 }
 
-export interface TimeseriesRow extends Gettable {
+export interface TimeseriesRowBase extends Gettable {
     nation: Nation
     cls: Clazz
     date: string
 }
 
-export interface TimeseriesABRow extends TimeseriesRow {
+export type TimeseriesRow<T extends Mode> = TimeseriesRowBase & (
+    T extends 'ab'
+        ? TimeseriesABRow
+        : T extends 'rb'
+            ? TimeseriesRBRow
+            : T extends 'sb'
+                ? TimeseriesSBRow
+                : never
+    )
+
+export interface TimeseriesABRow extends TimeseriesRowBase {
     ab_br: string
     ab_lower_br: number
     ab_battles_sum: number
@@ -70,7 +80,7 @@ export interface TimeseriesABRow extends TimeseriesRow {
     ab_ground_frags_per_death: number
 }
 
-export interface TimeseriesRBRow extends TimeseriesRow {
+export interface TimeseriesRBRow extends TimeseriesRowBase {
     rb_br: string
     rb_lower_br: number
     rb_battles_sum: number
@@ -82,7 +92,7 @@ export interface TimeseriesRBRow extends TimeseriesRow {
     rb_ground_frags_per_death: number
 }
 
-export interface TimeseriesSBRow extends TimeseriesRow {
+export interface TimeseriesSBRow extends TimeseriesRowBase {
     sb_br: string
     sb_lower_br: number
     sb_battles_sum: number

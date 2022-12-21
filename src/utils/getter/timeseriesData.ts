@@ -1,23 +1,13 @@
-import type { TimeseriesABRow, TimeseriesRBRow, TimeseriesRow, TimeseriesSBRow } from "@/types/dataTypes";
+import type { TimeseriesRow } from "@/types/dataTypes";
 import { Getter } from "@/utils/getter/getter";
 import type { Measurement, Mode } from "@/types/options";
 
-// currently useless since the value of `TimeseriesRowGetter.mode` haven't been specialized
-// https://github.com/ControlNet/wt-data-project.web/pull/10#discussion_r1054797252
-type TimeseriesRow<T> = T extends 'ab'
-    ? TimeseriesABRow
-    : T extends 'rb'
-        ? TimeseriesRBRow
-        : T extends 'sb'
-            ? TimeseriesSBRow
-            : never;
-
-export class TimeseriesRowGetter<T extends TimeseriesRow = TimeseriesRow> extends Getter {
-    protected readonly data: T;
-    protected readonly mode: Mode;
+export class TimeseriesRowGetter<T extends Mode> extends Getter {
+    protected readonly data: TimeseriesRow<T>;
+    protected readonly mode: T;
     private readonly measurement: Measurement;
 
-    constructor(data: T, mode: Mode, measurement: Measurement) {
+    constructor(data: TimeseriesRow<T>, mode: T, measurement: Measurement) {
         super();
         this.data = data;
         this.mode = mode;
@@ -25,14 +15,14 @@ export class TimeseriesRowGetter<T extends TimeseriesRow = TimeseriesRow> extend
     }
 
     get value(): number {
-        return Number((this.data as unknown as TimeseriesRow<typeof this.mode>)[`${this.mode}_${this.measurement}`]);
+        return Number(this.data[`${this.mode}_${this.measurement}` as keyof TimeseriesRow<T>]);
     }
 
     get br(): string {
-        return String((this.data as unknown as TimeseriesRow<typeof this.mode>)[`${this.mode}_br`]);
+        return String(this.data[`${this.mode}_br` as keyof TimeseriesRow<T>]);
     }
 
     get lowerBr(): number {
-        return Number((this.data as unknown as TimeseriesRow<typeof this.mode>)[`${this.mode}_lower_br`]);
+        return Number(this.data[`${this.mode}_lower_br` as keyof TimeseriesRow<T>]);
     }
 }
