@@ -16,7 +16,7 @@ export class TimeseriesRowGetter<T extends TimeseriesRow = TimeseriesRow> extend
 
     get value(): number {
         switch (this.mode) {
-            case "ab":
+            case "ab": {
                 const abData = <TimeseriesABRow><unknown>this.data;
                 switch (this.measurement) {
                     case "win_rate":
@@ -25,7 +25,8 @@ export class TimeseriesRowGetter<T extends TimeseriesRow = TimeseriesRow> extend
                         return +abData.ab_battles_sum;
                 }
                 break;
-            case "rb":
+            }
+            case "rb": {
                 const rbData = <TimeseriesRBRow><unknown>this.data;
                 switch (this.measurement) {
                     case "win_rate":
@@ -34,7 +35,8 @@ export class TimeseriesRowGetter<T extends TimeseriesRow = TimeseriesRow> extend
                         return +rbData.rb_battles_sum;
                 }
                 break;
-            case "sb":
+            }
+            case "sb": {
                 const sbData = <TimeseriesSBRow><unknown>this.data;
                 switch (this.measurement) {
                     case "win_rate":
@@ -43,6 +45,7 @@ export class TimeseriesRowGetter<T extends TimeseriesRow = TimeseriesRow> extend
                         return +sbData.sb_battles_sum;
                 }
                 break;
+            }
         }
     }
 
