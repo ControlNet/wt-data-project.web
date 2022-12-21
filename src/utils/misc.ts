@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import type { SquareInfo, TimeseriesRow } from "@/types/dataTypes";
+import type { SquareInfo } from "@/types/dataTypes";
 
 export function getSelectedValue<T extends string = string>(id: string): T {
     return <T>(<HTMLSelectElement>document.getElementById(id)).value;
