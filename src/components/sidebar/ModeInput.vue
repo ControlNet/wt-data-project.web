@@ -1,6 +1,6 @@
 <template>
     <el-row :justify="'space-between'" :align="'middle'">
-        <el-col :span="6"><h1>{{$t('Sidebar.Mode.label')}}</h1></el-col>
+        <el-col :span="6"><h1>{{ $t('Sidebar.Mode.label') }}</h1></el-col>
         <el-col :span="18">
             <el-select v-model="selectedMode" @change="onchange">
                 <el-option
@@ -21,7 +21,7 @@ import { i18n } from "@/i18n";
 import { useInputStore } from "@/stores/inputStore";
 import { ref } from "vue";
 
-const modes: Array<{name: Mode, label: string}> = [
+const modes: Array<{ name: Mode, label: string }> = [
     {name: "ab", label: i18n.global.t("Sidebar.Mode.ab")},
     {name: "rb", label: i18n.global.t("Sidebar.Mode.rb")},
     {name: "sb", label: i18n.global.t("Sidebar.Mode.sb")},

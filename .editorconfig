@@ -121,6 +121,8 @@ ij_scss_use_double_quotes = true
 ij_scss_value_alignment = 0
 
 [*.vue]
+indent_size = 4
+tab_width = 4
 ij_continuation_indent_size = 4
 ij_smart_tabs = false
 ij_vue_indent_children_of_top_level = template

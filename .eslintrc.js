@@ -16,5 +16,14 @@ module.exports = {
     plugins: [
         'vue'
     ],
-    rules: {}
+    rules: {
+        "vue/html-indent": ["error", 4],
+        "vue/script-indent": ["error", 4],
+        "vue/html-closing-bracket-spacing": ["error", {
+            "selfClosingTag": "always",
+        }],
+        "vue/max-attributes-per-line": ["error", {
+            "singleline": 8
+        }],
+    }
 }

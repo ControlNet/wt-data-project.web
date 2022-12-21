@@ -115,8 +115,8 @@ async function update(): Promise<void> {
 
 <template>
     <div id="color-bar">
-        <svg :height="svgHeight" :width="svgWidth" id="color-bar-svg">
-            <g id="color-bar-g" :transform="transform"/>
+        <svg id="color-bar-svg" :height="svgHeight" :width="svgWidth">
+            <g id="color-bar-g" :transform="transform" />
         </svg>
     </div>
 </template>

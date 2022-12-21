@@ -5,9 +5,9 @@ import ColorBar from "@/components/ColorBar.vue";
 
 
 <template>
-    <HeatMap/>
+    <HeatMap />
     <div style="float: right">
-        <ColorBar/>
+        <ColorBar />
     </div>
 </template>
 

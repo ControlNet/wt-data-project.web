@@ -4,8 +4,8 @@ import NavbarView from "@/views/NavbarView.vue"
 
 <template>
     <el-container direction="vertical">
-        <NavbarView></NavbarView>
-        <RouterView></RouterView>
+        <NavbarView />
+        <RouterView />
     </el-container>
 </template>
 

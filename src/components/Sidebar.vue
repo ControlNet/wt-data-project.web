@@ -18,7 +18,8 @@ const displayScaleInput = ref(false);
 
 function updateInputDisplay(routeName: RouteRecordName | undefined | null) {
     switch (routeName) {
-        case "GlobalLayout": case "br-heatmap":
+        case "GlobalLayout":
+        case "br-heatmap":
             displayDateInput.value = true;
             displayMeasurementInput.value = true;
             displayClazzInput.value = true;
@@ -57,12 +58,12 @@ onMounted(async () => {
 <template>
     <el-aside>
         <div v-if="metadataPrepared">
-            <DateInput v-if="displayDateInput" :all-dates="allDates" :last-date="lastDate"/>
-            <MeasurementInput v-if="displayMeasurementInput"/>
-            <ClazzInput v-if="displayClazzInput"/>
-            <ModeInput v-if="displayModeInput"/>
-            <BrRangeInput v-if="displayBrInput"/>
-            <ScaleInput v-if="displayScaleInput"/>
+            <DateInput v-if="displayDateInput" :all-dates="allDates" :last-date="lastDate" />
+            <MeasurementInput v-if="displayMeasurementInput" />
+            <ClazzInput v-if="displayClazzInput" />
+            <ModeInput v-if="displayModeInput" />
+            <BrRangeInput v-if="displayBrInput" />
+            <ScaleInput v-if="displayScaleInput" />
         </div>
     </el-aside>
 </template>

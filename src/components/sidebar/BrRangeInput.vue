@@ -1,6 +1,6 @@
 <template>
     <el-row :justify="'space-between'" :align="'middle'">
-        <el-col :span="6"><h1>{{$t("Sidebar.BrRange.label")}}</h1></el-col>
+        <el-col :span="6"><h1>{{ $t("Sidebar.BrRange.label") }}</h1></el-col>
         <el-col :span="18">
             <el-select v-model="selectedBrRange" @change="onchange">
                 <el-option

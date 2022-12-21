@@ -174,7 +174,7 @@ function buildAxis(g: d3.Selection<SVGGElement, unknown, HTMLElement, any>) {
 
 <template>
     <svg :height="svgHeight" :width="svgWidth">
-        <g id="main-g" :transform="translate"/>
+        <g id="main-g" :transform="translate" />
     </svg>
 </template>
 
