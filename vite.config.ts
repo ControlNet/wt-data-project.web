@@ -14,23 +14,23 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    vue(), 
-    VueI18nPlugin({
-      include:"json"
-    }),
-    vueJsx(),
-    AutoImport({
-      resolvers:[ElementPlusResolver()]
-    }),
-    Components({
-      resolvers:[ElementPlusResolver()]
-    }),
-    viteWasm()
-  ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+    plugins: [
+        vue(),
+        VueI18nPlugin({
+            include: "json"
+        }),
+        vueJsx(),
+        AutoImport({
+            resolvers: [ElementPlusResolver()]
+        }),
+        Components({
+            resolvers: [ElementPlusResolver()]
+        }),
+        viteWasm()
+    ],
+    resolve: {
+        alias: {
+            '@': fileURLToPath(new URL('./src', import.meta.url))
+        }
     }
-  }
 })

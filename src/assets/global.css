@@ -3,10 +3,10 @@ body {
 }
 
 a {
- text-decoration: none;
+    text-decoration: none;
 }
 
 
-.flex{
+.flex {
     display: flex;
 }

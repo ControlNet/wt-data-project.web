@@ -3,6 +3,9 @@
     "strict": true,
     "target": "es6",
     "noImplicitAny": true,
+    "allowUnreachableCode": false,
+    "noImplicitReturns": true,
+    "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "lib": ["es5", "es6", "es2019", "dom"],
     "experimentalDecorators": true

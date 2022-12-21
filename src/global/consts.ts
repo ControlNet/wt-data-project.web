@@ -1,4 +1,4 @@
-import type { Nation } from "./types"
+import type { Nation } from "@/types/alias";
 
 export const dataUrl = "https://controlnet.space/wt-data-project.data";
 

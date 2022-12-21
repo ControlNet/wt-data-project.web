@@ -1,22 +1,21 @@
 <script setup lang="ts">
-import AsideSelect from "@/components/AsideSelect.vue"
+import Sidebar from "@/components/Sidebar.vue";
 </script>
 
 
-
 <template>
-      <el-container class="container">
-        <AsideSelect></AsideSelect>
-        <el-divider style="height: auto;" direction="vertical" />
-        <el-main id="d3enterPoint" >
-          <RouterView></RouterView>
+    <el-container class="container">
+        <Sidebar></Sidebar>
+        <el-divider style="height: auto;" direction="vertical"/>
+        <el-main id="d3enterPoint">
+            <RouterView></RouterView>
         </el-main>
     </el-container>
 </template>
 
 <style scoped>
-.container{
-    --bs-gutter-x:1.5rem;
+.container {
+    --bs-gutter-x: 1.5rem;
     margin-top: 20px;
     padding-left: calc(var(--bs-gutter-x) * .5);
     padding-right: calc(var(--bs-gutter-x) * .5);
