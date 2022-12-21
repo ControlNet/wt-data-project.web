@@ -5,7 +5,7 @@
 
 <template>
     <el-header class="navbar">
-      <div><img class="log64" src="@/assets/log/logo64.png"/></div>
+      <div><img class="log64" src="@/assets/logo/logo64.png"/></div>
       <div><router-link to="/br-heatmap"><a class="page-tab">分房热力图</a></router-link></div>
       <div><router-link to="/stacked-area"><a class="page-tab">总体趋势图</a></router-link></div>
       <div><a class="todo-list">待定计划</a></div>
