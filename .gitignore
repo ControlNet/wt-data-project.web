@@ -28,3 +28,6 @@ coverage
 *.sw?
 
 src/**/__tests__/*
+components.d.ts
+env.d.ts
+auto-imports.d.ts

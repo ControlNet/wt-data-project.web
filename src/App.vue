@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import NavbarView from "@/views/NavbarView.vue"
-  import GlobalLayoutVue from "./Layout/GlobalLayout.vue";
+  import GlobalLayoutVue from "./layouts/GlobalLayout.vue";
 </script>
 
 <template>

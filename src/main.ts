@@ -4,7 +4,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 
-import { heatMapDataStore , key} from '@/stores/store'
+import { heatMapState , key} from '@/stores/heatMapState'
 
 import "@/assets/main.css"
 
@@ -12,6 +12,6 @@ const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
-app.use( heatMapDataStore ,key)
+app.use( heatMapState ,key)
 
 app.mount('#app')
