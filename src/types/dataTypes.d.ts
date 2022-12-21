@@ -1,30 +1,13 @@
-import type { Parser } from 'csv-parse/browser/esm/index'
+import type { Nation } from "@/types/alias";
+import type { Clazz, Mode } from "@/types/options";
 
-export type WikiData = Array<WikiRow>
-
-export type TsData = Array<TsRow>
-
-export type TimeseriesData<T extends TimeseriesRow = TimeseriesRow> = Array<T>;
-
-export type Nation = "USA" | "Germany" | "USSR" | "Britain" | "Japan" | "France" | "Italy" | "China" | "Sweden" | "Israel";
-
-export type BRRange = "0" | "1";
-
-export type Measurement = "win_rate" | "battles_sum";
-
-export type Mode = "ab" | "rb" | "sb";
-
-export type Clazz = "Aviation" | "Ground_vehicles";
-
-export abstract class Getter {
-    protected readonly abstract data: Gettable;
-    protected readonly abstract mode: Mode;
-
+export interface Getter {
+    data: Gettable;
+    mode: Mode;
 }
 
 export interface Gettable {
 }
-
 
 
 export interface WikiRow {
@@ -67,12 +50,6 @@ export interface TsRow {
     sb_ground_frags_per_battle: number
     sb_ground_frags_per_death: number
     alt_name: string
-}
-
-export interface Metadata {
-    type: string;
-    date: string;
-    path: string;
 }
 
 export interface TimeseriesRow extends Gettable {
@@ -121,22 +98,27 @@ export interface JoinedRow extends TsRow, WikiRow {
     wk_name: string
 }
 
-export interface TimeseriesCol{
-    nation:string
-    detail:Array<TimeseriesRow>
+export interface TimeseriesCol {
+    nation: string
+    detail: Array<TimeseriesRow>
 }
 
-
-export interface HeatMapState {
-    metaData:Array<MetaData>,
-    selectedDate:string,
-    selectedVehiclesType:string,
-    selectedGameModeType:Mode,
-    csvDataUrl:string,
-    csvParser:Parser
+export interface SquareInfo {
+    nation: Nation;
+    br: string;
+    lowerBr: number;
+    value: number;
 }
 
-export interface OnSomeSelectChange {
-    is:string,
-    newValue:string
+interface BrLineChartRow {
+    date: Date;
+    br: string;
+    nation: Nation;
+    value: number;
+}
+
+export interface BrLineChartDataObj {
+    br: string;
+    nation: Nation;
+    values: Array<{ date: Date, value: number }>
 }

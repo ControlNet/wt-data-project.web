@@ -6,14 +6,14 @@
 <template>
     <el-header class="navbar">
       <div><img class="log64" src="@/assets/logo/logo64.png"/></div>
-      <div><router-link to="/br-heatmap"><a class="page-tab">分房热力图</a></router-link></div>
-      <div><router-link to="/stacked-area"><a class="page-tab">总体趋势图</a></router-link></div>
-      <div><a class="todo-list">待定计划</a></div>
-      <div><a class="link-tab" href="https://github.com/ControlNet/wt-data-project.web" target="_blank">GitHub源码</a></div>
-      <div><a class="link-tab" href="https://github.com/ControlNet/wt-data-project.data" target="_blank">数据</a></div>
-      <div><a class="link-tab" href="https://github.com/ControlNet/wt-data-project.web/issues" target="_blank">反馈</a></div>
-      <div><a class="link-tab nav-tab-point" href="https://github.com/ControlNet/wt-data-project.web/discussions" target="_blank">论坛<span class="nav-tab-span">NEW</span></a></div>
-      <div><a class="link-tab" href="https://github.com/ControlNet" target="_blank">作者ControlNet</a></div>
+      <div><router-link to="/br-heatmap"><a class="page-tab">{{$t('Navbar.BrHeatmap')}}</a></router-link></div>
+      <div><router-link to="/stacked-area"><a class="page-tab">{{$t('Navbar.StackedArea')}}</a></router-link></div>
+      <div><router-link to="/todo-list" class="todo-list">{{$t('Navbar.TodoList')}}</router-link></div>
+      <div><a class="link-tab" href="https://github.com/ControlNet/wt-data-project.web" target="_blank">{{$t('Navbar.WebRepo')}}</a></div>
+      <div><a class="link-tab" href="https://github.com/ControlNet/wt-data-project.data" target="_blank">{{$t('Navbar.DataRepo')}}</a></div>
+      <div><a class="link-tab" href="https://github.com/ControlNet/wt-data-project.web/issues" target="_blank">{{$t('Navbar.Issues')}}</a></div>
+      <div><a class="link-tab nav-tab-point" href="https://github.com/ControlNet/wt-data-project.web/discussions" target="_blank">{{$t('Navbar.Forum')}}<span class="nav-tab-span">NEW</span></a></div>
+      <div><a class="link-tab" href="https://github.com/ControlNet" target="_blank">{{$t('Navbar.Github')}}</a></div>
     </el-header>
 </template>
 

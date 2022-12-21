@@ -1,16 +1,15 @@
 import { createI18n } from 'vue-i18n'
 
 
-import zh_cn from './lang/zh-cn.json'
-import en_us from './lang/en-us.json'
+import zh_CN from './lang/zh-CN.json'
+import en_US from './lang/en-US.json'
 
 
-const i18n = createI18n({
-    locale: 'zh-cn',
+export const i18n = createI18n({
+    locale: 'en-US',
+    globalInjection: true,
     messages: {
-        "zh-cn": zh_cn,
-        "en-us": en_us
+        "en-US": en_US,
+        "zh-CN": zh_CN
     }
 })
-
-export { i18n }

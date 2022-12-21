@@ -1,70 +1,68 @@
 {
-  "public": {
     "Navbar": {
-      "BrHeatmap": "分房热力图",
-      "StackedArea": "总体趋势图",
-      "TodoList": "待定计划",
-      "WebRepo": "GitHub源码",
-      "DataRepo": "数据",
-      "Issues": "反馈",
-      "Forum": "论坛",
-      "Github": "作者ControlNet"
+        "BrHeatmap": "分房热力图",
+        "StackedArea": "总体趋势图",
+        "TodoList": "待定计划",
+        "WebRepo": "GitHub源码",
+        "DataRepo": "数据",
+        "Issues": "反馈",
+        "Forum": "论坛",
+        "Github": "作者ControlNet"
     },
     "Sidebar": {
-      "Date": {
-        "label": "日期: "
-      },
-      "Class": {
-        "label": "载具类型: ",
-        "groundVehicles": "地面载具",
-        "aviation": "空中载具"
-      },
-      "Mode": {
-        "label": "游戏模式: ",
-        "ab": "街机娱乐",
-        "rb": "历史性能",
-        "sb": "全真模拟"
-      },
-      "Measurement": {
-        "label": "指标: ",
-        "winRate": "胜率",
-        "battlesSum": "游戏场次"
-      },
-      "BrRange": {
-        "label": "分房区间: "
-      },
-      "Scale": {
-        "label": "比例: ",
-        "value": "数值",
-        "percentage": "百分比"
-      }
+        "Date": {
+            "label": "日期: "
+        },
+        "Class": {
+            "label": "载具类型: ",
+            "groundVehicles": "地面载具",
+            "aviation": "空中载具"
+        },
+        "Mode": {
+            "label": "游戏模式: ",
+            "ab": "街机娱乐",
+            "rb": "历史性能",
+            "sb": "全真模拟"
+        },
+        "Measurement": {
+            "label": "指标: ",
+            "winRate": "胜率",
+            "battlesSum": "游戏场次"
+        },
+        "BrRange": {
+            "label": "分房区间: "
+        },
+        "Scale": {
+            "label": "比例: ",
+            "value": "数值",
+            "percentage": "百分比"
+        }
     },
     "BrHeatmapPage": {
-      "Tooltip": {
-        "nation": "国家: ",
-        "br": "分房: "
-      },
-      "BrLineChart": {
-        "date": "日期"
-      }
+        "Tooltip": {
+            "nation": "国家: ",
+            "br": "分房: "
+        },
+        "BrLineChart": {
+            "date": "日期"
+        }
     },
     "StackedAreaPage": {
-      "StackedLineChart": {
-        "date": "日期",
-        "battles": "游戏场次"
-      }
+        "StackedLineChart": {
+            "date": "日期",
+            "battles": "游戏场次"
+        }
     },
     "Nation": {
-      "USA": "美国",
-      "Germany": "德国",
-      "USSR": "苏联",
-      "Britain": "英国",
-      "Japan": "日本",
-      "France": "法国",
-      "Italy": "意大利",
-      "China": "中国",
-      "Sweden": "瑞典",
-      "Israel": "以色列"
+        "USA": "美国",
+        "Germany": "德国",
+        "USSR": "苏联",
+        "Britain": "英国",
+        "Japan": "日本",
+        "France": "法国",
+        "Italy": "意大利",
+        "China": "中国",
+        "Sweden": "瑞典",
+        "Israel": "以色列"
     }
-  }
 }

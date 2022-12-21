@@ -15,17 +15,15 @@
     "csv": "^6.2.5",
     "d3": "^7.7.0",
     "element-plus": "^2.2.26",
-    "inversify": "^6.0.1",
-    "inversify-binding-decorators": "^4.0.0",
     "marked": "^4.2.4",
+    "mitt": "^3.0.0",
     "pinia": "^2.0.28",
     "reflect-metadata": "^0.1.13",
     "vite-plugin-wasm": "^3.1.0",
     "vue": "^3.2.45",
     "vue-i18n": "^9.2.2",
     "vue-router": "^4.1.6",
-    "vuex": "^4.1.0",
-    "wasm-utils": "file:src/d3/wasm-utils/pkg"
+    "wasm-utils": "file:wasm-utils/pkg"
   },
   "devDependencies": {
     "@types/d3": "^7.4.0",
@@ -42,7 +40,6 @@
     "unplugin-vue-components": "^0.22.12",
     "vite": "^4.0.0",
     "vitest": "^0.25.6",
-    "vue-tsc": "^1.0.12",
-    "wasm-utils": "file:src/d3/wasm-utils/pkg"
+    "vue-tsc": "^1.0.12"
   }
 }
