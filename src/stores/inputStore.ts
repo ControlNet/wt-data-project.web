@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import type { InputState } from "@/types/states";
-import type { Clazz, Measurement, Mode, BrRange, Scale } from "@/types/options";
-import emitter from "@/global/eventbus";
+import type { BrRange, Clazz, Measurement, Mode, Scale } from "@/types/options";
 
 export const useInputStore = defineStore({
     id: "inputStore",
