@@ -4,27 +4,17 @@
 
 
 <template>
-    <el-header class="navbar">
-        <div><img class="log64" src="/logo/logo64.png" alt="" /></div>
-        <div>
-            <router-link to="/br-heatmap"><a class="page-tab">{{ $t('Navbar.BrHeatmap') }}</a></router-link>
-        </div>
-        <div>
-            <router-link to="/stacked-area"><a class="page-tab">{{ $t('Navbar.StackedArea') }}</a></router-link>
-        </div>
-        <div>
-            <router-link to="/todo-list" class="todo-list">{{ $t('Navbar.TodoList') }}</router-link>
-        </div>
-        <div><a class="link-tab" href="https://github.com/ControlNet/wt-data-project.web"
-                target="_blank">{{ $t('Navbar.WebRepo') }}</a></div>
-        <div><a class="link-tab" href="https://github.com/ControlNet/wt-data-project.data"
-                target="_blank">{{ $t('Navbar.DataRepo') }}</a></div>
-        <div><a class="link-tab" href="https://github.com/ControlNet/wt-data-project.web/issues"
-                target="_blank">{{ $t('Navbar.Issues') }}</a></div>
-        <div><a class="link-tab nav-tab-point" href="https://github.com/ControlNet/wt-data-project.web/discussions"
-                target="_blank">{{ $t('Navbar.Forum') }}<span class="nav-tab-span">NEW</span></a></div>
-        <div><a class="link-tab" href="https://github.com/ControlNet" target="_blank">{{ $t('Navbar.Github') }}</a>
-        </div>
+    <el-header class="navbar stick">
+      <div><img class="log64" src="/logo/logo64.png" alt=""/></div>
+      <div><router-link to="/br-heatmap"><a class="page-tab">{{$t('Navbar.BrHeatmap')}}</a></router-link></div>
+      <div><router-link to="/stacked-area"><a class="page-tab">{{$t('Navbar.StackedArea')}}</a></router-link></div>
+      <div><router-link to="/todo-list" class="todo-list">{{$t('Navbar.TodoList')}}</router-link></div>
+      <div><a class="link-tab" href="https://github.com/ControlNet/wt-data-project.web" target="_blank">{{$t('Navbar.WebRepo')}}</a></div>
+      <div><a class="link-tab" href="https://github.com/ControlNet/wt-data-project.data" target="_blank">{{$t('Navbar.DataRepo')}}</a></div>
+      <div><a class="link-tab" href="https://github.com/ControlNet/wt-data-project.web/issues" target="_blank">{{$t('Navbar.Issues')}}</a></div>
+      <div><a class="link-tab nav-tab-point" href="https://github.com/ControlNet/wt-data-project.web/discussions" target="_blank">{{$t('Navbar.Forum')}}<span class="nav-tab-span">NEW</span></a></div>
+      <div><a class="link-tab" href="https://github.com/ControlNet" target="_blank">{{$t('Navbar.Github')}}</a></div>
+      <div class="cover"></div>
     </el-header>
 </template>
 
@@ -42,6 +32,12 @@
     background-color: black;
     flex-direction: row;
     flex-wrap: wrap;
+    top: 0;
+    z-index: 9999;
+    border-radius: 32px;
+    margin: auto;
+    margin-top: 20px;
+    position: relative;
 }
 
 .navbar > div {
@@ -82,5 +78,9 @@
     font-size: 6px;
     top: 13px;
     left: 35px;
+}
+
+.cover{
+    
 }
 </style>
