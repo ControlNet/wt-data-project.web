@@ -16,6 +16,8 @@ export class Table extends Plot {
     @Inject(BRHeatMapPage) page: BRHeatMapPage;
     cache: Map<string, JoinedData> = new Map();
     winRateValue2color: Value2Color | null = null
+    tabulator: Tabulator | null = null
+    downloadButton: d3.Selection<HTMLButtonElement, unknown, HTMLElement, unknown> | null = null;
 
     init(): Table {
         this.table = this.content
@@ -23,6 +25,12 @@ export class Table extends Plot {
             .attr("id", "selected-table-div")
             .append<HTMLTableElement>("table")
             .attr("id", "selected-table");
+
+        this.downloadButton = d3.select("#selected-table-div")
+            .append<HTMLButtonElement>("button")
+            .html("Export to CSV")
+            .on("click", () => this.tabulator?.download("csv", `data.csv`))
+            .style("visibility", "hidden")
         return this;
     }
 
@@ -65,7 +73,7 @@ export class Table extends Plot {
 
         // select columns with selected mode
         const tableData = this.selectColumns(_.uniqBy(filtered, d => d.name));
-        new Tabulator("#selected-table", {
+        this.tabulator = new Tabulator("#selected-table", {
             data: tableData,
             layout: "fitColumns",
             columns: [
@@ -111,6 +119,8 @@ export class Table extends Plot {
                 {title: "sl_rate", field: "sl_rate", maxWidth: 80},
             ]
         })
+
+        this.downloadButton.style("visibility", "visible");
         return this;
     }
 
