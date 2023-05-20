@@ -100,8 +100,10 @@ export class ColorBar extends Plot {
             .tickFormat((d: number) => {
                 if (scale === "log") {
                     return 10 + utils.formatPower(Math.round(Math.log10(d)))
-                } else {
+                } else if (this.page.measurement === "battles_sum") {
                     return d + "%";
+                } else {
+                    return d.toString();
                 }
             });
 

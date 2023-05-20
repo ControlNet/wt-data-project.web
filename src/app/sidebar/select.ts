@@ -169,6 +169,10 @@ Container.bind(MeasurementSelect).toDynamicValue(() => {
         .class.add("plot-selection")
         .data.add({id: "win_rate", text: Container.get(Localization.Sidebar.Measurement.winRate)})
         .data.add({id: "battles_sum", text: Container.get(Localization.Sidebar.Measurement.battlesSum)})
+        .data.add({id: "air_frags_per_battle", text: Container.get(Localization.Sidebar.Measurement.airFragsPerBattle)})
+        .data.add({id: "air_frags_per_death", text: Container.get(Localization.Sidebar.Measurement.airFragsPerDeath)})
+        .data.add({id: "ground_frags_per_battle", text: Container.get(Localization.Sidebar.Measurement.groundFragsPerBattle)})
+        .data.add({id: "ground_frags_per_death", text: Container.get(Localization.Sidebar.Measurement.groundFragsPerDeath)})
         .default("win_rate");
 })
 

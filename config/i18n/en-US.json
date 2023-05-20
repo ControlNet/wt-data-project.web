@@ -27,7 +27,11 @@
     "Measurement": {
       "label": "Measurement: ",
       "winRate": "Win Rate",
-      "battlesSum": "Battles"
+      "battlesSum": "Battles",
+      "airFragsPerBattle": "Air Frags/Battle",
+      "airFragsPerDeath": "Air Frags/Death",
+      "groundFragsPerBattle": "Ground Frags/Battle",
+      "groundFragsPerDeath": "Ground Frags/Death"
     },
     "BrRange": {
       "label": "BR Range: "

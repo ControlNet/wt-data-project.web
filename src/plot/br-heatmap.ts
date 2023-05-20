@@ -304,14 +304,16 @@ export class BrHeatmap extends Plot {
 
                 if (this.page.clazz === "Ground_vehicles") {
                     range2color = d3.scaleLinear<string, string>()
-                        .domain(this.colorMaps.win_rate.Ground_vehicles.percentiles)
-                        .range(this.colorMaps.win_rate.Ground_vehicles.colors)
+                        .domain(this.colorMaps.winRate.Ground_vehicles.percentiles)
+                        .range(this.colorMaps.winRate.Ground_vehicles.colors)
                         .interpolate(d3.interpolateHsl)
                 } else if (this.page.clazz === "Aviation") {
                     range2color = d3.scaleLinear<string, string>()
-                        .domain(this.colorMaps.win_rate.Aviation.percentiles)
-                        .range(this.colorMaps.win_rate.Aviation.colors)
+                        .domain(this.colorMaps.winRate.Aviation.percentiles)
+                        .range(this.colorMaps.winRate.Aviation.colors)
                         .interpolate(d3.interpolateHsl)
+                } else {
+                    throw new Error(`Invalid clazz ${this.page.clazz} for colorMap win_rate`);
                 }
                 break;
             case "battles_sum":
@@ -323,10 +325,100 @@ export class BrHeatmap extends Plot {
                     .range([0, 1]);
 
                 range2color = d3.scaleLinear<string, string>()
-                    .domain(this.colorMaps.battles_sum.Ground_vehicles.percentiles)
-                    .range(this.colorMaps.battles_sum.Ground_vehicles.colors)
+                    .domain(this.colorMaps.battlesSum.Ground_vehicles.percentiles)
+                    .range(this.colorMaps.battlesSum.Ground_vehicles.colors)
                     .interpolate(d3.interpolateHsl)
                 break;
+            case "air_frags_per_battle":
+                valueMin = 0;
+                valueMax = 10;
+
+                value2range = d3.scaleLinear<number, number>()
+                    .domain([valueMin, valueMax])
+                    .range([0, 1]);
+
+                if (this.page.clazz === "Ground_vehicles") {
+                    range2color = d3.scaleLinear<string, string>()
+                        .domain(this.colorMaps.airFragsPerBattle.Ground_vehicles.percentiles)
+                        .range(this.colorMaps.airFragsPerBattle.Ground_vehicles.colors)
+                        .interpolate(d3.interpolateHsl)
+                } else if (this.page.clazz === "Aviation") {
+                    range2color = d3.scaleLinear<string, string>()
+                        .domain(this.colorMaps.airFragsPerBattle.Aviation.percentiles)
+                        .range(this.colorMaps.airFragsPerBattle.Aviation.colors)
+                        .interpolate(d3.interpolateHsl)
+                } else {
+                    throw new Error(`Invalid clazz ${this.page.clazz} for colorMap air_frags_per_battle`);
+                }
+                break;
+            case "air_frags_per_death":
+                valueMin = 0;
+                valueMax = 10;
+
+                value2range = d3.scaleLinear<number, number>()
+                    .domain([valueMin, valueMax])
+                    .range([0, 1]);
+
+                if (this.page.clazz === "Ground_vehicles") {
+                    range2color = d3.scaleLinear<string, string>()
+                        .domain(this.colorMaps.airFragsPerDeath.Ground_vehicles.percentiles)
+                        .range(this.colorMaps.airFragsPerDeath.Ground_vehicles.colors)
+                        .interpolate(d3.interpolateHsl)
+                } else if (this.page.clazz === "Aviation") {
+                    range2color = d3.scaleLinear<string, string>()
+                        .domain(this.colorMaps.airFragsPerDeath.Aviation.percentiles)
+                        .range(this.colorMaps.airFragsPerDeath.Aviation.colors)
+                        .interpolate(d3.interpolateHsl)
+                } else {
+                    throw new Error(`Invalid clazz ${this.page.clazz} for colorMap air_frags_per_death`);
+                }
+                break;
+            case "ground_frags_per_battle":
+                valueMin = 0;
+                valueMax = 10;
+
+                value2range = d3.scaleLinear<number, number>()
+                    .domain([valueMin, valueMax])
+                    .range([0, 1]);
+
+                if (this.page.clazz === "Ground_vehicles") {
+                    range2color = d3.scaleLinear<string, string>()
+                        .domain(this.colorMaps.groundFragsPerBattle.Ground_vehicles.percentiles)
+                        .range(this.colorMaps.groundFragsPerBattle.Ground_vehicles.colors)
+                        .interpolate(d3.interpolateHsl)
+                } else if (this.page.clazz === "Aviation") {
+                    range2color = d3.scaleLinear<string, string>()
+                        .domain(this.colorMaps.groundFragsPerBattle.Aviation.percentiles)
+                        .range(this.colorMaps.groundFragsPerBattle.Aviation.colors)
+                        .interpolate(d3.interpolateHsl)
+                } else {
+                    throw new Error(`Invalid clazz ${this.page.clazz} for colorMap ground_frags_per_battle`);
+                }
+                break;
+            case "ground_frags_per_death":
+                valueMin = 0;
+                valueMax = 10;
+
+                value2range = d3.scaleLinear<number, number>()
+                    .domain([valueMin, valueMax])
+                    .range([0, 1]);
+
+                if (this.page.clazz === "Ground_vehicles") {
+                    range2color = d3.scaleLinear<string, string>()
+                        .domain(this.colorMaps.groundFragsPerDeath.Ground_vehicles.percentiles)
+                        .range(this.colorMaps.groundFragsPerDeath.Ground_vehicles.colors)
+                        .interpolate(d3.interpolateHsl)
+                } else if (this.page.clazz === "Aviation") {
+                    range2color = d3.scaleLinear<string, string>()
+                        .domain(this.colorMaps.groundFragsPerDeath.Aviation.percentiles)
+                        .range(this.colorMaps.groundFragsPerDeath.Aviation.colors)
+                        .interpolate(d3.interpolateHsl)
+                } else {
+                    throw new Error(`Invalid clazz ${this.page.clazz} for colorMap ground_frags_per_death`);
+                }
+                break;
+            default:
+                throw new Error("Invalid measurement for colorMap " + this.page.measurement);
         }
 
         const value2color = (value: number) => range2color(value2range(value));

@@ -188,6 +188,10 @@ interface LocalizationJson {
             readonly label: string,
             readonly winRate: string,
             readonly battlesSum: string
+            readonly airFragsPerBattle: string,
+            readonly airFragsPerDeath: string,
+            readonly groundFragsPerBattle: string,
+            readonly groundFragsPerDeath: string,
         }
         readonly BrRange: {
             readonly label: string
@@ -357,6 +361,14 @@ export class Localization {
                     return Container.get(Localization.Sidebar.Measurement.winRate);
                 case "battles_sum":
                     return Container.get(Localization.Sidebar.Measurement.battlesSum);
+                case "air_frags_per_battle":
+                    return Container.get(Localization.Sidebar.Measurement.airFragsPerBattle);
+                case "air_frags_per_death":
+                    return Container.get(Localization.Sidebar.Measurement.airFragsPerDeath);
+                case "ground_frags_per_battle":
+                    return Container.get(Localization.Sidebar.Measurement.groundFragsPerBattle);
+                case "ground_frags_per_death":
+                    return Container.get(Localization.Sidebar.Measurement.groundFragsPerDeath);
             }
         })
     }
@@ -392,6 +404,18 @@ export class Localization {
             }
             get battlesSum(): string {
                 return `${this.class}.${this.layout}.${this.selection}.battlesSum`;
+            }
+            get airFragsPerBattle(): string {
+                return `${this.class}.${this.layout}.${this.selection}.airFragsPerBattle`;
+            }
+            get airFragsPerDeath(): string {
+                return `${this.class}.${this.layout}.${this.selection}.airFragsPerDeath`;
+            }
+            get groundFragsPerBattle(): string {
+                return `${this.class}.${this.layout}.${this.selection}.groundFragsPerBattle`;
+            }
+            get groundFragsPerDeath(): string {
+                return `${this.class}.${this.layout}.${this.selection}.groundFragsPerDeath`;
             }
         }("Sidebar", "Measurement");
 
