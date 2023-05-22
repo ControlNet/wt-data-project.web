@@ -100,9 +100,9 @@ export class BrLineChart extends LineChart {
         this.g.append<SVGGElement>("g")
             .classed("x-axis", true)
             .attr("transform", `translate(0, ${this.height})`)
-            .style("font-size", 8)
+            .style("font-size", 9)
             .call(d3.axisBottom(x)
-                .tickFormat(d3.timeFormat('%Y/%m')));
+                .tickFormat(d3.timeFormat('%y/%m')));
 
         // add x label
         this.g.append<SVGTextElement>("text")
