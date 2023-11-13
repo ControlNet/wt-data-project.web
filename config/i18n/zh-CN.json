@@ -24,6 +24,9 @@
       "rb": "历史性能",
       "sb": "全真模拟"
     },
+    "Colorblind": {
+      "label": "色盲模式"
+    },
     "Measurement": {
       "label": "指标: ",
       "winRate": "胜率",

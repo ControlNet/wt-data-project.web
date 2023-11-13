@@ -215,6 +215,14 @@ export enum CONT_COLORS {
     WHITE = "#FFFFFF"
 }
 
+export enum CONT_COLORS_BLIND {
+    RED = "#F05039",
+    YELLOW = "#E57A77",
+    GREEN = "#1F449C",
+    BLACK = "#2B2B2B",
+    WHITE = "#FFFFFF"
+}
+
 export class MousePosition {
     x: number;
     y: number;

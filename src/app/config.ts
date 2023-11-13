@@ -201,6 +201,9 @@ interface LocalizationJson {
             readonly value: string,
             readonly percentage: string
         }
+        readonly Colorblind: {
+            readonly label: string
+        }
     }
 
     readonly BrHeatmapPage: {
@@ -281,6 +284,21 @@ class SelectionLocalization extends AbstractLocalization {
 
     get label(): string {
         return `${this.class}.${this.layout}.${this.selection}.label`;
+    }
+}
+
+class CheckboxLocalization extends AbstractLocalization {
+    protected readonly layout: string;
+    protected readonly selection: string;
+
+    constructor(layout: string, selection: string) {
+        super();
+        this.layout = layout;
+        this.selection = selection;
+    }
+
+    get label(): string {
+        return `${this.class}.${this.layout}.${this.selection}.checked`;
     }
 }
 
@@ -429,6 +447,8 @@ export class Localization {
                 return `${this.class}.${this.layout}.${this.selection}.percentage`;
             }
         }("Sidebar", "Scale")
+
+        static Colorblind = new CheckboxLocalization("Sidebar", "Colorblind");
     };
 
     static BrHeatmapPage = {

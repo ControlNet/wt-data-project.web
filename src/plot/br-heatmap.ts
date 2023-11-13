@@ -28,7 +28,7 @@ export class BrHeatmap extends Plot {
     @Inject(BrHeatmapTooltip) readonly tooltip: Tooltip;
     @Inject(Content) readonly content: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>
     @Inject(BRHeatMapPage) readonly page: BRHeatMapPage;
-    @Inject(BrHeatColorMap) readonly colorMaps: BrHeatColorMap;
+    colorMaps: BrHeatColorMap | null = null;
 
     selected: Array<SquareInfo> = [];
 
@@ -288,6 +288,7 @@ export class BrHeatmap extends Plot {
     }
 
     private async getValue2color(): Promise<Value2Color> {
+        this.colorMaps = Container.get(BrHeatColorMap)
         let value2range: d3.ScaleLinear<number, number>;
         let range2color: d3.ScaleLinear<string, string>;
         let valueMin: number;

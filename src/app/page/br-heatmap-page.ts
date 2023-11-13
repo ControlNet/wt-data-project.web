@@ -6,6 +6,7 @@ import { BrRangeSelect, ClassSelect, DateSelect, MeasurementSelect, ModeSelect, 
 import * as d3 from "d3";
 import { BRRange, Clazz, Measurement, Mode } from "../options";
 import { Localization } from "../config";
+import { Checkbox, ColorblindCheckbox } from "../sidebar/checkbox";
 
 
 @Singleton(BRHeatMapPage)
@@ -28,6 +29,8 @@ export class BRHeatMapPage extends Page {
         Container.get<Select>(MeasurementSelect).init();
         // br range selection
         Container.get<Select>(BrRangeSelect).init();
+        // colorblind mode checkbox
+        Container.get<Checkbox>(ColorblindCheckbox).init();
         // init main content plot
         // rebind the container to BrHeatmap constructor to new a object
         Container.rebind(BrHeatmap).toSelf();
@@ -42,6 +45,12 @@ export class BRHeatMapPage extends Page {
         // override some selection forcing re-download time-series data
         utils.setEvent.byIds("mode-selection", "br-range-selection")
             .onchange(() => this.plot.update(true));
+        // update the colors when colorblind mode is changed
+        utils.setEvent.byIds("colorblind-checkbox")
+            .onchange(async () => {
+                localStorage.setItem("colorblind-checkbox", d3.select("#colorblind-checkbox").property("checked").toString())
+                await this.plot.update(false)
+            });
     }
 
     get date(): string {

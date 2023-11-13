@@ -24,6 +24,9 @@
       "rb": "RB",
       "sb": "SB"
     },
+    "Colorblind": {
+      "label": "Colorblind Mode"
+    },
     "Measurement": {
       "label": "Measurement: ",
       "winRate": "Win Rate",
