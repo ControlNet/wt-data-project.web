@@ -1,0 +1,77 @@
+name: build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Setup rust wasm
+      run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+    - name: Build wasm
+      run: |
+        cd wasm-utils
+        wasm-pack build
+
+    - name: Use Node.js 16.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 16.x
+
+    - name: npm install and build
+      run: |
+        npm install
+        npm run build:production
+      env:
+        CI: true
+
+    - name: Clean files
+      run: |
+        mv img/logo.ico .
+        mv img/logo64.png .
+        rm -R img
+        rm -R src
+        rm -R wasm-utils
+        rm tsconfig.json
+        rm webpack.config.js
+        rm webpack.prod.js
+        mkdir img
+        mv logo.ico img
+        mv logo64.png img
+        sed -i 's/dist//g' .gitignore
+        sed -i 's/\/data//g' .gitignore
+
+#    - name: Download data
+#      run: |
+#        git clone --depth 1 https://github.com/ControlNet/wt-data-project.data.git data
+#        cd data
+#        chmod 777 -R .git
+#        rm -R .git
+
+    - name: Init git and commit
+      env:
+        WT_DATA_WEB_PRIVATE: ${{ secrets.WT_DATA_WEB_PRIVATE }}
+      run: |
+        mkdir -p ~/.ssh/
+        echo "$WT_DATA_WEB_PRIVATE" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+        git config --global user.email "smczx@hotmail.com"
+        git config --global user.name "ControlNet"
+        rm -rf .git
+        git init
+        git add -A
+        git commit -m "update"
+        git remote add origin-ssh git@github.com:ControlNet/wt-data-project.web.git
+
+    - name: Push
+      run: |
+        git push origin-ssh HEAD:web -f
