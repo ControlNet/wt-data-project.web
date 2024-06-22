@@ -1,0 +1,39 @@
+name: build
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - web
+  pull_request:
+    branches:
+      - '*'
+
+
+jobs:
+  build-test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Setup rust wasm
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      - name: Build wasm
+        run: |
+          cd wasm-utils
+          wasm-pack build
+
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+
+      - name: npm install and build
+        run: |
+          npm install
+          npm run build:production
+        env:
+          CI: true
